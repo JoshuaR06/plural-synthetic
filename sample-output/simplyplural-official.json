@@ -1,0 +1,256 @@
+{
+  "customFields": [
+    {
+      "_id": "synthetic-field-0001",
+      "name": "Likes",
+      "order": 0,
+      "preventTrusted": false,
+      "private": false,
+      "type": 0
+    },
+    {
+      "_id": "synthetic-field-0002",
+      "name": "Role in system",
+      "order": 1,
+      "preventTrusted": false,
+      "private": false,
+      "type": 0
+    }
+  ],
+  "frontHistory": [
+    {
+      "_id": "synthetic-fh-0001",
+      "custom": false,
+      "customStatus": "synthetic status",
+      "endTime": 1756054000000,
+      "live": false,
+      "member": "synthetic-member-0001",
+      "startTime": 1756032400000
+    },
+    {
+      "_id": "synthetic-fh-0002",
+      "custom": false,
+      "customStatus": "",
+      "endTime": 1756079200000,
+      "live": false,
+      "member": "synthetic-member-0002",
+      "startTime": 1756054000000
+    },
+    {
+      "_id": "synthetic-fh-0003",
+      "custom": true,
+      "customStatus": "custom front entry",
+      "endTime": 1756122400000,
+      "live": false,
+      "member": "synthetic-front-0001",
+      "startTime": 1756115200000
+    },
+    {
+      "_id": "synthetic-fh-0004",
+      "custom": false,
+      "customStatus": "",
+      "endTime": 1756136800000,
+      "live": false,
+      "member": "synthetic-member-deleted-0099",
+      "startTime": 1756129600000
+    },
+    {
+      "_id": "synthetic-fh-0005",
+      "custom": false,
+      "customStatus": "still fronting",
+      "live": true,
+      "member": "synthetic-member-0001",
+      "startTime": 1756205200000
+    },
+    {
+      "_id": "synthetic-fh-0006",
+      "custom": false,
+      "customStatus": "",
+      "live": true,
+      "member": "synthetic-member-0005",
+      "startTime": 1756212400000
+    }
+  ],
+  "frontStatuses": [
+    {
+      "_id": "synthetic-front-0001",
+      "color": "#999999",
+      "desc": "Fictional custom front.",
+      "name": "Blurry / unsure"
+    }
+  ],
+  "groups": [
+    {
+      "_id": "synthetic-group-0001",
+      "color": "#7C5CBF",
+      "desc": "Fictional group.",
+      "emoji": "🌞",
+      "members": [
+        "synthetic-member-0001",
+        "synthetic-member-0002",
+        "synthetic-member-0005"
+      ],
+      "name": "Daily front",
+      "parent": "root"
+    },
+    {
+      "_id": "synthetic-group-0002",
+      "color": "#8A8F98",
+      "desc": "Fictional group.",
+      "emoji": "🌙",
+      "members": [
+        "synthetic-member-0004"
+      ],
+      "name": "Resting",
+      "parent": "root"
+    },
+    {
+      "_id": "synthetic-group-0003",
+      "color": "#2B8C6B",
+      "desc": "Fictional top-level group that only holds a subgroup.",
+      "emoji": "🌿",
+      "members": [],
+      "name": "Sidesystem",
+      "parent": "root"
+    },
+    {
+      "_id": "synthetic-group-0004",
+      "color": "#5B7345",
+      "desc": "Fictional nested group.",
+      "emoji": "🌱",
+      "members": [
+        "synthetic-member-0005"
+      ],
+      "name": "Subsystem",
+      "parent": "synthetic-group-0003"
+    },
+    {
+      "_id": "synthetic-group-0005",
+      "color": "#E89AC7",
+      "desc": "Fictional group with a nested group inside it.",
+      "emoji": "🧸",
+      "members": [
+        "synthetic-member-0003"
+      ],
+      "name": "Littles",
+      "parent": "root"
+    },
+    {
+      "_id": "synthetic-group-0006",
+      "color": "#6C7BD9",
+      "desc": "Fictional group nested in Littles.",
+      "emoji": "🛏",
+      "members": [
+        "synthetic-member-0002"
+      ],
+      "name": "Bedtime",
+      "parent": "synthetic-group-0005"
+    }
+  ],
+  "members": [
+    {
+      "_id": "synthetic-member-0001",
+      "avatarUuid": "synthetic-avatar-0001",
+      "buckets": [
+        "synthetic-bucket-0001"
+      ],
+      "color": "#7C5CBF",
+      "desc": "Fictional member. Host role.",
+      "info": {
+        "synthetic-field-0001": "Rainy days",
+        "synthetic-field-0002": "Host"
+      },
+      "name": "Nova",
+      "pronouns": "she/her",
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0002",
+      "avatarUuid": "synthetic-avatar-0002",
+      "buckets": [
+        "synthetic-bucket-0001"
+      ],
+      "color": "#D9482B",
+      "desc": "Fictional member. Protector role.",
+      "info": {
+        "synthetic-field-0002": "Protector"
+      },
+      "name": "Ember",
+      "pronouns": "they/them",
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0003",
+      "color": "#2B8C6B",
+      "desc": "Fictional member with no custom field values.",
+      "info": {},
+      "name": "Wren",
+      "pronouns": "he/him",
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0004",
+      "archived": true,
+      "archivedReason": "Dormant (synthetic)",
+      "buckets": [
+        "synthetic-bucket-0002"
+      ],
+      "color": "#8A8F98",
+      "desc": "Fictional archived member.",
+      "info": {},
+      "name": "Halcyon",
+      "pronouns": "they/them",
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0005",
+      "color": "#E8A13C",
+      "desc": "Fictional member in a subsystem, and in two groups at once.",
+      "info": {},
+      "name": "Juniper",
+      "pronouns": "she/they",
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "notes": [
+    {
+      "_id": "synthetic-note-0001",
+      "date": 1756072000000,
+      "member": "synthetic-member-0001",
+      "note": "Fictional note body for tests.",
+      "supportMarkdown": false,
+      "title": "Synthetic note"
+    },
+    {
+      "_id": "synthetic-note-0002",
+      "date": 1756140400000,
+      "member": "synthetic-member-0002",
+      "note": "Fictional note with an empty title.",
+      "supportMarkdown": false,
+      "title": ""
+    }
+  ],
+  "privacyBuckets": [
+    {
+      "_id": "synthetic-bucket-0001",
+      "desc": "Fictional privacy bucket.",
+      "icon": "🔐",
+      "name": "Trusted friends"
+    },
+    {
+      "_id": "synthetic-bucket-0002",
+      "desc": "Fictional privacy bucket.",
+      "icon": "🔒",
+      "name": "Private"
+    }
+  ],
+  "users": [
+    {
+      "_id": "synthetic-system-0001",
+      "color": "#7C5CBF",
+      "desc": "Fictional system used for public tests. Not a real person.",
+      "uid": "synthetic-system-0001",
+      "username": "Aurora (synthetic test system)"
+    }
+  ]
+}

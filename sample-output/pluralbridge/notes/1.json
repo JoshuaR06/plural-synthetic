@@ -1,0 +1,13 @@
+[
+  {
+    "content": {
+      "date": 1756072000000,
+      "member": "synthetic-member-0001",
+      "note": "Fictional note body for tests.",
+      "supportMarkdown": false,
+      "title": "Synthetic note"
+    },
+    "exists": true,
+    "id": "synthetic-note-0001"
+  }
+]

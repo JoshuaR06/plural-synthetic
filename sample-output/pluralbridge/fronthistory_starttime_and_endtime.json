@@ -1,0 +1,72 @@
+[
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "synthetic status",
+      "endTime": 1756054000000,
+      "live": false,
+      "member": "synthetic-member-0001",
+      "startTime": 1756032400000
+    },
+    "exists": true,
+    "id": "synthetic-fh-0001"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "",
+      "endTime": 1756079200000,
+      "live": false,
+      "member": "synthetic-member-0002",
+      "startTime": 1756054000000
+    },
+    "exists": true,
+    "id": "synthetic-fh-0002"
+  },
+  {
+    "content": {
+      "custom": true,
+      "customStatus": "custom front entry",
+      "endTime": 1756122400000,
+      "live": false,
+      "member": "synthetic-front-0001",
+      "startTime": 1756115200000
+    },
+    "exists": true,
+    "id": "synthetic-fh-0003"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "",
+      "endTime": 1756136800000,
+      "live": false,
+      "member": "synthetic-member-deleted-0099",
+      "startTime": 1756129600000
+    },
+    "exists": true,
+    "id": "synthetic-fh-0004"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "still fronting",
+      "live": true,
+      "member": "synthetic-member-0001",
+      "startTime": 1756205200000
+    },
+    "exists": true,
+    "id": "synthetic-fh-0005"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "",
+      "live": true,
+      "member": "synthetic-member-0005",
+      "startTime": 1756212400000
+    },
+    "exists": true,
+    "id": "synthetic-fh-0006"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "avatars": [
+    {
+      "file": "synthetic-member-0001.png",
+      "memberId": "synthetic-member-0001",
+      "present": true
+    },
+    {
+      "file": "synthetic-member-0002.png",
+      "memberId": "synthetic-member-0002",
+      "present": true
+    },
+    {
+      "file": "synthetic-member-0003.png",
+      "memberId": "synthetic-member-0003",
+      "present": true
+    },
+    {
+      "file": "synthetic-member-0005.png",
+      "memberId": "synthetic-member-0005",
+      "present": true
+    }
+  ],
+  "generated": "synthetic",
+  "note": "Manifest shape only. Image bytes ship separately in avatars.zip."
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "content": {
+      "avatarUuid": "synthetic-avatar-0001",
+      "buckets": [
+        "synthetic-bucket-0001"
+      ],
+      "color": "#7C5CBF",
+      "desc": "Fictional member. Host role.",
+      "info": {
+        "synthetic-field-0001": "Rainy days",
+        "synthetic-field-0002": "Host"
+      },
+      "name": "Nova",
+      "pronouns": "she/her",
+      "uid": "synthetic-system-0001"
+    },
+    "exists": true,
+    "id": "synthetic-member-0001"
+  },
+  {
+    "content": {
+      "avatarUuid": "synthetic-avatar-0002",
+      "buckets": [
+        "synthetic-bucket-0001"
+      ],
+      "color": "#D9482B",
+      "desc": "Fictional member. Protector role.",
+      "info": {
+        "synthetic-field-0002": "Protector"
+      },
+      "name": "Ember",
+      "pronouns": "they/them",
+      "uid": "synthetic-system-0001"
+    },
+    "exists": true,
+    "id": "synthetic-member-0002"
+  },
+  {
+    "content": {
+      "color": "#2B8C6B",
+      "desc": "Fictional member with no custom field values.",
+      "info": {},
+      "name": "Wren",
+      "pronouns": "he/him",
+      "uid": "synthetic-system-0001"
+    },
+    "exists": true,
+    "id": "synthetic-member-0003"
+  },
+  {
+    "content": {
+      "archived": true,
+      "archivedReason": "Dormant (synthetic)",
+      "buckets": [
+        "synthetic-bucket-0002"
+      ],
+      "color": "#8A8F98",
+      "desc": "Fictional archived member.",
+      "info": {},
+      "name": "Halcyon",
+      "pronouns": "they/them",
+      "uid": "synthetic-system-0001"
+    },
+    "exists": true,
+    "id": "synthetic-member-0004"
+  },
+  {
+    "content": {
+      "color": "#E8A13C",
+      "desc": "Fictional member in a subsystem, and in two groups at once.",
+      "info": {},
+      "name": "Juniper",
+      "pronouns": "she/they",
+      "uid": "synthetic-system-0001"
+    },
+    "exists": true,
+    "id": "synthetic-member-0005"
+  }
+]

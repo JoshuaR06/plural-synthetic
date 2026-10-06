@@ -1,0 +1,20 @@
+[
+  {
+    "content": {
+      "desc": "Fictional privacy bucket.",
+      "icon": "🔐",
+      "name": "Trusted friends"
+    },
+    "exists": true,
+    "id": "synthetic-bucket-0001"
+  },
+  {
+    "content": {
+      "desc": "Fictional privacy bucket.",
+      "icon": "🔒",
+      "name": "Private"
+    },
+    "exists": true,
+    "id": "synthetic-bucket-0002"
+  }
+]

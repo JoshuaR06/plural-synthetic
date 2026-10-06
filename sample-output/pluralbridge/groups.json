@@ -1,0 +1,86 @@
+[
+  {
+    "content": {
+      "color": "#7C5CBF",
+      "desc": "Fictional group.",
+      "emoji": "🌞",
+      "members": [
+        "synthetic-member-0001",
+        "synthetic-member-0002",
+        "synthetic-member-0005"
+      ],
+      "name": "Daily front",
+      "parent": "root"
+    },
+    "exists": true,
+    "id": "synthetic-group-0001"
+  },
+  {
+    "content": {
+      "color": "#8A8F98",
+      "desc": "Fictional group.",
+      "emoji": "🌙",
+      "members": [
+        "synthetic-member-0004"
+      ],
+      "name": "Resting",
+      "parent": "root"
+    },
+    "exists": true,
+    "id": "synthetic-group-0002"
+  },
+  {
+    "content": {
+      "color": "#2B8C6B",
+      "desc": "Fictional top-level group that only holds a subgroup.",
+      "emoji": "🌿",
+      "members": [],
+      "name": "Sidesystem",
+      "parent": "root"
+    },
+    "exists": true,
+    "id": "synthetic-group-0003"
+  },
+  {
+    "content": {
+      "color": "#5B7345",
+      "desc": "Fictional nested group.",
+      "emoji": "🌱",
+      "members": [
+        "synthetic-member-0005"
+      ],
+      "name": "Subsystem",
+      "parent": "synthetic-group-0003"
+    },
+    "exists": true,
+    "id": "synthetic-group-0004"
+  },
+  {
+    "content": {
+      "color": "#E89AC7",
+      "desc": "Fictional group with a nested group inside it.",
+      "emoji": "🧸",
+      "members": [
+        "synthetic-member-0003"
+      ],
+      "name": "Littles",
+      "parent": "root"
+    },
+    "exists": true,
+    "id": "synthetic-group-0005"
+  },
+  {
+    "content": {
+      "color": "#6C7BD9",
+      "desc": "Fictional group nested in Littles.",
+      "emoji": "🛏",
+      "members": [
+        "synthetic-member-0002"
+      ],
+      "name": "Bedtime",
+      "parent": "synthetic-group-0005"
+    },
+    "exists": true,
+    "id": "synthetic-group-0006"
+  }
+]

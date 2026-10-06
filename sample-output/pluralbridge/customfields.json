@@ -1,0 +1,24 @@
+[
+  {
+    "content": {
+      "name": "Likes",
+      "order": 0,
+      "preventTrusted": false,
+      "private": false,
+      "type": 0
+    },
+    "exists": true,
+    "id": "synthetic-field-0001"
+  },
+  {
+    "content": {
+      "name": "Role in system",
+      "order": 1,
+      "preventTrusted": false,
+      "private": false,
+      "type": 0
+    },
+    "exists": true,
+    "id": "synthetic-field-0002"
+  }
+]

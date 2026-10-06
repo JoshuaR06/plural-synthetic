@@ -1,0 +1,72 @@
+[
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "synthetic status",
+      "endTime": "2025-08-24T16:46:40.000Z",
+      "live": false,
+      "member": "synthetic-member-0001",
+      "startTime": "2025-08-24T10:46:40.000Z"
+    },
+    "exists": true,
+    "id": "synthetic-fh-0001"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "",
+      "endTime": "2025-08-24T23:46:40.000Z",
+      "live": false,
+      "member": "synthetic-member-0002",
+      "startTime": "2025-08-24T16:46:40.000Z"
+    },
+    "exists": true,
+    "id": "synthetic-fh-0002"
+  },
+  {
+    "content": {
+      "custom": true,
+      "customStatus": "custom front entry",
+      "endTime": "2025-08-25T11:46:40.000Z",
+      "live": false,
+      "member": "synthetic-front-0001",
+      "startTime": "2025-08-25T09:46:40.000Z"
+    },
+    "exists": true,
+    "id": "synthetic-fh-0003"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "",
+      "endTime": "2025-08-25T15:46:40.000Z",
+      "live": false,
+      "member": "synthetic-member-deleted-0099",
+      "startTime": "2025-08-25T13:46:40.000Z"
+    },
+    "exists": true,
+    "id": "synthetic-fh-0004"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "still fronting",
+      "live": true,
+      "member": "synthetic-member-0001",
+      "startTime": "2025-08-26T10:46:40.000Z"
+    },
+    "exists": true,
+    "id": "synthetic-fh-0005"
+  },
+  {
+    "content": {
+      "custom": false,
+      "customStatus": "",
+      "live": true,
+      "member": "synthetic-member-0005",
+      "startTime": "2025-08-26T12:46:40.000Z"
+    },
+    "exists": true,
+    "id": "synthetic-fh-0006"
+  }
+]
