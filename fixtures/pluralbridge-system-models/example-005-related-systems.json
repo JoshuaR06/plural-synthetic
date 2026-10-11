@@ -1,0 +1,308 @@
+{
+  "pluralBridgeExport": {
+    "exportVersion": "0.1-draft",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exampleId": "example-005",
+    "exampleName": "Related Systems Model",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example has two Systems associated by an explicit related relationship. The relationship records association without parentage, containment, ownership, or automatic authority."
+  },
+  "accounts": [
+    {
+      "accountId": "account-001",
+      "displayName": "Jasmine",
+      "username": "jasmine",
+      "status": "Active"
+    },
+    {
+      "accountId": "account-002",
+      "displayName": "Brianna",
+      "username": "brianna",
+      "status": "Active"
+    }
+  ],
+  "memberships": [
+    {
+      "membershipId": "membership-001",
+      "accountId": "account-001",
+      "systemId": "system-001",
+      "status": "Active",
+      "roles": ["Owner"]
+    },
+    {
+      "membershipId": "membership-002",
+      "accountId": "account-002",
+      "systemId": "system-001",
+      "status": "Active",
+      "roles": ["Owner"]
+    },
+    {
+      "membershipId": "membership-003",
+      "accountId": "account-001",
+      "systemId": "system-002",
+      "status": "Active",
+      "roles": ["Owner"]
+    },
+    {
+      "membershipId": "membership-004",
+      "accountId": "account-002",
+      "systemId": "system-002",
+      "status": "Active",
+      "roles": ["Owner"]
+    }
+  ],
+  "systems": [
+    {
+      "systemId": "system-001",
+      "name": "The Harbor",
+      "description": "Root-level System with a related association to The Archive.",
+      "color": "#8367ea"
+    },
+    {
+      "systemId": "system-002",
+      "name": "The Archive",
+      "description": "Root-level System associated with The Harbor through shared history, partial overlap, or a loosely connected internal organization.",
+      "color": "#4f8fcf"
+    }
+  ],
+  "systemRelationships": [
+    {
+      "relationshipId": "relationship-001",
+      "systemId": "system-001",
+      "relationshipType": "root",
+      "parentSystemId": null,
+      "targetSystemId": null,
+      "rank": 1
+    },
+    {
+      "relationshipId": "relationship-002",
+      "systemId": "system-002",
+      "relationshipType": "root",
+      "parentSystemId": null,
+      "targetSystemId": null,
+      "rank": 2
+    },
+    {
+      "relationshipId": "relationship-003",
+      "systemId": "system-002",
+      "relationshipType": "related",
+      "parentSystemId": null,
+      "targetSystemId": "system-001",
+      "rank": 1
+    }
+  ],
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "systemId": "system-001",
+      "objectType": "member",
+      "objectId": "member-001",
+      "linkRole": "scoped-to-system"
+    },
+    {
+      "linkId": "link-002",
+      "systemId": "system-001",
+      "objectType": "member",
+      "objectId": "member-002",
+      "linkRole": "scoped-to-system"
+    },
+    {
+      "linkId": "link-003",
+      "systemId": "system-001",
+      "objectType": "group",
+      "objectId": "group-001",
+      "linkRole": "scoped-to-system"
+    },
+    {
+      "linkId": "link-004",
+      "systemId": "system-001",
+      "objectType": "note",
+      "objectId": "note-001",
+      "linkRole": "scoped-to-system"
+    },
+    {
+      "linkId": "link-005",
+      "systemId": "system-001",
+      "objectType": "frontHistory",
+      "objectId": "front-001",
+      "linkRole": "fronting-context"
+    },
+    {
+      "linkId": "link-006",
+      "systemId": "system-001",
+      "objectType": "customField",
+      "objectId": "custom-field-001",
+      "linkRole": "defined-in-system"
+    },
+    {
+      "linkId": "link-007",
+      "systemId": "system-001",
+      "objectType": "privacyBucket",
+      "objectId": "privacy-bucket-001",
+      "linkRole": "defined-in-system"
+    },
+    {
+      "linkId": "link-008",
+      "systemId": "system-001",
+      "objectType": "visibilityScope",
+      "objectId": "visibility-scope-001",
+      "linkRole": "defined-in-system"
+    },
+    {
+      "linkId": "link-009",
+      "systemId": "system-002",
+      "objectType": "member",
+      "objectId": "member-003",
+      "linkRole": "scoped-to-system"
+    },
+    {
+      "linkId": "link-010",
+      "systemId": "system-002",
+      "objectType": "note",
+      "objectId": "note-002",
+      "linkRole": "scoped-to-system"
+    },
+    {
+      "linkId": "link-011",
+      "systemId": "system-002",
+      "objectType": "customField",
+      "objectId": "custom-field-002",
+      "linkRole": "defined-in-system"
+    },
+    {
+      "linkId": "link-012",
+      "systemId": "system-002",
+      "objectType": "frontHistory",
+      "objectId": "front-002",
+      "linkRole": "fronting-context"
+    }
+  ],
+  "members": [
+    {
+      "memberId": "member-001",
+      "displayName": "A",
+      "pronouns": "she/her",
+      "description": "Synthetic member A in The Harbor.",
+      "color": "#69d563",
+      "isArchived": false
+    },
+    {
+      "memberId": "member-002",
+      "displayName": "B",
+      "pronouns": "they/them",
+      "description": "Synthetic member B in The Harbor.",
+      "color": "#4a90e2",
+      "isArchived": false
+    },
+    {
+      "memberId": "member-003",
+      "displayName": "C",
+      "pronouns": "she/they",
+      "description": "Synthetic member C in The Archive.",
+      "color": "#f5a623",
+      "isArchived": false
+    }
+  ],
+  "groups": [
+    {
+      "groupId": "group-001",
+      "name": "Harbor Group",
+      "description": "Synthetic group scoped to The Harbor.",
+      "color": "#cccccc"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "groupMembershipId": "group-membership-001",
+      "groupId": "group-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupMembershipId": "group-membership-002",
+      "groupId": "group-001",
+      "memberId": "member-002",
+      "rank": 2
+    }
+  ],
+  "notes": [
+    {
+      "noteId": "note-001",
+      "title": "Harbor note",
+      "body": "Synthetic note attached to The Harbor.",
+      "supportsMarkdown": true
+    },
+    {
+      "noteId": "note-002",
+      "title": "Archive note",
+      "body": "Synthetic note attached to The Archive. This note records that The Archive is related to The Harbor without being its parent or child.",
+      "supportsMarkdown": true
+    }
+  ],
+  "frontHistory": [
+    {
+      "frontHistoryId": "front-001",
+      "memberIds": ["member-001", "member-002"],
+      "startedAt": "2026-01-01T12:00:00Z",
+      "endedAt": "2026-01-01T13:00:00Z",
+      "isLive": false,
+      "status": "co-fronting"
+    },
+    {
+      "frontHistoryId": "front-002",
+      "memberIds": ["member-003"],
+      "startedAt": "2026-01-01T14:00:00Z",
+      "endedAt": null,
+      "isLive": true,
+      "status": null
+    }
+  ],
+  "customFields": [
+    {
+      "customFieldId": "custom-field-001",
+      "fieldName": "System Role",
+      "fieldType": "text",
+      "description": "Synthetic custom field defined in The Harbor.",
+      "supportsMarkdown": false
+    },
+    {
+      "customFieldId": "custom-field-002",
+      "fieldName": "Archive Context",
+      "fieldType": "text",
+      "description": "Synthetic custom field defined in The Archive.",
+      "supportsMarkdown": false
+    }
+  ],
+  "privacyBuckets": [
+    {
+      "privacyBucketId": "privacy-bucket-001",
+      "name": "Trusted",
+      "description": "Synthetic privacy bucket defined in The Harbor.",
+      "color": "#1998a8"
+    }
+  ],
+  "visibilityScopes": [
+    {
+      "visibilityScopeId": "visibility-scope-001",
+      "name": "Private",
+      "description": "Visible only through explicit private visibility rules.",
+      "isSystemDefault": false,
+      "isActive": true,
+      "memberIds": ["member-001"]
+    }
+  ],
+  "provenance": {
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceIdsPreserved": true,
+    "lossyMappings": []
+  },
+  "audit": {
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "lookups": {
+    "roles": ["Owner"],
+    "membershipStatuses": ["Active"],
+    "relationshipTypes": ["root", "related"]
+  }
+}

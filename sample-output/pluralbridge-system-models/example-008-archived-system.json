@@ -1,0 +1,376 @@
+{
+  "accounts": [
+    {
+      "accountId": "account-001",
+      "displayName": "Jasmine",
+      "status": "Active",
+      "username": "jasmine"
+    },
+    {
+      "accountId": "account-002",
+      "displayName": "Brianna",
+      "status": "Active",
+      "username": "brianna"
+    }
+  ],
+  "audit": {
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "customFields": [
+    {
+      "customFieldId": "custom-field-001",
+      "description": "Synthetic custom field defined in Current System.",
+      "fieldName": "System Role",
+      "fieldType": "text",
+      "supportsMarkdown": false
+    }
+  ],
+  "frontHistory": [
+    {
+      "endedAt": "2026-01-01T13:00:00Z",
+      "frontHistoryId": "front-001",
+      "isArchived": false,
+      "isLive": false,
+      "memberIds": [
+        "member-001",
+        "member-002"
+      ],
+      "startedAt": "2026-01-01T12:00:00Z",
+      "status": "co-fronting"
+    },
+    {
+      "endedAt": "2025-06-01T13:00:00Z",
+      "frontHistoryId": "front-002",
+      "isArchived": true,
+      "isLive": false,
+      "memberIds": [
+        "member-003"
+      ],
+      "startedAt": "2025-06-01T12:00:00Z",
+      "status": "historical"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-002",
+      "rank": 2
+    },
+    {
+      "groupId": "group-002",
+      "groupMembershipId": "group-membership-003",
+      "memberId": "member-003",
+      "rank": 1
+    },
+    {
+      "groupId": "group-002",
+      "groupMembershipId": "group-membership-004",
+      "memberId": "member-004",
+      "rank": 2
+    }
+  ],
+  "groups": [
+    {
+      "color": "#cccccc",
+      "description": "Synthetic group scoped to Current System.",
+      "groupId": "group-001",
+      "isArchived": false,
+      "name": "Current Group"
+    },
+    {
+      "color": "#999999",
+      "description": "Synthetic archived group retained from Old Map.",
+      "groupId": "group-002",
+      "isArchived": true,
+      "name": "Old Map Group"
+    }
+  ],
+  "lookups": {
+    "membershipStatuses": [
+      "Active",
+      "Historical"
+    ],
+    "relationshipTypes": [
+      "root",
+      "archived-predecessor"
+    ],
+    "roles": [
+      "Owner"
+    ],
+    "systemStatuses": [
+      "active",
+      "archived"
+    ]
+  },
+  "members": [
+    {
+      "color": "#69d563",
+      "description": "Synthetic member A in Current System.",
+      "displayName": "A",
+      "isArchived": false,
+      "memberId": "member-001",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Synthetic member B in Current System.",
+      "displayName": "B",
+      "isArchived": false,
+      "memberId": "member-002",
+      "pronouns": "they/them"
+    },
+    {
+      "archivedReason": "Historical member record retained from archived structure.",
+      "color": "#999999",
+      "description": "Synthetic historical member record from Old Map.",
+      "displayName": "Archive A",
+      "isArchived": true,
+      "memberId": "member-003",
+      "pronouns": "she/her"
+    },
+    {
+      "archivedReason": "Historical member record retained from archived structure.",
+      "color": "#777777",
+      "description": "Synthetic historical member record from Old Map.",
+      "displayName": "Archive B",
+      "isArchived": true,
+      "memberId": "member-004",
+      "pronouns": "they/them"
+    }
+  ],
+  "memberships": [
+    {
+      "accountId": "account-001",
+      "membershipId": "membership-001",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    },
+    {
+      "accountId": "account-002",
+      "membershipId": "membership-002",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    },
+    {
+      "accountId": "account-001",
+      "membershipId": "membership-003",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Historical",
+      "systemId": "system-002"
+    },
+    {
+      "accountId": "account-002",
+      "membershipId": "membership-004",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Historical",
+      "systemId": "system-002"
+    }
+  ],
+  "notes": [
+    {
+      "body": "Synthetic note attached to the active Current System.",
+      "isArchived": false,
+      "noteId": "note-001",
+      "supportsMarkdown": true,
+      "title": "Current System note"
+    },
+    {
+      "body": "Synthetic archived note preserving the meaning of the old structure after migration.",
+      "isArchived": true,
+      "noteId": "note-002",
+      "supportsMarkdown": true,
+      "title": "Old Map migration note"
+    }
+  ],
+  "pluralBridgeExport": {
+    "exampleId": "example-008",
+    "exampleName": "Archived System Model",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example preserves an archived System as historically meaningful data. Archived status does not erase old notes, old fronting records, past organization, or migration context."
+  },
+  "privacyBuckets": [
+    {
+      "color": "#1998a8",
+      "description": "Synthetic privacy bucket defined in Current System.",
+      "name": "Trusted",
+      "privacyBucketId": "privacy-bucket-001"
+    }
+  ],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-001",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-002",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-002",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-003",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-001",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-004",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-001",
+      "objectType": "note",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-005",
+      "linkRole": "fronting-context",
+      "objectId": "front-001",
+      "objectType": "frontHistory",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-006",
+      "linkRole": "defined-in-system",
+      "objectId": "custom-field-001",
+      "objectType": "customField",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-007",
+      "linkRole": "defined-in-system",
+      "objectId": "privacy-bucket-001",
+      "objectType": "privacyBucket",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-008",
+      "linkRole": "defined-in-system",
+      "objectId": "visibility-scope-001",
+      "objectType": "visibilityScope",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-009",
+      "linkRole": "historical-system-member",
+      "objectId": "member-003",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-010",
+      "linkRole": "historical-system-member",
+      "objectId": "member-004",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-011",
+      "linkRole": "historical-organization",
+      "objectId": "group-002",
+      "objectType": "group",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-012",
+      "linkRole": "historical-note",
+      "objectId": "note-002",
+      "objectType": "note",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-013",
+      "linkRole": "historical-fronting-context",
+      "objectId": "front-002",
+      "objectType": "frontHistory",
+      "systemId": "system-002"
+    }
+  ],
+  "systemRelationships": [
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-001",
+      "relationshipType": "root",
+      "systemId": "system-001",
+      "targetSystemId": null
+    },
+    {
+      "parentSystemId": null,
+      "rank": 2,
+      "relationshipId": "relationship-002",
+      "relationshipType": "root",
+      "systemId": "system-002",
+      "targetSystemId": null
+    },
+    {
+      "description": "Old Map is an archived historical structure related to the active Current System.",
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-003",
+      "relationshipType": "archived-predecessor",
+      "systemId": "system-002",
+      "targetSystemId": "system-001"
+    }
+  ],
+  "systems": [
+    {
+      "color": "#8367ea",
+      "description": "Active root-level System.",
+      "isArchived": false,
+      "name": "Current System",
+      "status": "active",
+      "systemId": "system-001"
+    },
+    {
+      "archivedAt": "2026-01-01T00:00:00Z",
+      "archivedReason": "Superseded by Current System during migration.",
+      "color": "#808080",
+      "description": "Archived System retained for historical organization, old notes, migration meaning, and past fronting records.",
+      "isArchived": true,
+      "name": "Old Map",
+      "status": "archived",
+      "systemId": "system-002"
+    }
+  ],
+  "visibilityScopes": [
+    {
+      "description": "Visible only through explicit private visibility rules.",
+      "isActive": true,
+      "isSystemDefault": false,
+      "memberIds": [
+        "member-001"
+      ],
+      "name": "Private",
+      "visibilityScopeId": "visibility-scope-001"
+    }
+  ]
+}
