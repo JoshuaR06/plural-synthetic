@@ -16,6 +16,7 @@ Everything is fictional, every id is `synthetic-*`, and output is byte-identical
 Standard library only. Usage:  python3 generate.py [--out DIR]
 """
 import argparse, json, os, shutil, struct, zipfile, zlib
+from pathlib import Path
 from datetime import datetime, timezone
 
 BASE_EPOCH = 1756000000  # fixed, so output never depends on the clock
@@ -148,6 +149,18 @@ NOTES = {
 AVATAR_COLOURS = {"synthetic-member-0001": (124, 92, 191), "synthetic-member-0002": (217, 72, 43),
                   "synthetic-member-0003": (43, 140, 107), "synthetic-member-0005": (232, 161, 60)}
 
+SYSTEM_MODEL_FIXTURE_NAMES = [
+    "example-001-simple-single-system.json",
+    "example-002-multiple-top-level-systems.json",
+    "example-003-parent-child-system.json",
+    "example-004-sibling-systems.json",
+    "example-005-related-systems.json",
+    "example-006-subsystem.json",
+    "example-007-evolving-uncertain-relationship.json",
+    "example-008-archived-system.json",
+    "example-009-non-tree-graph.json",
+]
+
 # ---------------------------------------------------------------- shapes
 
 def wrap(recs):
@@ -228,6 +241,33 @@ def write_zip(path, entries):
             info.compress_type = zipfile.ZIP_DEFLATED
             z.writestr(info, entries[name])
 
+def read_system_model_fixtures(repo_root):
+    """Read the canonical PluralBridge system-model fixtures from fixtures/."""
+    fixtures_root = Path(repo_root) / "fixtures" / "pluralbridge-system-models"
+    fixtures = {}
+    for name in SYSTEM_MODEL_FIXTURE_NAMES:
+        full_path = fixtures_root / name
+        text = full_path.read_text(encoding="utf-8")
+        obj = json.loads(text)
+        expected_example_id = name.split("-", 2)[0] + "-" + name.split("-", 2)[1]
+        assert obj["pluralBridgeExport"]["exampleId"] == expected_example_id, name
+        fixtures[name] = obj
+    return fixtures
+
+def write_system_model_fixtures(out, fixtures):
+    """Write system-model fixtures under <out>/pluralbridge-system-models/."""
+    target = Path(out) / "pluralbridge-system-models"
+    target.mkdir(parents=True, exist_ok=True)
+    for name, obj in fixtures.items():
+        (target / name).write_text(dump(obj), encoding="utf-8")
+
+def sync_system_model_sample_output(repo_root, fixtures):
+    """Refresh sample-output/pluralbridge-system-models from canonical fixtures."""
+    target = Path(repo_root) / "sample-output" / "pluralbridge-system-models"
+    target.mkdir(parents=True, exist_ok=True)
+    for name, obj in fixtures.items():
+        (target / name).write_text(dump(obj), encoding="utf-8")
+
 def check(out):
     """Every id synthetic, every file parses, every reference resolvable or deliberately not."""
     ids = set()
@@ -247,7 +287,11 @@ def check(out):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "out"))
-    out = ap.parse_args().out
+    ap.add_argument("--sync-system-model-sample-output", action="store_true",
+                    help="copy PluralBridge system-model fixtures into sample-output/pluralbridge-system-models")
+    args = ap.parse_args()
+    out = args.out
+    repo_root = os.path.dirname(os.path.abspath(__file__))
     shutil.rmtree(out, ignore_errors=True)
     pb = pluralbridge_files()
     for path, obj in pb.items():
@@ -261,10 +305,15 @@ def main():
     os.makedirs(os.path.join(out, "edge"))
     for name, obj in edge_variants().items():
         open(os.path.join(out, "edge", name), "w").write(dump(obj))
+    system_model_fixtures = read_system_model_fixtures(repo_root)
+    write_system_model_fixtures(out, system_model_fixtures)
+    if args.sync_system_model_sample_output:
+        sync_system_model_sample_output(repo_root, system_model_fixtures)
     check(out)
     print(f"wrote {out}: {len(MEMBERS)} members, {len(GROUPS)} groups (2 nested) + {len(EDGE_GROUPS)} edge groups, "
           f"{len(FRONT_HISTORY)} front entries (2 open, 1 deleted-member), "
-          f"{sum(len(v) for v in NOTES.values())} notes, {len(AVATAR_COLOURS)} avatars, 4 edge variants")
+          f"{sum(len(v) for v in NOTES.values())} notes, {len(AVATAR_COLOURS)} avatars, 4 edge variants, "
+          f"{len(system_model_fixtures)} system-model fixtures")
 
 if __name__ == "__main__":
     main()

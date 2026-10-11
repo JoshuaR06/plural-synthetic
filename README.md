@@ -23,6 +23,7 @@ git clone https://github.com/JoshuaR06/plural-synthetic.git
 cd plural-synthetic
 python3 generate.py            # writes everything to ./out
 python3 generate.py --out DIR  # or somewhere else
+python3 generate.py --sync-system-model-sample-output  # refresh sample-output/pluralbridge-system-models
 ```
 
 Don't want to run anything? The same files are already in [`sample-output/`](sample-output/).
@@ -42,6 +43,28 @@ you can commit it as test fixtures and diff it in review.
 | `edge/fronthistory-open-without-live-flag.json` | open fronts with no `live` field at all |
 | `edge/groups-structural-edge-cases.json` | the normal groups plus damaged or unusual group structures |
 | `edge/simplyplural-official-with-edge-groups.json` | a complete Simply Plural export using those edge-case groups |
+| `pluralbridge-system-models/*.json` | nine self-contained PluralBridge system-model fixtures (001-009) |
+
+## PluralBridge system-model fixtures
+
+The repository includes nine self-contained PluralBridge system-model examples in
+[`sample-output/pluralbridge-system-models/`](sample-output/pluralbridge-system-models).
+These cover:
+
+- simple single-system
+- multiple top-level roots
+- parent/child
+- sibling
+- related (non-hierarchical)
+- subsystem
+- evolving/uncertain relationship state
+- archived system state
+- non-tree graph relationships
+
+Canonical source files live in
+[`fixtures/pluralbridge-system-models/`](fixtures/pluralbridge-system-models).
+`generate.py` copies them into `<out>/pluralbridge-system-models/` every run, and
+`--sync-system-model-sample-output` refreshes the committed sample-output mirror.
 
 ## The fictional system
 

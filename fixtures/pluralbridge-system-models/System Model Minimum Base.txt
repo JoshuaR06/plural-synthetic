@@ -1,0 +1,111 @@
+1. Simple Single-System Model
+A person signs in and has one System.
+
+Account
+└── System: The Harbor
+    ├── Member: A
+    ├── Member: B
+    ├── Member: C
+    ├── Groups
+    ├── Notes
+    └── Front history
+This is the default model: one account, one System, members inside it, and one focused System context.
+
+2. Multiple Top-Level Systems Model
+A person has more than one root-level System. Neither root owns the other.
+
+Account
+├── System: The Harbor
+│   ├── Members
+│   └── Front history
+└── System: The Observatory
+    ├── Members
+    └── Notes
+This supports a user who experiences two distinct top-level structures. The app treats both as root Systems because neither has a parent relationship.
+
+3. Parent / Child System Model
+One System contains or relates to a smaller child System.
+
+Account
+└── System: Main House
+    ├── Member: Rowan
+    ├── Member: Tess
+    └── Child System: The Workshop
+        ├── Member: Kit
+        └── Member: Lark
+The parent / child relationship describes structure. Access and privacy remain governed by membership, consent, and policy.
+
+4. Sibling Systems Model
+Two Systems share a common relationship, but neither controls the other.
+
+Account
+├── System: Day Team
+└── System: Night Team
+This is useful for Systems that see themselves as parallel, cooperative, or operationally separate.
+
+5. Related Systems Model
+Two Systems are associated without a parent / child shape.
+
+Account
+├── System: The Harbor
+└── System: The Archive
+    └── relationship to The Harbor: "related"
+This could represent shared history, partial overlap, a past structure, or a loosely connected internal organization.
+
+6. Subsystem Model
+A member, group, or internal cluster may have its own structure.
+
+System: The Harbor
+├── Member: Alex
+├── Member: Morgan
+│   └── Subsystem: Morgan's Room
+│       ├── Member: M1
+│       └── Member: M2
+└── Member: Rae
+This is one of the models where a strict flat member list starts to run out of descriptive power.
+
+7. Evolving / Uncertain Relationship Model
+The user knows two structures are connected, and the exact relationship is still forming.
+
+Account
+├── System: The Harbor
+└── System: North Wing
+    └── relationship to The Harbor: "unknown" or "evolving"
+This gives the user a way to preserve reality-in-progress without prematurely naming it.
+
+8. Archived System Model
+A System or structure still matters historically, but is no longer active.
+
+Account
+├── System: Current System
+└── System: Old Map
+    └── status: archived
+This helps preserve migration meaning, old fronting records, old notes, and past organization.
+
+9. Non-Tree / Graph Model
+Some Systems may have overlapping or cross-linked relationships.
+
+Account
+├── System: A
+├── System: B
+└── System: C
+Relationship examples:
+
+A related to B
+B sibling of C
+C associated with A
+This breaks the ordinary tree assumption. The structure becomes a graph of relationships instead of a single trunk with branches.
+
+Design Notes
+These examples imply several important PluralBridge design rules:
+
+A root System means a System with no parent relationship.
+There can be more than one root System.
+Parent / child, sibling, related, subsystem, archived, and unknown relationships describe structure.
+Structural relationships should not automatically grant access, authority, or visibility.
+Access should come from explicit membership, consent, permission, or policy.
+The active working context should be handled through focus.
+Fronting should be modeled inside the focused System context.
+The default user experience can remain simple while the underlying model stays flexible.
+Therapist-facing views should be user-controlled and privacy-aware.
+Professional input can improve safety without overriding lived experience.
