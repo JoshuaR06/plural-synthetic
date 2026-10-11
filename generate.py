@@ -284,6 +284,31 @@ def check(out):
         ids |= {rid for rid, _ in recs}
     assert all(i.startswith("synthetic-") for i in ids), "non-synthetic id"
 
+SYSTEM_MODEL_EXPORT_KIND = "self-contained-pluralbridge-example"
+
+def check_system_model_fixtures(repo_root, out):
+    """PluralBridge fixtures keep their own id style, so instead of the synthetic- prefix each file
+    must declare itself synthetic in its header. Every fixture must be listed (nothing unchecked can
+    slip in), and the committed sample-output mirror must match the canonical files."""
+    src = Path(repo_root) / "fixtures" / "pluralbridge-system-models"
+    mirror = Path(repo_root) / "sample-output" / "pluralbridge-system-models"
+    # Exact inventory of BOTH folders, every file at any depth: an unlisted file (any name, case or
+    # subfolder) would otherwise ship unchecked.
+    expected = set(SYSTEM_MODEL_FIXTURE_NAMES)
+    for folder, docs in ((src, {"README.md", "System Model Minimum Base.txt"}), (mirror, {"README.md"})):
+        found = {p.relative_to(folder).as_posix() for p in folder.rglob("*") if p.is_file()}
+        assert found == expected | docs, \
+            f"{folder.relative_to(repo_root)}: unexpected {sorted(found - expected - docs)}, missing {sorted(expected - found)}"
+    for name in SYSTEM_MODEL_FIXTURE_NAMES:
+        generated = (Path(out) / "pluralbridge-system-models" / name).read_text(encoding="utf-8")
+        header = json.loads(generated)["pluralBridgeExport"]
+        assert header.get("exportKind") == SYSTEM_MODEL_EXPORT_KIND, f"{name}: exportKind must be {SYSTEM_MODEL_EXPORT_KIND!r}"
+        assert str(header.get("modelingNote", "")).startswith("Synthetic"), f"{name}: modelingNote must start with 'Synthetic'"
+        # Text comparison on purpose: read_text() normalizes CRLF, so a Windows checkout doesn't fail.
+        committed = mirror / name
+        assert committed.exists() and committed.read_text(encoding="utf-8") == generated, \
+            f"sample-output/pluralbridge-system-models/{name} is stale: run generate.py --sync-system-model-sample-output"
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "out"))
@@ -310,6 +335,7 @@ def main():
     if args.sync_system_model_sample_output:
         sync_system_model_sample_output(repo_root, system_model_fixtures)
     check(out)
+    check_system_model_fixtures(repo_root, out)
     print(f"wrote {out}: {len(MEMBERS)} members, {len(GROUPS)} groups (2 nested) + {len(EDGE_GROUPS)} edge groups, "
           f"{len(FRONT_HISTORY)} front entries (2 open, 1 deleted-member), "
           f"{sum(len(v) for v in NOTES.values())} notes, {len(AVATAR_COLOURS)} avatars, 4 edge variants, "
