@@ -1,0 +1,23 @@
+name: check
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Runs every built-in check: ids synthetic, references, PluralBridge fixture markers,
+      # sample-output mirror in sync.
+      - name: Generate and check
+        run: python3 generate.py --out "$RUNNER_TEMP/out"
+      - name: Output is deterministic
+        run: |
+          python3 generate.py --out "$RUNNER_TEMP/out2" > /dev/null
+          diff -r "$RUNNER_TEMP/out" "$RUNNER_TEMP/out2"

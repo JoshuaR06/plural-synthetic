@@ -66,6 +66,12 @@ Canonical source files live in
 `generate.py` copies them into `<out>/pluralbridge-system-models/` every run, and
 `--sync-system-model-sample-output` refreshes the committed sample-output mirror.
 
+These fixtures keep PluralBridge's own id style, so instead of the `synthetic-` id prefix used
+everywhere else, the built-in check requires each one to declare itself synthetic in its header
+(`exportKind: self-contained-pluralbridge-example`, `modelingNote` starting with "Synthetic"). It
+also fails on any fixture not listed in `SYSTEM_MODEL_FIXTURE_NAMES`, and on a stale
+sample-output mirror. CI (`.github/workflows/check.yml`) runs all of it on every pull request.
+
 ## The fictional system
 
 **Members**
