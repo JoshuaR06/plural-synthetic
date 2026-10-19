@@ -13,10 +13,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      # Runs every built-in check: ids synthetic, references, PluralBridge fixture markers,
-      # sample-output mirror in sync.
+      # Runs every built-in check: ids synthetic, references, PluralBridge system-model
+      # structure, sample-output mirror in sync.
       - name: Generate and check
         run: python3 generate.py --out "$RUNNER_TEMP/out"
+      - name: Unit tests
+        run: python3 -m unittest discover -s . -p 'test_*.py' -v
       - name: Output is deterministic
         run: |
           python3 generate.py --out "$RUNNER_TEMP/out2" > /dev/null

@@ -1,16 +1,13 @@
 {
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
-      "status": "Active",
-      "username": "jasmine"
-    },
-    {
       "accountId": "account-002",
-      "displayName": "Brianna",
+      "displayName": "Example 2",
+      "email": "example-2@pluralbridge.org",
       "status": "Active",
-      "username": "brianna"
+      "username": "example-2"
     }
   ],
   "audit": {
@@ -72,6 +69,9 @@
     "membershipStatuses": [
       "Active"
     ],
+    "placementRoles": [
+      "container-child"
+    ],
     "relationshipTypes": [
       "root"
     ],
@@ -107,7 +107,7 @@
   ],
   "memberships": [
     {
-      "accountId": "account-001",
+      "accountId": "account-002",
       "membershipId": "membership-001",
       "roles": [
         "Owner"
@@ -116,26 +116,8 @@
       "systemId": "system-001"
     },
     {
-      "accountId": "account-001",
+      "accountId": "account-002",
       "membershipId": "membership-002",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-003",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-001"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-004",
       "roles": [
         "Owner"
       ],
@@ -151,6 +133,8 @@
       "title": "Observatory orientation note"
     }
   ],
+  "placeMemberships": [],
+  "places": [],
   "pluralBridgeExport": {
     "exampleId": "example-002",
     "exampleName": "Multiple Top-Level Systems Model",
@@ -169,7 +153,7 @@
   "provenance": {
     "lossyMappings": [],
     "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceGenerator": "plural-synthetic",
     "sourceIdsPreserved": true
   },
   "systemObjectLinks": [
@@ -242,6 +226,18 @@
       "objectId": "custom-field-002",
       "objectType": "customField",
       "systemId": "system-002"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
     }
   ],
   "systemRelationships": [

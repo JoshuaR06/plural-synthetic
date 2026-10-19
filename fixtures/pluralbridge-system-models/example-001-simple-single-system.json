@@ -1,311 +1,325 @@
 {
-  "pluralBridgeExport": {
-    "exportVersion": "0.1-draft",
-    "exportKind": "self-contained-pluralbridge-example",
-    "exampleId": "example-001",
-    "exampleName": "Simple Single-System Model",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. System context is represented by explicit relationship and object-link records. Group placement is modeled explicitly so groups can be anchored anywhere within a system."
-  },
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
       "accountId": "account-001",
       "displayName": "Example 1",
-      "username": "example-1",
       "email": "example-1@pluralbridge.org",
-      "status": "Active"
-    }
-  ],
-  "memberships": [
-    {
-      "membershipId": "membership-001",
-      "accountId": "account-001",
-      "systemId": "system-001",
       "status": "Active",
-      "roles": [
-        "Owner"
-      ]
+      "username": "example-1"
     }
   ],
-  "systems": [
+  "audit": {
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "customFields": [
     {
-      "systemId": "system-001",
-      "name": "The Harbor",
-      "description": "A simple single-system example with one shared System context.",
-      "color": "#8367ea"
-    }
-  ],
-  "systemRelationships": [
-    {
-      "relationshipId": "relationship-001",
-      "systemId": "system-001",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 1
-    }
-  ],
-  "systemObjectLinks": [
-    {
-      "linkId": "link-001",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-002",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-003",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-003",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-004",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-005",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-006",
-      "systemId": "system-001",
-      "objectType": "note",
-      "objectId": "note-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-007",
-      "systemId": "system-001",
-      "objectType": "frontHistory",
-      "objectId": "front-001",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-008",
-      "systemId": "system-001",
-      "objectType": "customField",
-      "objectId": "custom-field-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-009",
-      "systemId": "system-001",
-      "objectType": "privacyBucket",
-      "objectId": "privacy-bucket-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-010",
-      "systemId": "system-001",
-      "objectType": "visibilityScope",
-      "objectId": "visibility-scope-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-011",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-003",
-      "linkRole": "scoped-to-system"
-    }
-  ],
-  "systemObjectPlacements": [
-    {
-      "placementId": "placement-001",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-001",
-      "parentObjectType": "system",
-      "parentObjectId": "system-001",
-      "placementRole": "container-child",
-      "rank": 1
-    },
-    {
-      "placementId": "placement-002",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-002",
-      "parentObjectType": "system",
-      "parentObjectId": "system-001",
-      "placementRole": "container-child",
-      "rank": 2
-    },
-    {
-      "placementId": "placement-003",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-003",
-      "parentObjectType": "group",
-      "parentObjectId": "group-002",
-      "placementRole": "container-child",
-      "rank": 1
-    }
-  ],
-  "members": [
-    {
-      "memberId": "member-001",
-      "displayName": "A",
-      "pronouns": "she/her",
-      "description": "Synthetic member A.",
-      "color": "#69d563",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-002",
-      "displayName": "B",
-      "pronouns": "they/them",
-      "description": "Synthetic member B.",
-      "color": "#4a90e2",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-003",
-      "displayName": "C",
-      "pronouns": "he/him",
-      "description": "Synthetic member C.",
-      "color": "#f5a623",
-      "isArchived": false
-    }
-  ],
-  "groups": [
-    {
-      "groupId": "group-001",
-      "name": "Musicians",
-      "description": "Synthetic group for members A and C.",
-      "color": "#cccccc"
-    },
-    {
-      "groupId": "group-002",
-      "name": "Dancers",
-      "description": "Synthetic group for member B.",
-      "color": "#b4d8ff"
-    },
-    {
-      "groupId": "group-003",
-      "name": "Ballet",
-      "description": "Synthetic nested group under Dancers for member A.",
-      "color": "#ffd1dc"
-    }
-  ],
-  "groupMemberships": [
-    {
-      "groupMembershipId": "group-membership-001",
-      "groupId": "group-001",
-      "memberId": "member-001",
-      "rank": 1
-    },
-    {
-      "groupMembershipId": "group-membership-002",
-      "groupId": "group-001",
-      "memberId": "member-003",
-      "rank": 2
-    },
-    {
-      "groupMembershipId": "group-membership-003",
-      "groupId": "group-002",
-      "memberId": "member-002",
-      "rank": 1
-    },
-    {
-      "groupMembershipId": "group-membership-004",
-      "groupId": "group-003",
-      "memberId": "member-001",
-      "rank": 1
-    }
-  ],
-  "notes": [
-    {
-      "noteId": "note-001",
-      "title": "System note",
-      "body": "Synthetic note attached to the single System context.",
-      "supportsMarkdown": true
+      "customFieldId": "custom-field-001",
+      "description": "Synthetic custom field example.",
+      "fieldName": "System Role",
+      "fieldType": "text",
+      "supportsMarkdown": false
     }
   ],
   "frontHistory": [
     {
+      "endedAt": "2026-01-01T13:00:00Z",
       "frontHistoryId": "front-001",
+      "isLive": false,
       "memberIds": [
         "member-001"
       ],
       "startedAt": "2026-01-01T12:00:00Z",
-      "endedAt": "2026-01-01T13:00:00Z",
-      "isLive": false,
       "status": null
     },
     {
+      "endedAt": null,
       "frontHistoryId": "front-002",
+      "isLive": true,
       "memberIds": [
         "member-001",
         "member-002"
       ],
       "startedAt": "2026-01-01T13:00:00Z",
-      "endedAt": null,
-      "isLive": true,
       "status": "co-fronting"
     }
   ],
-  "customFields": [
+  "groupMemberships": [
     {
-      "customFieldId": "custom-field-001",
-      "fieldName": "System Role",
-      "fieldType": "text",
-      "description": "Synthetic custom field example.",
-      "supportsMarkdown": false
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-003",
+      "rank": 2
+    },
+    {
+      "groupId": "group-002",
+      "groupMembershipId": "group-membership-003",
+      "memberId": "member-002",
+      "rank": 1
+    },
+    {
+      "groupId": "group-003",
+      "groupMembershipId": "group-membership-004",
+      "memberId": "member-001",
+      "rank": 1
     }
   ],
+  "groups": [
+    {
+      "color": "#cccccc",
+      "description": "Synthetic group for members A and C.",
+      "groupId": "group-001",
+      "name": "Musicians"
+    },
+    {
+      "color": "#b4d8ff",
+      "description": "Synthetic group for member B.",
+      "groupId": "group-002",
+      "name": "Dancers"
+    },
+    {
+      "color": "#ffd1dc",
+      "description": "Synthetic nested group under Dancers for member A.",
+      "groupId": "group-003",
+      "name": "Ballet"
+    }
+  ],
+  "lookups": {
+    "membershipStatuses": [
+      "Active"
+    ],
+    "placementRoles": [
+      "container-child"
+    ],
+    "relationshipTypes": [
+      "root"
+    ],
+    "roles": [
+      "Owner"
+    ]
+  },
+  "members": [
+    {
+      "color": "#69d563",
+      "description": "Synthetic member A.",
+      "displayName": "A",
+      "isArchived": false,
+      "memberId": "member-001",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Synthetic member B.",
+      "displayName": "B",
+      "isArchived": false,
+      "memberId": "member-002",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#f5a623",
+      "description": "Synthetic member C.",
+      "displayName": "C",
+      "isArchived": false,
+      "memberId": "member-003",
+      "pronouns": "he/him"
+    }
+  ],
+  "memberships": [
+    {
+      "accountId": "account-001",
+      "membershipId": "membership-001",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    }
+  ],
+  "notes": [
+    {
+      "body": "Synthetic note attached to the single System context.",
+      "noteId": "note-001",
+      "supportsMarkdown": true,
+      "title": "System note"
+    }
+  ],
+  "placeMemberships": [],
+  "places": [],
+  "pluralBridgeExport": {
+    "exampleId": "example-001",
+    "exampleName": "Simple Single-System Model",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. System context is represented by explicit relationship and object-link records. Group placement is modeled explicitly so groups can be anchored anywhere within a system."
+  },
   "privacyBuckets": [
     {
-      "privacyBucketId": "privacy-bucket-001",
-      "name": "Trusted",
+      "color": "#1998a8",
       "description": "Synthetic privacy bucket.",
-      "color": "#1998a8"
+      "name": "Trusted",
+      "privacyBucketId": "privacy-bucket-001"
+    }
+  ],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-001",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-002",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-002",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-003",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-003",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-004",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-001",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-005",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-002",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-006",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-003",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-007",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-001",
+      "objectType": "note",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-008",
+      "linkRole": "fronting-context",
+      "objectId": "front-001",
+      "objectType": "frontHistory",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-009",
+      "linkRole": "fronting-context",
+      "objectId": "front-002",
+      "objectType": "frontHistory",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-010",
+      "linkRole": "defined-in-system",
+      "objectId": "custom-field-001",
+      "objectType": "customField",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-011",
+      "linkRole": "defined-in-system",
+      "objectId": "privacy-bucket-001",
+      "objectType": "privacyBucket",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-012",
+      "linkRole": "defined-in-system",
+      "objectId": "visibility-scope-001",
+      "objectType": "visibilityScope",
+      "systemId": "system-001"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    },
+    {
+      "objectId": "group-002",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-002",
+      "placementRole": "container-child",
+      "rank": 2,
+      "systemId": "system-001"
+    },
+    {
+      "objectId": "group-003",
+      "objectType": "group",
+      "parentObjectId": "group-002",
+      "parentObjectType": "group",
+      "placementId": "placement-003",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    }
+  ],
+  "systemRelationships": [
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-001",
+      "relationshipType": "root",
+      "systemId": "system-001",
+      "targetSystemId": null
+    }
+  ],
+  "systems": [
+    {
+      "color": "#8367ea",
+      "description": "A simple single-system example with one shared System context.",
+      "name": "The Harbor",
+      "systemId": "system-001"
     }
   ],
   "visibilityScopes": [
     {
-      "visibilityScopeId": "visibility-scope-001",
-      "name": "Private",
       "description": "Visible only through explicit private visibility rules.",
-      "isSystemDefault": false,
       "isActive": true,
+      "isSystemDefault": false,
       "memberIds": [
         "member-001"
-      ]
+      ],
+      "name": "Private",
+      "visibilityScopeId": "visibility-scope-001"
     }
-  ],
-  "provenance": {
-    "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
-    "sourceIdsPreserved": true,
-    "lossyMappings": []
-  },
-  "audit": {
-    "createdAt": "2026-01-01T00:00:00Z",
-    "updatedAt": "2026-01-01T00:00:00Z"
-  },
-  "lookups": {
-    "roles": [
-      "Owner"
-    ],
-    "membershipStatuses": [
-      "Active"
-    ],
-    "relationshipTypes": [
-      "root"
-    ]
-  }
+  ]
 }

@@ -1,16 +1,13 @@
 {
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
+      "accountId": "account-006",
+      "displayName": "Example 6",
+      "email": "example-6@pluralbridge.org",
       "status": "Active",
-      "username": "jasmine"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "status": "Active",
-      "username": "brianna"
+      "username": "example-6"
     }
   ],
   "audit": {
@@ -37,17 +34,6 @@
       ],
       "startedAt": "2026-01-01T12:00:00Z",
       "status": "co-fronting"
-    },
-    {
-      "endedAt": null,
-      "frontHistoryId": "front-002",
-      "isLive": true,
-      "memberIds": [
-        "member-004",
-        "member-005"
-      ],
-      "startedAt": "2026-01-01T14:00:00Z",
-      "status": "subsystem co-fronting"
     }
   ],
   "groupMemberships": [
@@ -82,9 +68,11 @@
     "membershipStatuses": [
       "Active"
     ],
+    "placementRoles": [
+      "container-child"
+    ],
     "relationshipTypes": [
-      "root",
-      "subsystem"
+      "root"
     ],
     "roles": [
       "Owner"
@@ -101,7 +89,7 @@
     },
     {
       "color": "#4a90e2",
-      "description": "Synthetic member in The Harbor with an associated subsystem.",
+      "description": "Synthetic member in The Harbor. Morgan's Room is a Place in the same System.",
       "displayName": "Morgan",
       "isArchived": false,
       "memberId": "member-002",
@@ -134,40 +122,13 @@
   ],
   "memberships": [
     {
-      "accountId": "account-001",
+      "accountId": "account-006",
       "membershipId": "membership-001",
       "roles": [
         "Owner"
       ],
       "status": "Active",
       "systemId": "system-001"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-002",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-001"
-    },
-    {
-      "accountId": "account-001",
-      "membershipId": "membership-003",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-004",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
     }
   ],
   "notes": [
@@ -178,10 +139,32 @@
       "title": "Harbor note"
     },
     {
-      "body": "Morgan's Room is modeled as a subsystem associated with Morgan, with its own internal member structure.",
+      "body": "Morgan's Room is modeled as a Place inside The Harbor, with its own members.",
       "noteId": "note-002",
       "supportsMarkdown": true,
-      "title": "Subsystem note"
+      "title": "Place note"
+    }
+  ],
+  "placeMemberships": [
+    {
+      "memberId": "member-004",
+      "placeId": "place-001",
+      "placeMembershipId": "place-membership-001",
+      "rank": 1
+    },
+    {
+      "memberId": "member-005",
+      "placeId": "place-001",
+      "placeMembershipId": "place-membership-002",
+      "rank": 2
+    }
+  ],
+  "places": [
+    {
+      "color": "#4f8fcf",
+      "description": "Place inside The Harbor with its own member structure.",
+      "name": "Morgan's Room",
+      "placeId": "place-001"
     }
   ],
   "pluralBridgeExport": {
@@ -189,7 +172,7 @@
     "exampleName": "Subsystem Model",
     "exportKind": "self-contained-pluralbridge-example",
     "exportVersion": "0.1-draft",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example models a subsystem associated with one member. The subsystem has its own System record and member set, while the relationship to the containing System and associated member is explicit rather than implied by nesting."
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. Morgan's Room is a Place inside The Harbor, not a second System. Place containment uses system object-link and placement records; M1 and M2 belong to the Place rather than to The Harbor member list."
   },
   "privacyBuckets": [
     {
@@ -202,7 +185,7 @@
   "provenance": {
     "lossyMappings": [],
     "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceGenerator": "plural-synthetic",
     "sourceIdsPreserved": true
   },
   "systemObjectLinks": [
@@ -230,71 +213,79 @@
     {
       "linkId": "link-004",
       "linkRole": "scoped-to-system",
-      "objectId": "member-004",
-      "objectType": "member",
-      "systemId": "system-002"
-    },
-    {
-      "linkId": "link-005",
-      "linkRole": "scoped-to-system",
-      "objectId": "member-005",
-      "objectType": "member",
-      "systemId": "system-002"
-    },
-    {
-      "linkId": "link-006",
-      "linkRole": "scoped-to-system",
       "objectId": "group-001",
       "objectType": "group",
       "systemId": "system-001"
     },
     {
-      "linkId": "link-007",
+      "linkId": "link-005",
+      "linkRole": "scoped-to-system",
+      "objectId": "place-001",
+      "objectType": "place",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-006",
       "linkRole": "scoped-to-system",
       "objectId": "note-001",
       "objectType": "note",
       "systemId": "system-001"
     },
     {
-      "linkId": "link-008",
+      "linkId": "link-007",
       "linkRole": "scoped-to-system",
       "objectId": "note-002",
       "objectType": "note",
-      "systemId": "system-002"
+      "systemId": "system-001"
     },
     {
-      "linkId": "link-009",
+      "linkId": "link-008",
       "linkRole": "fronting-context",
       "objectId": "front-001",
       "objectType": "frontHistory",
       "systemId": "system-001"
     },
     {
-      "linkId": "link-010",
-      "linkRole": "fronting-context",
-      "objectId": "front-002",
-      "objectType": "frontHistory",
-      "systemId": "system-002"
-    },
-    {
-      "linkId": "link-011",
+      "linkId": "link-009",
       "linkRole": "defined-in-system",
       "objectId": "custom-field-001",
       "objectType": "customField",
       "systemId": "system-001"
     },
     {
-      "linkId": "link-012",
+      "linkId": "link-010",
       "linkRole": "defined-in-system",
       "objectId": "privacy-bucket-001",
       "objectType": "privacyBucket",
       "systemId": "system-001"
     },
     {
-      "linkId": "link-013",
+      "linkId": "link-011",
       "linkRole": "defined-in-system",
       "objectId": "visibility-scope-001",
       "objectType": "visibilityScope",
+      "systemId": "system-001"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    },
+    {
+      "objectId": "place-001",
+      "objectType": "place",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-002",
+      "placementRole": "container-child",
+      "rank": 2,
       "systemId": "system-001"
     }
   ],
@@ -306,30 +297,14 @@
       "relationshipType": "root",
       "systemId": "system-001",
       "targetSystemId": null
-    },
-    {
-      "associatedObjectId": "member-002",
-      "associatedObjectType": "member",
-      "parentSystemId": "system-001",
-      "rank": 1,
-      "relationshipId": "relationship-002",
-      "relationshipType": "subsystem",
-      "systemId": "system-002",
-      "targetSystemId": null
     }
   ],
   "systems": [
     {
       "color": "#8367ea",
-      "description": "Root-level System containing members and a member-associated subsystem.",
+      "description": "Root-level System containing members, a group, and a Place.",
       "name": "The Harbor",
       "systemId": "system-001"
-    },
-    {
-      "color": "#4f8fcf",
-      "description": "Subsystem associated with Morgan. It has its own internal structure and member list.",
-      "name": "Morgan's Room",
-      "systemId": "system-002"
     }
   ],
   "visibilityScopes": [

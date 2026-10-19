@@ -1,282 +1,319 @@
 {
-  "pluralBridgeExport": {
-    "exportVersion": "0.1-draft",
-    "exportKind": "self-contained-pluralbridge-example",
-    "exampleId": "example-003",
-    "exampleName": "Parent / Child System Model",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example has one root-level System and one child System. The parent/child relationship describes structure; access is represented through explicit memberships rather than inherited ownership."
-  },
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
       "accountId": "account-003",
       "displayName": "Example 3",
-      "username": "example-3",
       "email": "example-3@pluralbridge.org",
-      "status": "Active"
-    }
-  ],
-  "memberships": [
-    {
-      "membershipId": "membership-001",
-      "accountId": "account-003",
-      "systemId": "system-001",
       "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-002",
-      "accountId": "account-003",
-      "systemId": "system-002",
-      "status": "Active",
-      "roles": ["Owner"]
+      "username": "example-3"
     }
   ],
-  "systems": [
-    {
-      "systemId": "system-001",
-      "name": "Main House",
-      "description": "Root-level System.",
-      "color": "#8367ea"
-    },
-    {
-      "systemId": "system-002",
-      "name": "The Workshop",
-      "description": "Child System structurally related to Main House. Access and privacy remain governed by membership, consent, and policy.",
-      "color": "#4f8fcf"
-    }
-  ],
-  "systemRelationships": [
-    {
-      "relationshipId": "relationship-001",
-      "systemId": "system-001",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 1
-    },
-    {
-      "relationshipId": "relationship-002",
-      "systemId": "system-002",
-      "relationshipType": "child",
-      "parentSystemId": "system-001",
-      "targetSystemId": null,
-      "rank": 1
-    }
-  ],
-  "systemObjectLinks": [
-    {
-      "linkId": "link-001",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-002",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-003",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-004",
-      "systemId": "system-001",
-      "objectType": "note",
-      "objectId": "note-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-005",
-      "systemId": "system-001",
-      "objectType": "frontHistory",
-      "objectId": "front-001",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-006",
-      "systemId": "system-001",
-      "objectType": "customField",
-      "objectId": "custom-field-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-007",
-      "systemId": "system-001",
-      "objectType": "privacyBucket",
-      "objectId": "privacy-bucket-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-008",
-      "systemId": "system-001",
-      "objectType": "visibilityScope",
-      "objectId": "visibility-scope-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-009",
-      "systemId": "system-002",
-      "objectType": "member",
-      "objectId": "member-003",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-010",
-      "systemId": "system-002",
-      "objectType": "member",
-      "objectId": "member-004",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-011",
-      "systemId": "system-002",
-      "objectType": "note",
-      "objectId": "note-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-012",
-      "systemId": "system-002",
-      "objectType": "frontHistory",
-      "objectId": "front-002",
-      "linkRole": "fronting-context"
-    }
-  ],
-  "members": [
-    {
-      "memberId": "member-001",
-      "displayName": "Rowan",
-      "pronouns": "she/her",
-      "description": "Synthetic member in Main House.",
-      "color": "#69d563",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-002",
-      "displayName": "Tess",
-      "pronouns": "they/them",
-      "description": "Synthetic member in Main House.",
-      "color": "#4a90e2",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-003",
-      "displayName": "Kit",
-      "pronouns": "they/them",
-      "description": "Synthetic member in The Workshop.",
-      "color": "#f5a623",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-004",
-      "displayName": "Lark",
-      "pronouns": "she/her",
-      "description": "Synthetic member in The Workshop.",
-      "color": "#7ed321",
-      "isArchived": false
-    }
-  ],
-  "groups": [
-    {
-      "groupId": "group-001",
-      "name": "Main House Group",
-      "description": "Synthetic group scoped to Main House.",
-      "color": "#cccccc"
-    }
-  ],
-  "groupMemberships": [
-    {
-      "groupMembershipId": "group-membership-001",
-      "groupId": "group-001",
-      "memberId": "member-001",
-      "rank": 1
-    },
-    {
-      "groupMembershipId": "group-membership-002",
-      "groupId": "group-001",
-      "memberId": "member-002",
-      "rank": 2
-    }
-  ],
-  "notes": [
-    {
-      "noteId": "note-001",
-      "title": "Main House note",
-      "body": "Synthetic note attached to the parent System context.",
-      "supportsMarkdown": true
-    },
-    {
-      "noteId": "note-002",
-      "title": "Workshop note",
-      "body": "Synthetic note attached to the child System context.",
-      "supportsMarkdown": true
-    }
-  ],
-  "frontHistory": [
-    {
-      "frontHistoryId": "front-001",
-      "memberIds": ["member-001"],
-      "startedAt": "2026-01-01T12:00:00Z",
-      "endedAt": "2026-01-01T13:00:00Z",
-      "isLive": false,
-      "status": null
-    },
-    {
-      "frontHistoryId": "front-002",
-      "memberIds": ["member-003", "member-004"],
-      "startedAt": "2026-01-01T13:00:00Z",
-      "endedAt": null,
-      "isLive": true,
-      "status": "co-fronting"
-    }
-  ],
-  "customFields": [
-    {
-      "customFieldId": "custom-field-001",
-      "fieldName": "System Role",
-      "fieldType": "text",
-      "description": "Synthetic custom field defined in Main House.",
-      "supportsMarkdown": false
-    }
-  ],
-  "privacyBuckets": [
-    {
-      "privacyBucketId": "privacy-bucket-001",
-      "name": "Trusted",
-      "description": "Synthetic privacy bucket defined in Main House.",
-      "color": "#1998a8"
-    }
-  ],
-  "visibilityScopes": [
-    {
-      "visibilityScopeId": "visibility-scope-001",
-      "name": "Private",
-      "description": "Visible only through explicit private visibility rules.",
-      "isSystemDefault": false,
-      "isActive": true,
-      "memberIds": ["member-001"]
-    }
-  ],
-  "provenance": {
-    "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
-    "sourceIdsPreserved": true,
-    "lossyMappings": []
-  },
   "audit": {
     "createdAt": "2026-01-01T00:00:00Z",
     "updatedAt": "2026-01-01T00:00:00Z"
   },
+  "customFields": [
+    {
+      "customFieldId": "custom-field-001",
+      "description": "Synthetic custom field defined in Main House.",
+      "fieldName": "System Role",
+      "fieldType": "text",
+      "supportsMarkdown": false
+    }
+  ],
+  "frontHistory": [
+    {
+      "endedAt": "2026-01-01T13:00:00Z",
+      "frontHistoryId": "front-001",
+      "isLive": false,
+      "memberIds": [
+        "member-001"
+      ],
+      "startedAt": "2026-01-01T12:00:00Z",
+      "status": null
+    },
+    {
+      "endedAt": null,
+      "frontHistoryId": "front-002",
+      "isLive": true,
+      "memberIds": [
+        "member-003",
+        "member-004"
+      ],
+      "startedAt": "2026-01-01T13:00:00Z",
+      "status": "co-fronting"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-002",
+      "rank": 2
+    }
+  ],
+  "groups": [
+    {
+      "color": "#cccccc",
+      "description": "Synthetic group scoped to Main House.",
+      "groupId": "group-001",
+      "name": "Main House Group"
+    }
+  ],
   "lookups": {
-    "roles": ["Owner"],
-    "membershipStatuses": ["Active"],
-    "relationshipTypes": ["root", "child"]
-  }
+    "membershipStatuses": [
+      "Active"
+    ],
+    "placementRoles": [
+      "container-child"
+    ],
+    "relationshipTypes": [
+      "root",
+      "child"
+    ],
+    "roles": [
+      "Owner"
+    ]
+  },
+  "members": [
+    {
+      "color": "#69d563",
+      "description": "Synthetic member in Main House.",
+      "displayName": "Rowan",
+      "isArchived": false,
+      "memberId": "member-001",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Synthetic member in Main House.",
+      "displayName": "Tess",
+      "isArchived": false,
+      "memberId": "member-002",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#f5a623",
+      "description": "Synthetic member in The Workshop.",
+      "displayName": "Kit",
+      "isArchived": false,
+      "memberId": "member-003",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#7ed321",
+      "description": "Synthetic member in The Workshop.",
+      "displayName": "Lark",
+      "isArchived": false,
+      "memberId": "member-004",
+      "pronouns": "she/her"
+    }
+  ],
+  "memberships": [
+    {
+      "accountId": "account-003",
+      "membershipId": "membership-001",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    },
+    {
+      "accountId": "account-003",
+      "membershipId": "membership-002",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-002"
+    }
+  ],
+  "notes": [
+    {
+      "body": "Synthetic note attached to the parent System context.",
+      "noteId": "note-001",
+      "supportsMarkdown": true,
+      "title": "Main House note"
+    },
+    {
+      "body": "Synthetic note attached to the child System context.",
+      "noteId": "note-002",
+      "supportsMarkdown": true,
+      "title": "Workshop note"
+    }
+  ],
+  "placeMemberships": [],
+  "places": [],
+  "pluralBridgeExport": {
+    "exampleId": "example-003",
+    "exampleName": "Parent / Child System Model",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example has one root-level System and one child System. The parent/child relationship describes structure; access is represented through explicit memberships rather than inherited ownership."
+  },
+  "privacyBuckets": [
+    {
+      "color": "#1998a8",
+      "description": "Synthetic privacy bucket defined in Main House.",
+      "name": "Trusted",
+      "privacyBucketId": "privacy-bucket-001"
+    }
+  ],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-001",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-002",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-002",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-003",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-001",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-004",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-001",
+      "objectType": "note",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-005",
+      "linkRole": "fronting-context",
+      "objectId": "front-001",
+      "objectType": "frontHistory",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-006",
+      "linkRole": "defined-in-system",
+      "objectId": "custom-field-001",
+      "objectType": "customField",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-007",
+      "linkRole": "defined-in-system",
+      "objectId": "privacy-bucket-001",
+      "objectType": "privacyBucket",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-008",
+      "linkRole": "defined-in-system",
+      "objectId": "visibility-scope-001",
+      "objectType": "visibilityScope",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-009",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-003",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-010",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-004",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-011",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-002",
+      "objectType": "note",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-012",
+      "linkRole": "fronting-context",
+      "objectId": "front-002",
+      "objectType": "frontHistory",
+      "systemId": "system-002"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    }
+  ],
+  "systemRelationships": [
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-001",
+      "relationshipType": "root",
+      "systemId": "system-001",
+      "targetSystemId": null
+    },
+    {
+      "parentSystemId": "system-001",
+      "rank": 1,
+      "relationshipId": "relationship-002",
+      "relationshipType": "child",
+      "systemId": "system-002",
+      "targetSystemId": null
+    }
+  ],
+  "systems": [
+    {
+      "color": "#8367ea",
+      "description": "Root-level System.",
+      "name": "Main House",
+      "systemId": "system-001"
+    },
+    {
+      "color": "#4f8fcf",
+      "description": "Child System structurally related to Main House. Access and privacy remain governed by membership, consent, and policy.",
+      "name": "The Workshop",
+      "systemId": "system-002"
+    }
+  ],
+  "visibilityScopes": [
+    {
+      "description": "Visible only through explicit private visibility rules.",
+      "isActive": true,
+      "isSystemDefault": false,
+      "memberIds": [
+        "member-001"
+      ],
+      "name": "Private",
+      "visibilityScopeId": "visibility-scope-001"
+    }
+  ]
 }
