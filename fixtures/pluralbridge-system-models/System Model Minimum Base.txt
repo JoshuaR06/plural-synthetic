@@ -2,75 +2,129 @@
 A person signs in and has one System.
 
 Account
-└── System: The Harbor
-    ├── Member: A
-    ├── Member: B
-    ├── Member: C
-    ├── Groups
-    ├── Notes
-    └── Front history
-This is the default model: one account, one System, members inside it, and one focused System context.
+├── System: The Harbor
+│   ├── Member: A
+│   ├── Member: B
+│   ├── Member: C
+│   └── Groups
+│       ├── Group: Dancers
+│       │   ├── Member: B
+│       │   └── Group: Ballet
+│       │       └── Member: A
+│       └── Group: Musicians
+│           ├── Member: A
+│           └── Member: C
+├── Notes
+└── Front history
+This is the default model: one account, one System, members and groups inside it, and one focused System context.
 
 2. Multiple Top-Level Systems Model
 A person has more than one root-level System. Neither root owns the other.
 
 Account
 ├── System: The Harbor
-│   ├── Members
-│   └── Front history
-└── System: The Observatory
-    ├── Members
-    └── Notes
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Harbor Group
+│           ├── Member: A
+│           └── Member: B
+├── System: The Observatory
+│   └── Member: C
+├── Notes
+└── Front history
 This supports a user who experiences two distinct top-level structures. The app treats both as root Systems because neither has a parent relationship.
 
 3. Parent / Child System Model
 One System contains or relates to a smaller child System.
 
 Account
-└── System: Main House
-    ├── Member: Rowan
-    ├── Member: Tess
-    └── Child System: The Workshop
-        ├── Member: Kit
-        └── Member: Lark
+├── System: Main House
+│   ├── Member: Rowan
+│   ├── Member: Tess
+│   ├── Groups
+│   │   └── Group: Main House Group
+│   │       ├── Member: Rowan
+│   │       └── Member: Tess
+│   └── Child System: The Workshop
+│       ├── Member: Kit
+│       └── Member: Lark
+├── Notes
+└── Front history
 The parent / child relationship describes structure. Access and privacy remain governed by membership, consent, and policy.
 
 4. Sibling Systems Model
 Two Systems share a common relationship, but neither controls the other.
 
 Account
-├── System: Day Team
-└── System: Night Team
+├── System: Day Team (sibling)
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Day Team Group
+│           ├── Member: A
+│           └── Member: B
+├── System: Night Team (sibling)
+│   ├── Member: C
+│   └── Member: D
+├── Notes
+└── Front history
 This is useful for Systems that see themselves as parallel, cooperative, or operationally separate.
 
 5. Related Systems Model
 Two Systems are associated without a parent / child shape.
 
 Account
-├── System: The Harbor
-└── System: The Archive
-    └── relationship to The Harbor: "related"
+├── System: The Archive (related)
+│   └── Member: C
+├── System: The Harbor (related)
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Harbor Group
+│           ├── Member: A
+│           └── Member: B
+├── Notes
+└── Front history
 This could represent shared history, partial overlap, a past structure, or a loosely connected internal organization.
 
 6. Subsystem Model
 A member, group, or internal cluster may have its own structure.
 
-System: The Harbor
-├── Member: Alex
-├── Member: Morgan
-│   └── Subsystem: Morgan's Room
+Account
+├── System: The Harbor
+│   ├── Member: Alex
+│   ├── Member: Morgan
+│   ├── Member: Rae
+│   ├── Groups
+│   │   └── Group: Harbor Group
+│   │       ├── Member: Alex
+│   │       ├── Member: Morgan
+│   │       └── Member: Rae
+│   └── Place: Morgan's Room
 │       ├── Member: M1
 │       └── Member: M2
-└── Member: Rae
+├── Notes
+└── Front history
+
 This is one of the models where a strict flat member list starts to run out of descriptive power.
 
 7. Evolving / Uncertain Relationship Model
 The user knows two structures are connected, and the exact relationship is still forming.
 
 Account
+├── System: North Wing (evolving, unknown)
+│   ├── Member: C
+│   └── Member: D
 ├── System: The Harbor
-└── System: North Wing
-    └── relationship to The Harbor: "unknown" or "evolving"
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Harbor Group
+│           ├── Member: A
+│           └── Member: B
+├── Notes
+└── Front history
 This gives the user a way to preserve reality-in-progress without prematurely naming it.
 
 8. Archived System Model
@@ -78,23 +132,82 @@ A System or structure still matters historically, but is no longer active.
 
 Account
 ├── System: Current System
-└── System: Old Map
-    └── status: archived
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Current Group
+│           ├── Member: A
+│           └── Member: B
+├── System: Old Map (archived)
+│   ├── Member: Archive A
+│   ├── Member: Archive B
+│   └── Groups
+│       └── Group: Old Map Group
+│           ├── Member: Archive A
+│           └── Member: Archive B
+├── Notes
+└── Front history
 This helps preserve migration meaning, old fronting records, old notes, and past organization.
 
 9. Non-Tree / Graph Model
 Some Systems may have overlapping or cross-linked relationships.
 
 Account
-├── System: A
-├── System: B
-└── System: C
+├── System: A (related->B)
+│   ├── Member: A1
+│   ├── Member: A2
+│   └── Groups
+│       └── Group: A Group
+│           ├── Member: A1
+│           └── Member: A2
+├── System: B (sibling->C)
+│   └── Member: B1
+├── System: C (associated->A)
+│   └── Member: C1
+├── Notes
+└── Front history
 Relationship examples:
 
-A related to B
-B sibling of C
-C associated with A
+A --related--> B
+B --sibling--> C
+C --associated--> A
 This breaks the ordinary tree assumption. The structure becomes a graph of relationships instead of a single trunk with branches.
+
+10. Group Collection of Systems
+A top level group that contains two Systems
+This allows us to make a Group the same class as a System
+
+Account
+├── Group: Household
+│   ├── Member: A
+│   ├── Member: E
+│   ├── Member: I
+│   ├── Member: O
+│   ├── System: The Harbor
+│   │   ├── Member: W
+│   │   └── Member: Y
+│   └── System: Main House
+│       ├── Member: X
+│       └── Member: Z
+├── Notes
+└── Front history
+This allows us to make a Group the same class as a System
+
+11. 'Place' Collection of Systems
+A top level named object that contains two Systems and another named object
+
+Account
+├── Place: Central Hub
+│   ├── System: The Harbor
+│   │   ├── Member: Popeye
+│   │   └── Member: Gilligan
+│   └── System: Main House
+│       └── Place: Waiting Room
+│           ├── Member: Mickey
+│           └── Member: Minnie
+├── Notes
+└── Front history
+This gives plurals a more fluid way of describing themselves
 
 Design Notes
 These examples imply several important PluralBridge design rules:

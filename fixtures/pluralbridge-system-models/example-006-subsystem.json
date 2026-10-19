@@ -8,43 +8,38 @@
   },
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
-      "username": "jasmine",
-      "status": "Active"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "username": "brianna",
+      "accountId": "account-006",
+      "displayName": "Example 6",
+      "username": "example-6",
+      "email": "example-6@pluralbridge.org",
       "status": "Active"
     }
   ],
   "memberships": [
     {
       "membershipId": "membership-001",
-      "accountId": "account-001",
+      "accountId": "account-006",
       "systemId": "system-001",
       "status": "Active",
       "roles": ["Owner"]
     },
     {
       "membershipId": "membership-002",
-      "accountId": "account-002",
+      "accountId": "account-006",
       "systemId": "system-001",
       "status": "Active",
       "roles": ["Owner"]
     },
     {
       "membershipId": "membership-003",
-      "accountId": "account-001",
+      "accountId": "account-006",
       "systemId": "system-002",
       "status": "Active",
       "roles": ["Owner"]
     },
     {
       "membershipId": "membership-004",
-      "accountId": "account-002",
+      "accountId": "account-006",
       "systemId": "system-002",
       "status": "Active",
       "roles": ["Owner"]
