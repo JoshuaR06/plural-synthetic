@@ -76,7 +76,7 @@
       "container-child"
     ],
     "relationshipStatuses": [
-      "uncertain"
+      "unknown"
     ],
     "relationshipTypes": [
       "root",
@@ -297,7 +297,7 @@
       "parentSystemId": null,
       "rank": 1,
       "relationshipId": "relationship-003",
-      "relationshipStatus": "uncertain",
+      "relationshipStatus": "unknown",
       "relationshipType": "evolving",
       "systemId": "system-002",
       "targetSystemId": "system-001"

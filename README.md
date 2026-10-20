@@ -59,9 +59,9 @@ They cover:
 - multiple top-level roots
 - parent/child
 - sibling
-- related (non-hierarchical)
+- related (non-hierarchical; reciprocal records when both sides are labeled)
 - a Place inside a System (Morgan's Room)
-- evolving/uncertain relationship state
+- evolving relationship with unknown status
 - archived system state
 - non-tree graph relationships
 - a top-level Group containing Systems

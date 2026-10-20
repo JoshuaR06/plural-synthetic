@@ -157,7 +157,7 @@
     "exampleName": "Related Systems Model",
     "exportKind": "self-contained-pluralbridge-example",
     "exportVersion": "0.1-draft",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example has two Systems associated by an explicit related relationship. The relationship records association without parentage, containment, ownership, or automatic authority."
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example has two Systems associated by reciprocal related records. Each System is labeled related with no arrow, so both directions are encoded. The records describe association without parentage, containment, ownership, or automatic authority."
   },
   "privacyBuckets": [
     {
@@ -295,6 +295,14 @@
       "relationshipType": "related",
       "systemId": "system-002",
       "targetSystemId": "system-001"
+    },
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-004",
+      "relationshipType": "related",
+      "systemId": "system-001",
+      "targetSystemId": "system-002"
     }
   ],
   "systems": [

@@ -594,8 +594,9 @@ def spec_005():
         "example_name": "Related Systems Model",
         "modeling_note": (
             "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example has two Systems associated by an explicit related relationship. "
-            "The relationship records association without parentage, containment, ownership, "
+            "This example has two Systems associated by reciprocal related records. "
+            "Each System is labeled related with no arrow, so both directions are encoded. "
+            "The records describe association without parentage, containment, ownership, "
             "or automatic authority."
         ),
         "account": account(5),
@@ -613,6 +614,8 @@ def spec_005():
              "targetSystemId": None, "rank": 2},
             {"systemId": archive, "relationshipType": "related", "parentSystemId": None,
              "targetSystemId": harbor, "rank": 1},
+            {"systemId": harbor, "relationshipType": "related", "parentSystemId": None,
+             "targetSystemId": archive, "rank": 1},
         ],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A in The Harbor.", "#69d563"),
@@ -757,7 +760,7 @@ def spec_007():
             {"systemId": north, "relationshipType": "root", "parentSystemId": None,
              "targetSystemId": None, "rank": 2},
             {"systemId": north, "relationshipType": "evolving", "parentSystemId": None,
-             "targetSystemId": harbor, "relationshipStatus": "uncertain",
+             "targetSystemId": harbor, "relationshipStatus": "unknown",
              "description": "North Wing is connected to The Harbor, but the user has not resolved "
                             "whether that connection is sibling, child, subsystem, related, or another structure.",
              "rank": 1},
@@ -814,8 +817,9 @@ def spec_008():
         "modeling_note": (
             "Synthetic PluralBridge example using flattened top-level collections. "
             "This example preserves an archived System as historically meaningful data. "
-            "Archived status does not erase old notes, old fronting records, past organization, "
-            "or migration context."
+            "Old Map and its existing members, groups, notes, front history, and associations "
+            "are retained. Per-object archive flags on those associated records are independent "
+            "facts, not an automatic cascade from the System lifecycle."
         ),
         "account": account(8),
         "systems": [
@@ -833,9 +837,6 @@ def spec_008():
              "targetSystemId": None, "rank": 1},
             {"systemId": old, "relationshipType": "root", "parentSystemId": None,
              "targetSystemId": None, "rank": 2},
-            {"systemId": old, "relationshipType": "archived-predecessor", "parentSystemId": None,
-             "targetSystemId": current, "rank": 1,
-             "description": "Old Map is an archived historical structure related to the active Current System."},
         ],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A in Current System.", "#69d563"),
@@ -1277,6 +1278,12 @@ def validate_topology(export, name="export"):
         assert ("system-001", "frontHistory", "front-002", "fronting-context") in _sys_link_set(export)
         assert export["places"] == []
         assert len(export["memberships"]) == 1
+        assert len(export["systemRelationships"]) == 1
+        root = export["systemRelationships"][0]
+        assert root["systemId"] == "system-001"
+        assert root["relationshipType"] == "root"
+        assert root["parentSystemId"] is None
+        assert root["targetSystemId"] is None
     elif example_id == "example-002":
         assert set(names.values()) == {"The Harbor", "The Observatory"}
         assert {r[1] for r in rels} == {"root"}
@@ -1295,6 +1302,7 @@ def validate_topology(export, name="export"):
         assert len(export["memberships"]) == 2
     elif example_id == "example-005":
         assert ("system-002", "related", None, "system-001") in rels
+        assert ("system-001", "related", None, "system-002") in rels
         assert {r[1] for r in rels if r[1] != "root"} == {"related"}
         assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
     elif example_id == "example-006":
@@ -1304,27 +1312,52 @@ def validate_topology(export, name="export"):
         assert ("system-001", "place", "place-001", "scoped-to-system") in _sys_link_set(export)
         assert _system_members(export, "system-001") == {"Alex", "Morgan", "Rae"}
         assert {member_names[r["memberId"]] for r in export["placeMemberships"]} == {"M1", "M2"}
+        # This example uses Place containment under Harbor. Broader subsystem
+        # endpoints and associated-object semantics are unspecified; this example
+        # must not encode either.
         assert not any(r["relationshipType"] == "subsystem" for r in export["systemRelationships"])
+        assert not any(r.get("associatedObjectId") == "member-002" for r in export["systemRelationships"])
         assert len(export["memberships"]) == 1
         assert len(export["systems"]) == 1
     elif example_id == "example-007":
         evolving = [r for r in export["systemRelationships"] if r["relationshipType"] == "evolving"]
         assert len(evolving) == 1
-        assert evolving[0]["relationshipStatus"] == "uncertain"
+        assert evolving[0]["systemId"] == "system-002"
+        assert evolving[0]["targetSystemId"] == "system-001"
+        assert evolving[0]["relationshipType"] == "evolving"
+        assert evolving[0]["parentSystemId"] is None
+        assert ("system-002", "evolving", None, "system-001") in rels
+        assert evolving[0]["relationshipStatus"] == "unknown"
         assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
         assert len(export["memberships"]) == 2
     elif example_id == "example-008":
-        assert ("system-002", "archived-predecessor", None, "system-001") in rels
+        assert {r[1] for r in rels} == {"root"}
+        assert not any(r[1] == "archived-predecessor" for r in rels)
         old = next(s for s in export["systems"] if s["systemId"] == "system-002")
+        current = next(s for s in export["systems"] if s["systemId"] == "system-001")
         assert old["isArchived"] is True and old["status"] == "archived"
+        assert current["isArchived"] is False and current["status"] == "active"
         statuses = {m["systemId"]: m["status"] for m in export["memberships"]}
         assert statuses == {"system-001": "Active", "system-002": "Historical"}
         assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
         assert ("system-002", "group", "group-002", "system", "system-002") in sys_places
+        archive_members = [m for m in export["members"] if m["memberId"] in ("member-003", "member-004")]
+        assert all(m["isArchived"] is True for m in archive_members)
+        old_group = next(g for g in export["groups"] if g["groupId"] == "group-002")
+        assert old_group["isArchived"] is True
+        old_note = next(n for n in export["notes"] if n["noteId"] == "note-002")
+        assert old_note["isArchived"] is True
+        old_front = next(f for f in export["frontHistory"] if f["frontHistoryId"] == "front-002")
+        assert old_front["isArchived"] is True
     elif example_id == "example-009":
-        assert ("system-001", "related", None, "system-002") in rels
-        assert ("system-002", "sibling", None, "system-003") in rels
-        assert ("system-003", "associated", None, "system-001") in rels
+        graph_edges = {
+            ("system-001", "related", None, "system-002"),
+            ("system-002", "sibling", None, "system-003"),
+            ("system-003", "associated", None, "system-001"),
+        }
+        assert graph_edges <= rels
+        assert {r[1] for r in rels} == {"root", "related", "sibling", "associated"}
+        assert not any(r[1] == "child" for r in rels)
         assert len(export["memberships"]) == 3
         assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
     elif example_id == "example-010":

@@ -99,8 +99,7 @@
       "container-child"
     ],
     "relationshipTypes": [
-      "root",
-      "archived-predecessor"
+      "root"
     ],
     "roles": [
       "Owner"
@@ -189,7 +188,7 @@
     "exampleName": "Archived System Model",
     "exportKind": "self-contained-pluralbridge-example",
     "exportVersion": "0.1-draft",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example preserves an archived System as historically meaningful data. Archived status does not erase old notes, old fronting records, past organization, or migration context."
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example preserves an archived System as historically meaningful data. Old Map and its existing members, groups, notes, front history, and associations are retained. Per-object archive flags on those associated records are independent facts, not an automatic cascade from the System lifecycle."
   },
   "privacyBuckets": [
     {
@@ -336,15 +335,6 @@
       "relationshipType": "root",
       "systemId": "system-002",
       "targetSystemId": null
-    },
-    {
-      "description": "Old Map is an archived historical structure related to the active Current System.",
-      "parentSystemId": null,
-      "rank": 1,
-      "relationshipId": "relationship-003",
-      "relationshipType": "archived-predecessor",
-      "systemId": "system-002",
-      "targetSystemId": "system-001"
     }
   ],
   "systems": [
