@@ -1,16 +1,13 @@
 {
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
+      "accountId": "account-005",
+      "displayName": "Example 5",
+      "email": "example-5@pluralbridge.org",
       "status": "Active",
-      "username": "jasmine"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "status": "Active",
-      "username": "brianna"
+      "username": "example-5"
     }
   ],
   "audit": {
@@ -82,6 +79,9 @@
     "membershipStatuses": [
       "Active"
     ],
+    "placementRoles": [
+      "container-child"
+    ],
     "relationshipTypes": [
       "root",
       "related"
@@ -118,7 +118,7 @@
   ],
   "memberships": [
     {
-      "accountId": "account-001",
+      "accountId": "account-005",
       "membershipId": "membership-001",
       "roles": [
         "Owner"
@@ -127,26 +127,8 @@
       "systemId": "system-001"
     },
     {
-      "accountId": "account-002",
+      "accountId": "account-005",
       "membershipId": "membership-002",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-001"
-    },
-    {
-      "accountId": "account-001",
-      "membershipId": "membership-003",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-004",
       "roles": [
         "Owner"
       ],
@@ -168,12 +150,14 @@
       "title": "Archive note"
     }
   ],
+  "placeMemberships": [],
+  "places": [],
   "pluralBridgeExport": {
     "exampleId": "example-005",
     "exampleName": "Related Systems Model",
     "exportKind": "self-contained-pluralbridge-example",
     "exportVersion": "0.1-draft",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example has two Systems associated by an explicit related relationship. The relationship records association without parentage, containment, ownership, or automatic authority."
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example has two Systems associated by reciprocal related records. Each System is labeled related with no arrow, so both directions are encoded. The records describe association without parentage, containment, ownership, or automatic authority."
   },
   "privacyBuckets": [
     {
@@ -186,7 +170,7 @@
   "provenance": {
     "lossyMappings": [],
     "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceGenerator": "plural-synthetic",
     "sourceIdsPreserved": true
   },
   "systemObjectLinks": [
@@ -275,6 +259,18 @@
       "systemId": "system-002"
     }
   ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    }
+  ],
   "systemRelationships": [
     {
       "parentSystemId": null,
@@ -299,6 +295,14 @@
       "relationshipType": "related",
       "systemId": "system-002",
       "targetSystemId": "system-001"
+    },
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-004",
+      "relationshipType": "related",
+      "systemId": "system-001",
+      "targetSystemId": "system-002"
     }
   ],
   "systems": [

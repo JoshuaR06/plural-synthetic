@@ -1,16 +1,13 @@
 {
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
+      "accountId": "account-004",
+      "displayName": "Example 4",
+      "email": "example-4@pluralbridge.org",
       "status": "Active",
-      "username": "jasmine"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "status": "Active",
-      "username": "brianna"
+      "username": "example-4"
     }
   ],
   "audit": {
@@ -76,6 +73,9 @@
     "membershipStatuses": [
       "Active"
     ],
+    "placementRoles": [
+      "container-child"
+    ],
     "relationshipTypes": [
       "root",
       "sibling"
@@ -120,7 +120,7 @@
   ],
   "memberships": [
     {
-      "accountId": "account-001",
+      "accountId": "account-004",
       "membershipId": "membership-001",
       "roles": [
         "Owner"
@@ -129,26 +129,8 @@
       "systemId": "system-001"
     },
     {
-      "accountId": "account-001",
+      "accountId": "account-004",
       "membershipId": "membership-002",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-003",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-001"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-004",
       "roles": [
         "Owner"
       ],
@@ -170,6 +152,8 @@
       "title": "Night Team note"
     }
   ],
+  "placeMemberships": [],
+  "places": [],
   "pluralBridgeExport": {
     "exampleId": "example-004",
     "exampleName": "Sibling Systems Model",
@@ -188,7 +172,7 @@
   "provenance": {
     "lossyMappings": [],
     "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceGenerator": "plural-synthetic",
     "sourceIdsPreserved": true
   },
   "systemObjectLinks": [
@@ -275,6 +259,18 @@
       "objectId": "front-002",
       "objectType": "frontHistory",
       "systemId": "system-002"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
     }
   ],
   "systemRelationships": [

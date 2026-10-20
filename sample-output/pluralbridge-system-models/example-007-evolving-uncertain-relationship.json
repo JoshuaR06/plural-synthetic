@@ -1,16 +1,13 @@
 {
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
+      "accountId": "account-007",
+      "displayName": "Example 7",
+      "email": "example-7@pluralbridge.org",
       "status": "Active",
-      "username": "jasmine"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "status": "Active",
-      "username": "brianna"
+      "username": "example-7"
     }
   ],
   "audit": {
@@ -75,8 +72,11 @@
     "membershipStatuses": [
       "Active"
     ],
+    "placementRoles": [
+      "container-child"
+    ],
     "relationshipStatuses": [
-      "uncertain"
+      "unknown"
     ],
     "relationshipTypes": [
       "root",
@@ -122,7 +122,7 @@
   ],
   "memberships": [
     {
-      "accountId": "account-001",
+      "accountId": "account-007",
       "membershipId": "membership-001",
       "roles": [
         "Owner"
@@ -131,26 +131,8 @@
       "systemId": "system-001"
     },
     {
-      "accountId": "account-002",
+      "accountId": "account-007",
       "membershipId": "membership-002",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-001"
-    },
-    {
-      "accountId": "account-001",
-      "membershipId": "membership-003",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-004",
       "roles": [
         "Owner"
       ],
@@ -172,6 +154,8 @@
       "title": "North Wing relationship note"
     }
   ],
+  "placeMemberships": [],
+  "places": [],
   "pluralBridgeExport": {
     "exampleId": "example-007",
     "exampleName": "Evolving / Uncertain Relationship Model",
@@ -190,7 +174,7 @@
   "provenance": {
     "lossyMappings": [],
     "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceGenerator": "plural-synthetic",
     "sourceIdsPreserved": true
   },
   "systemObjectLinks": [
@@ -279,6 +263,18 @@
       "systemId": "system-002"
     }
   ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    }
+  ],
   "systemRelationships": [
     {
       "parentSystemId": null,
@@ -301,7 +297,7 @@
       "parentSystemId": null,
       "rank": 1,
       "relationshipId": "relationship-003",
-      "relationshipStatus": "uncertain",
+      "relationshipStatus": "unknown",
       "relationshipType": "evolving",
       "systemId": "system-002",
       "targetSystemId": "system-001"

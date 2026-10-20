@@ -1,384 +1,401 @@
 {
-  "pluralBridgeExport": {
-    "exportVersion": "0.1-draft",
-    "exportKind": "self-contained-pluralbridge-example",
-    "exampleId": "example-009",
-    "exampleName": "Non-Tree / Graph Model",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example breaks the ordinary tree assumption by representing Systems as graph nodes connected through multiple explicit relationship records. No single trunk, root hierarchy, or forced parentage is required."
-  },
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
-      "username": "jasmine",
-      "status": "Active"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "username": "brianna",
-      "status": "Active"
-    }
-  ],
-  "memberships": [
-    {
-      "membershipId": "membership-001",
-      "accountId": "account-001",
-      "systemId": "system-001",
+      "accountId": "account-009",
+      "displayName": "Example 9",
+      "email": "example-9@pluralbridge.org",
       "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-002",
-      "accountId": "account-002",
-      "systemId": "system-001",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-003",
-      "accountId": "account-001",
-      "systemId": "system-002",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-004",
-      "accountId": "account-002",
-      "systemId": "system-002",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-005",
-      "accountId": "account-001",
-      "systemId": "system-003",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-006",
-      "accountId": "account-002",
-      "systemId": "system-003",
-      "status": "Active",
-      "roles": ["Owner"]
+      "username": "example-9"
     }
   ],
-  "systems": [
-    {
-      "systemId": "system-001",
-      "name": "A",
-      "description": "Graph node System A.",
-      "color": "#8367ea"
-    },
-    {
-      "systemId": "system-002",
-      "name": "B",
-      "description": "Graph node System B.",
-      "color": "#4f8fcf"
-    },
-    {
-      "systemId": "system-003",
-      "name": "C",
-      "description": "Graph node System C.",
-      "color": "#f5a623"
-    }
-  ],
-  "systemRelationships": [
-    {
-      "relationshipId": "relationship-001",
-      "systemId": "system-001",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 1
-    },
-    {
-      "relationshipId": "relationship-002",
-      "systemId": "system-002",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 2
-    },
-    {
-      "relationshipId": "relationship-003",
-      "systemId": "system-003",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 3
-    },
-    {
-      "relationshipId": "relationship-004",
-      "systemId": "system-001",
-      "relationshipType": "related",
-      "parentSystemId": null,
-      "targetSystemId": "system-002",
-      "description": "System A is related to System B.",
-      "rank": 1
-    },
-    {
-      "relationshipId": "relationship-005",
-      "systemId": "system-002",
-      "relationshipType": "sibling",
-      "parentSystemId": null,
-      "targetSystemId": "system-003",
-      "description": "System B is a sibling of System C.",
-      "rank": 1
-    },
-    {
-      "relationshipId": "relationship-006",
-      "systemId": "system-003",
-      "relationshipType": "associated",
-      "parentSystemId": null,
-      "targetSystemId": "system-001",
-      "description": "System C is associated with System A.",
-      "rank": 1
-    }
-  ],
-  "systemObjectLinks": [
-    {
-      "linkId": "link-001",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-002",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-003",
-      "systemId": "system-002",
-      "objectType": "member",
-      "objectId": "member-003",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-004",
-      "systemId": "system-003",
-      "objectType": "member",
-      "objectId": "member-004",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-005",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-006",
-      "systemId": "system-001",
-      "objectType": "note",
-      "objectId": "note-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-007",
-      "systemId": "system-002",
-      "objectType": "note",
-      "objectId": "note-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-008",
-      "systemId": "system-003",
-      "objectType": "note",
-      "objectId": "note-003",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-009",
-      "systemId": "system-001",
-      "objectType": "frontHistory",
-      "objectId": "front-001",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-010",
-      "systemId": "system-002",
-      "objectType": "frontHistory",
-      "objectId": "front-002",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-011",
-      "systemId": "system-003",
-      "objectType": "frontHistory",
-      "objectId": "front-003",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-012",
-      "systemId": "system-001",
-      "objectType": "customField",
-      "objectId": "custom-field-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-013",
-      "systemId": "system-001",
-      "objectType": "privacyBucket",
-      "objectId": "privacy-bucket-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-014",
-      "systemId": "system-001",
-      "objectType": "visibilityScope",
-      "objectId": "visibility-scope-001",
-      "linkRole": "defined-in-system"
-    }
-  ],
-  "members": [
-    {
-      "memberId": "member-001",
-      "displayName": "A1",
-      "pronouns": "she/her",
-      "description": "Synthetic member in System A.",
-      "color": "#69d563",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-002",
-      "displayName": "A2",
-      "pronouns": "they/them",
-      "description": "Synthetic member in System A.",
-      "color": "#4a90e2",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-003",
-      "displayName": "B1",
-      "pronouns": "she/they",
-      "description": "Synthetic member in System B.",
-      "color": "#f5a623",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-004",
-      "displayName": "C1",
-      "pronouns": "he/they",
-      "description": "Synthetic member in System C.",
-      "color": "#7ed321",
-      "isArchived": false
-    }
-  ],
-  "groups": [
-    {
-      "groupId": "group-001",
-      "name": "A Group",
-      "description": "Synthetic group scoped to System A.",
-      "color": "#cccccc"
-    }
-  ],
-  "groupMemberships": [
-    {
-      "groupMembershipId": "group-membership-001",
-      "groupId": "group-001",
-      "memberId": "member-001",
-      "rank": 1
-    },
-    {
-      "groupMembershipId": "group-membership-002",
-      "groupId": "group-001",
-      "memberId": "member-002",
-      "rank": 2
-    }
-  ],
-  "notes": [
-    {
-      "noteId": "note-001",
-      "title": "System A note",
-      "body": "Synthetic note attached to System A.",
-      "supportsMarkdown": true
-    },
-    {
-      "noteId": "note-002",
-      "title": "System B note",
-      "body": "Synthetic note attached to System B.",
-      "supportsMarkdown": true
-    },
-    {
-      "noteId": "note-003",
-      "title": "System C graph note",
-      "body": "This example uses graph relationships: A related to B, B sibling of C, and C associated with A.",
-      "supportsMarkdown": true
-    }
-  ],
-  "frontHistory": [
-    {
-      "frontHistoryId": "front-001",
-      "memberIds": ["member-001", "member-002"],
-      "startedAt": "2026-01-01T12:00:00Z",
-      "endedAt": "2026-01-01T13:00:00Z",
-      "isLive": false,
-      "status": "co-fronting"
-    },
-    {
-      "frontHistoryId": "front-002",
-      "memberIds": ["member-003"],
-      "startedAt": "2026-01-01T14:00:00Z",
-      "endedAt": "2026-01-01T15:00:00Z",
-      "isLive": false,
-      "status": null
-    },
-    {
-      "frontHistoryId": "front-003",
-      "memberIds": ["member-004"],
-      "startedAt": "2026-01-01T16:00:00Z",
-      "endedAt": null,
-      "isLive": true,
-      "status": null
-    }
-  ],
-  "customFields": [
-    {
-      "customFieldId": "custom-field-001",
-      "fieldName": "System Role",
-      "fieldType": "text",
-      "description": "Synthetic custom field defined in System A.",
-      "supportsMarkdown": false
-    }
-  ],
-  "privacyBuckets": [
-    {
-      "privacyBucketId": "privacy-bucket-001",
-      "name": "Trusted",
-      "description": "Synthetic privacy bucket defined in System A.",
-      "color": "#1998a8"
-    }
-  ],
-  "visibilityScopes": [
-    {
-      "visibilityScopeId": "visibility-scope-001",
-      "name": "Private",
-      "description": "Visible only through explicit private visibility rules.",
-      "isSystemDefault": false,
-      "isActive": true,
-      "memberIds": ["member-001"]
-    }
-  ],
-  "provenance": {
-    "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
-    "sourceIdsPreserved": true,
-    "lossyMappings": []
-  },
   "audit": {
     "createdAt": "2026-01-01T00:00:00Z",
     "updatedAt": "2026-01-01T00:00:00Z"
   },
+  "customFields": [
+    {
+      "customFieldId": "custom-field-001",
+      "description": "Synthetic custom field defined in System A.",
+      "fieldName": "System Role",
+      "fieldType": "text",
+      "supportsMarkdown": false
+    }
+  ],
+  "frontHistory": [
+    {
+      "endedAt": "2026-01-01T13:00:00Z",
+      "frontHistoryId": "front-001",
+      "isLive": false,
+      "memberIds": [
+        "member-001",
+        "member-002"
+      ],
+      "startedAt": "2026-01-01T12:00:00Z",
+      "status": "co-fronting"
+    },
+    {
+      "endedAt": "2026-01-01T15:00:00Z",
+      "frontHistoryId": "front-002",
+      "isLive": false,
+      "memberIds": [
+        "member-003"
+      ],
+      "startedAt": "2026-01-01T14:00:00Z",
+      "status": null
+    },
+    {
+      "endedAt": null,
+      "frontHistoryId": "front-003",
+      "isLive": true,
+      "memberIds": [
+        "member-004"
+      ],
+      "startedAt": "2026-01-01T16:00:00Z",
+      "status": null
+    }
+  ],
+  "groupMemberships": [
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-002",
+      "rank": 2
+    }
+  ],
+  "groups": [
+    {
+      "color": "#cccccc",
+      "description": "Synthetic group scoped to System A.",
+      "groupId": "group-001",
+      "name": "A Group"
+    }
+  ],
   "lookups": {
-    "roles": ["Owner"],
-    "membershipStatuses": ["Active"],
-    "relationshipTypes": ["root", "related", "sibling", "associated"]
-  }
+    "membershipStatuses": [
+      "Active"
+    ],
+    "placementRoles": [
+      "container-child"
+    ],
+    "relationshipTypes": [
+      "root",
+      "related",
+      "sibling",
+      "associated"
+    ],
+    "roles": [
+      "Owner"
+    ]
+  },
+  "members": [
+    {
+      "color": "#69d563",
+      "description": "Synthetic member in System A.",
+      "displayName": "A1",
+      "isArchived": false,
+      "memberId": "member-001",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Synthetic member in System A.",
+      "displayName": "A2",
+      "isArchived": false,
+      "memberId": "member-002",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#f5a623",
+      "description": "Synthetic member in System B.",
+      "displayName": "B1",
+      "isArchived": false,
+      "memberId": "member-003",
+      "pronouns": "she/they"
+    },
+    {
+      "color": "#7ed321",
+      "description": "Synthetic member in System C.",
+      "displayName": "C1",
+      "isArchived": false,
+      "memberId": "member-004",
+      "pronouns": "he/they"
+    }
+  ],
+  "memberships": [
+    {
+      "accountId": "account-009",
+      "membershipId": "membership-001",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    },
+    {
+      "accountId": "account-009",
+      "membershipId": "membership-002",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-002"
+    },
+    {
+      "accountId": "account-009",
+      "membershipId": "membership-003",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-003"
+    }
+  ],
+  "notes": [
+    {
+      "body": "Synthetic note attached to System A.",
+      "noteId": "note-001",
+      "supportsMarkdown": true,
+      "title": "System A note"
+    },
+    {
+      "body": "Synthetic note attached to System B.",
+      "noteId": "note-002",
+      "supportsMarkdown": true,
+      "title": "System B note"
+    },
+    {
+      "body": "This example uses graph relationships: A related to B, B sibling of C, and C associated with A.",
+      "noteId": "note-003",
+      "supportsMarkdown": true,
+      "title": "System C graph note"
+    }
+  ],
+  "placeMemberships": [],
+  "places": [],
+  "pluralBridgeExport": {
+    "exampleId": "example-009",
+    "exampleName": "Non-Tree / Graph Model",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example breaks the ordinary tree assumption by representing Systems as graph nodes connected through multiple explicit relationship records. No single trunk, root hierarchy, or forced parentage is required."
+  },
+  "privacyBuckets": [
+    {
+      "color": "#1998a8",
+      "description": "Synthetic privacy bucket defined in System A.",
+      "name": "Trusted",
+      "privacyBucketId": "privacy-bucket-001"
+    }
+  ],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-001",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-002",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-002",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-003",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-003",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-004",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-004",
+      "objectType": "member",
+      "systemId": "system-003"
+    },
+    {
+      "linkId": "link-005",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-001",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-006",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-001",
+      "objectType": "note",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-007",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-002",
+      "objectType": "note",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-008",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-003",
+      "objectType": "note",
+      "systemId": "system-003"
+    },
+    {
+      "linkId": "link-009",
+      "linkRole": "fronting-context",
+      "objectId": "front-001",
+      "objectType": "frontHistory",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-010",
+      "linkRole": "fronting-context",
+      "objectId": "front-002",
+      "objectType": "frontHistory",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-011",
+      "linkRole": "fronting-context",
+      "objectId": "front-003",
+      "objectType": "frontHistory",
+      "systemId": "system-003"
+    },
+    {
+      "linkId": "link-012",
+      "linkRole": "defined-in-system",
+      "objectId": "custom-field-001",
+      "objectType": "customField",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-013",
+      "linkRole": "defined-in-system",
+      "objectId": "privacy-bucket-001",
+      "objectType": "privacyBucket",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-014",
+      "linkRole": "defined-in-system",
+      "objectId": "visibility-scope-001",
+      "objectType": "visibilityScope",
+      "systemId": "system-001"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    }
+  ],
+  "systemRelationships": [
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-001",
+      "relationshipType": "root",
+      "systemId": "system-001",
+      "targetSystemId": null
+    },
+    {
+      "parentSystemId": null,
+      "rank": 2,
+      "relationshipId": "relationship-002",
+      "relationshipType": "root",
+      "systemId": "system-002",
+      "targetSystemId": null
+    },
+    {
+      "parentSystemId": null,
+      "rank": 3,
+      "relationshipId": "relationship-003",
+      "relationshipType": "root",
+      "systemId": "system-003",
+      "targetSystemId": null
+    },
+    {
+      "description": "System A is related to System B.",
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-004",
+      "relationshipType": "related",
+      "systemId": "system-001",
+      "targetSystemId": "system-002"
+    },
+    {
+      "description": "System B is a sibling of System C.",
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-005",
+      "relationshipType": "sibling",
+      "systemId": "system-002",
+      "targetSystemId": "system-003"
+    },
+    {
+      "description": "System C is associated with System A.",
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-006",
+      "relationshipType": "associated",
+      "systemId": "system-003",
+      "targetSystemId": "system-001"
+    }
+  ],
+  "systems": [
+    {
+      "color": "#8367ea",
+      "description": "Graph node System A.",
+      "name": "A",
+      "systemId": "system-001"
+    },
+    {
+      "color": "#4f8fcf",
+      "description": "Graph node System B.",
+      "name": "B",
+      "systemId": "system-002"
+    },
+    {
+      "color": "#f5a623",
+      "description": "Graph node System C.",
+      "name": "C",
+      "systemId": "system-003"
+    }
+  ],
+  "visibilityScopes": [
+    {
+      "description": "Visible only through explicit private visibility rules.",
+      "isActive": true,
+      "isSystemDefault": false,
+      "memberIds": [
+        "member-001"
+      ],
+      "name": "Private",
+      "visibilityScopeId": "visibility-scope-001"
+    }
+  ]
 }

@@ -1,324 +1,322 @@
 {
-  "pluralBridgeExport": {
-    "exportVersion": "0.1-draft",
-    "exportKind": "self-contained-pluralbridge-example",
-    "exampleId": "example-006",
-    "exampleName": "Subsystem Model",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example models a subsystem associated with one member. The subsystem has its own System record and member set, while the relationship to the containing System and associated member is explicit rather than implied by nesting."
-  },
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
-      "username": "jasmine",
-      "status": "Active"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "username": "brianna",
-      "status": "Active"
-    }
-  ],
-  "memberships": [
-    {
-      "membershipId": "membership-001",
-      "accountId": "account-001",
-      "systemId": "system-001",
+      "accountId": "account-006",
+      "displayName": "Example 6",
+      "email": "example-6@pluralbridge.org",
       "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-002",
-      "accountId": "account-002",
-      "systemId": "system-001",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-003",
-      "accountId": "account-001",
-      "systemId": "system-002",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-004",
-      "accountId": "account-002",
-      "systemId": "system-002",
-      "status": "Active",
-      "roles": ["Owner"]
+      "username": "example-6"
     }
   ],
-  "systems": [
-    {
-      "systemId": "system-001",
-      "name": "The Harbor",
-      "description": "Root-level System containing members and a member-associated subsystem.",
-      "color": "#8367ea"
-    },
-    {
-      "systemId": "system-002",
-      "name": "Morgan's Room",
-      "description": "Subsystem associated with Morgan. It has its own internal structure and member list.",
-      "color": "#4f8fcf"
-    }
-  ],
-  "systemRelationships": [
-    {
-      "relationshipId": "relationship-001",
-      "systemId": "system-001",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 1
-    },
-    {
-      "relationshipId": "relationship-002",
-      "systemId": "system-002",
-      "relationshipType": "subsystem",
-      "parentSystemId": "system-001",
-      "targetSystemId": null,
-      "associatedObjectType": "member",
-      "associatedObjectId": "member-002",
-      "rank": 1
-    }
-  ],
-  "systemObjectLinks": [
-    {
-      "linkId": "link-001",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-002",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-003",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-003",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-004",
-      "systemId": "system-002",
-      "objectType": "member",
-      "objectId": "member-004",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-005",
-      "systemId": "system-002",
-      "objectType": "member",
-      "objectId": "member-005",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-006",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-007",
-      "systemId": "system-001",
-      "objectType": "note",
-      "objectId": "note-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-008",
-      "systemId": "system-002",
-      "objectType": "note",
-      "objectId": "note-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-009",
-      "systemId": "system-001",
-      "objectType": "frontHistory",
-      "objectId": "front-001",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-010",
-      "systemId": "system-002",
-      "objectType": "frontHistory",
-      "objectId": "front-002",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-011",
-      "systemId": "system-001",
-      "objectType": "customField",
-      "objectId": "custom-field-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-012",
-      "systemId": "system-001",
-      "objectType": "privacyBucket",
-      "objectId": "privacy-bucket-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-013",
-      "systemId": "system-001",
-      "objectType": "visibilityScope",
-      "objectId": "visibility-scope-001",
-      "linkRole": "defined-in-system"
-    }
-  ],
-  "members": [
-    {
-      "memberId": "member-001",
-      "displayName": "Alex",
-      "pronouns": "she/her",
-      "description": "Synthetic member in The Harbor.",
-      "color": "#69d563",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-002",
-      "displayName": "Morgan",
-      "pronouns": "they/them",
-      "description": "Synthetic member in The Harbor with an associated subsystem.",
-      "color": "#4a90e2",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-003",
-      "displayName": "Rae",
-      "pronouns": "she/they",
-      "description": "Synthetic member in The Harbor.",
-      "color": "#f5a623",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-004",
-      "displayName": "M1",
-      "pronouns": "they/them",
-      "description": "Synthetic member inside Morgan's Room.",
-      "color": "#7ed321",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-005",
-      "displayName": "M2",
-      "pronouns": "he/they",
-      "description": "Synthetic member inside Morgan's Room.",
-      "color": "#bd10e0",
-      "isArchived": false
-    }
-  ],
-  "groups": [
-    {
-      "groupId": "group-001",
-      "name": "Harbor Group",
-      "description": "Synthetic group scoped to The Harbor.",
-      "color": "#cccccc"
-    }
-  ],
-  "groupMemberships": [
-    {
-      "groupMembershipId": "group-membership-001",
-      "groupId": "group-001",
-      "memberId": "member-001",
-      "rank": 1
-    },
-    {
-      "groupMembershipId": "group-membership-002",
-      "groupId": "group-001",
-      "memberId": "member-002",
-      "rank": 2
-    },
-    {
-      "groupMembershipId": "group-membership-003",
-      "groupId": "group-001",
-      "memberId": "member-003",
-      "rank": 3
-    }
-  ],
-  "notes": [
-    {
-      "noteId": "note-001",
-      "title": "Harbor note",
-      "body": "Synthetic note attached to The Harbor.",
-      "supportsMarkdown": true
-    },
-    {
-      "noteId": "note-002",
-      "title": "Subsystem note",
-      "body": "Morgan's Room is modeled as a subsystem associated with Morgan, with its own internal member structure.",
-      "supportsMarkdown": true
-    }
-  ],
-  "frontHistory": [
-    {
-      "frontHistoryId": "front-001",
-      "memberIds": ["member-001", "member-002"],
-      "startedAt": "2026-01-01T12:00:00Z",
-      "endedAt": "2026-01-01T13:00:00Z",
-      "isLive": false,
-      "status": "co-fronting"
-    },
-    {
-      "frontHistoryId": "front-002",
-      "memberIds": ["member-004", "member-005"],
-      "startedAt": "2026-01-01T14:00:00Z",
-      "endedAt": null,
-      "isLive": true,
-      "status": "subsystem co-fronting"
-    }
-  ],
-  "customFields": [
-    {
-      "customFieldId": "custom-field-001",
-      "fieldName": "System Role",
-      "fieldType": "text",
-      "description": "Synthetic custom field defined in The Harbor.",
-      "supportsMarkdown": false
-    }
-  ],
-  "privacyBuckets": [
-    {
-      "privacyBucketId": "privacy-bucket-001",
-      "name": "Trusted",
-      "description": "Synthetic privacy bucket defined in The Harbor.",
-      "color": "#1998a8"
-    }
-  ],
-  "visibilityScopes": [
-    {
-      "visibilityScopeId": "visibility-scope-001",
-      "name": "Private",
-      "description": "Visible only through explicit private visibility rules.",
-      "isSystemDefault": false,
-      "isActive": true,
-      "memberIds": ["member-002"]
-    }
-  ],
-  "provenance": {
-    "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
-    "sourceIdsPreserved": true,
-    "lossyMappings": []
-  },
   "audit": {
     "createdAt": "2026-01-01T00:00:00Z",
     "updatedAt": "2026-01-01T00:00:00Z"
   },
+  "customFields": [
+    {
+      "customFieldId": "custom-field-001",
+      "description": "Synthetic custom field defined in The Harbor.",
+      "fieldName": "System Role",
+      "fieldType": "text",
+      "supportsMarkdown": false
+    }
+  ],
+  "frontHistory": [
+    {
+      "endedAt": "2026-01-01T13:00:00Z",
+      "frontHistoryId": "front-001",
+      "isLive": false,
+      "memberIds": [
+        "member-001",
+        "member-002"
+      ],
+      "startedAt": "2026-01-01T12:00:00Z",
+      "status": "co-fronting"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-002",
+      "rank": 2
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-003",
+      "memberId": "member-003",
+      "rank": 3
+    }
+  ],
+  "groups": [
+    {
+      "color": "#cccccc",
+      "description": "Synthetic group scoped to The Harbor.",
+      "groupId": "group-001",
+      "name": "Harbor Group"
+    }
+  ],
   "lookups": {
-    "roles": ["Owner"],
-    "membershipStatuses": ["Active"],
-    "relationshipTypes": ["root", "subsystem"]
-  }
+    "membershipStatuses": [
+      "Active"
+    ],
+    "placementRoles": [
+      "container-child"
+    ],
+    "relationshipTypes": [
+      "root"
+    ],
+    "roles": [
+      "Owner"
+    ]
+  },
+  "members": [
+    {
+      "color": "#69d563",
+      "description": "Synthetic member in The Harbor.",
+      "displayName": "Alex",
+      "isArchived": false,
+      "memberId": "member-001",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Synthetic member in The Harbor. Morgan's Room is a Place in the same System.",
+      "displayName": "Morgan",
+      "isArchived": false,
+      "memberId": "member-002",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#f5a623",
+      "description": "Synthetic member in The Harbor.",
+      "displayName": "Rae",
+      "isArchived": false,
+      "memberId": "member-003",
+      "pronouns": "she/they"
+    },
+    {
+      "color": "#7ed321",
+      "description": "Synthetic member inside Morgan's Room.",
+      "displayName": "M1",
+      "isArchived": false,
+      "memberId": "member-004",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#bd10e0",
+      "description": "Synthetic member inside Morgan's Room.",
+      "displayName": "M2",
+      "isArchived": false,
+      "memberId": "member-005",
+      "pronouns": "he/they"
+    }
+  ],
+  "memberships": [
+    {
+      "accountId": "account-006",
+      "membershipId": "membership-001",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    }
+  ],
+  "notes": [
+    {
+      "body": "Synthetic note attached to The Harbor.",
+      "noteId": "note-001",
+      "supportsMarkdown": true,
+      "title": "Harbor note"
+    },
+    {
+      "body": "Morgan's Room is modeled as a Place inside The Harbor, with its own members.",
+      "noteId": "note-002",
+      "supportsMarkdown": true,
+      "title": "Place note"
+    }
+  ],
+  "placeMemberships": [
+    {
+      "memberId": "member-004",
+      "placeId": "place-001",
+      "placeMembershipId": "place-membership-001",
+      "rank": 1
+    },
+    {
+      "memberId": "member-005",
+      "placeId": "place-001",
+      "placeMembershipId": "place-membership-002",
+      "rank": 2
+    }
+  ],
+  "places": [
+    {
+      "color": "#4f8fcf",
+      "description": "Place inside The Harbor with its own member structure.",
+      "name": "Morgan's Room",
+      "placeId": "place-001"
+    }
+  ],
+  "pluralBridgeExport": {
+    "exampleId": "example-006",
+    "exampleName": "Subsystem Model",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. Morgan's Room is a Place inside The Harbor, not a second System. Place containment uses system object-link and placement records; M1 and M2 belong to the Place rather than to The Harbor member list."
+  },
+  "privacyBuckets": [
+    {
+      "color": "#1998a8",
+      "description": "Synthetic privacy bucket defined in The Harbor.",
+      "name": "Trusted",
+      "privacyBucketId": "privacy-bucket-001"
+    }
+  ],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-001",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-002",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-002",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-003",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-003",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-004",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-001",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-005",
+      "linkRole": "scoped-to-system",
+      "objectId": "place-001",
+      "objectType": "place",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-006",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-001",
+      "objectType": "note",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-007",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-002",
+      "objectType": "note",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-008",
+      "linkRole": "fronting-context",
+      "objectId": "front-001",
+      "objectType": "frontHistory",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-009",
+      "linkRole": "defined-in-system",
+      "objectId": "custom-field-001",
+      "objectType": "customField",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-010",
+      "linkRole": "defined-in-system",
+      "objectId": "privacy-bucket-001",
+      "objectType": "privacyBucket",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-011",
+      "linkRole": "defined-in-system",
+      "objectId": "visibility-scope-001",
+      "objectType": "visibilityScope",
+      "systemId": "system-001"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    },
+    {
+      "objectId": "place-001",
+      "objectType": "place",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-002",
+      "placementRole": "container-child",
+      "rank": 2,
+      "systemId": "system-001"
+    }
+  ],
+  "systemRelationships": [
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-001",
+      "relationshipType": "root",
+      "systemId": "system-001",
+      "targetSystemId": null
+    }
+  ],
+  "systems": [
+    {
+      "color": "#8367ea",
+      "description": "Root-level System containing members, a group, and a Place.",
+      "name": "The Harbor",
+      "systemId": "system-001"
+    }
+  ],
+  "visibilityScopes": [
+    {
+      "description": "Visible only through explicit private visibility rules.",
+      "isActive": true,
+      "isSystemDefault": false,
+      "memberIds": [
+        "member-002"
+      ],
+      "name": "Private",
+      "visibilityScopeId": "visibility-scope-001"
+    }
+  ]
 }

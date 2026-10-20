@@ -1,312 +1,332 @@
 {
-  "pluralBridgeExport": {
-    "exportVersion": "0.1-draft",
-    "exportKind": "self-contained-pluralbridge-example",
-    "exampleId": "example-007",
-    "exampleName": "Evolving / Uncertain Relationship Model",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example preserves a real but unresolved relationship between two Systems without prematurely naming it as parent, child, sibling, subsystem, or ownership."
-  },
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
-      "username": "jasmine",
-      "status": "Active"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "username": "brianna",
-      "status": "Active"
-    }
-  ],
-  "memberships": [
-    {
-      "membershipId": "membership-001",
-      "accountId": "account-001",
-      "systemId": "system-001",
+      "accountId": "account-007",
+      "displayName": "Example 7",
+      "email": "example-7@pluralbridge.org",
       "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-002",
-      "accountId": "account-002",
-      "systemId": "system-001",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-003",
-      "accountId": "account-001",
-      "systemId": "system-002",
-      "status": "Active",
-      "roles": ["Owner"]
-    },
-    {
-      "membershipId": "membership-004",
-      "accountId": "account-002",
-      "systemId": "system-002",
-      "status": "Active",
-      "roles": ["Owner"]
+      "username": "example-7"
     }
   ],
-  "systems": [
-    {
-      "systemId": "system-001",
-      "name": "The Harbor",
-      "description": "Root-level System with an unresolved relationship to North Wing.",
-      "color": "#8367ea"
-    },
-    {
-      "systemId": "system-002",
-      "name": "North Wing",
-      "description": "System connected to The Harbor. The exact relationship is still forming.",
-      "color": "#4f8fcf"
-    }
-  ],
-  "systemRelationships": [
-    {
-      "relationshipId": "relationship-001",
-      "systemId": "system-001",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 1
-    },
-    {
-      "relationshipId": "relationship-002",
-      "systemId": "system-002",
-      "relationshipType": "root",
-      "parentSystemId": null,
-      "targetSystemId": null,
-      "rank": 2
-    },
-    {
-      "relationshipId": "relationship-003",
-      "systemId": "system-002",
-      "relationshipType": "evolving",
-      "parentSystemId": null,
-      "targetSystemId": "system-001",
-      "relationshipStatus": "uncertain",
-      "description": "North Wing is connected to The Harbor, but the user has not resolved whether that connection is sibling, child, subsystem, related, or another structure.",
-      "rank": 1
-    }
-  ],
-  "systemObjectLinks": [
-    {
-      "linkId": "link-001",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-002",
-      "systemId": "system-001",
-      "objectType": "member",
-      "objectId": "member-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-003",
-      "systemId": "system-001",
-      "objectType": "group",
-      "objectId": "group-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-004",
-      "systemId": "system-001",
-      "objectType": "note",
-      "objectId": "note-001",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-005",
-      "systemId": "system-001",
-      "objectType": "frontHistory",
-      "objectId": "front-001",
-      "linkRole": "fronting-context"
-    },
-    {
-      "linkId": "link-006",
-      "systemId": "system-001",
-      "objectType": "customField",
-      "objectId": "custom-field-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-007",
-      "systemId": "system-001",
-      "objectType": "privacyBucket",
-      "objectId": "privacy-bucket-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-008",
-      "systemId": "system-001",
-      "objectType": "visibilityScope",
-      "objectId": "visibility-scope-001",
-      "linkRole": "defined-in-system"
-    },
-    {
-      "linkId": "link-009",
-      "systemId": "system-002",
-      "objectType": "member",
-      "objectId": "member-003",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-010",
-      "systemId": "system-002",
-      "objectType": "member",
-      "objectId": "member-004",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-011",
-      "systemId": "system-002",
-      "objectType": "note",
-      "objectId": "note-002",
-      "linkRole": "scoped-to-system"
-    },
-    {
-      "linkId": "link-012",
-      "systemId": "system-002",
-      "objectType": "frontHistory",
-      "objectId": "front-002",
-      "linkRole": "fronting-context"
-    }
-  ],
-  "members": [
-    {
-      "memberId": "member-001",
-      "displayName": "A",
-      "pronouns": "she/her",
-      "description": "Synthetic member A in The Harbor.",
-      "color": "#69d563",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-002",
-      "displayName": "B",
-      "pronouns": "they/them",
-      "description": "Synthetic member B in The Harbor.",
-      "color": "#4a90e2",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-003",
-      "displayName": "C",
-      "pronouns": "she/they",
-      "description": "Synthetic member C in North Wing.",
-      "color": "#f5a623",
-      "isArchived": false
-    },
-    {
-      "memberId": "member-004",
-      "displayName": "D",
-      "pronouns": "he/they",
-      "description": "Synthetic member D in North Wing.",
-      "color": "#7ed321",
-      "isArchived": false
-    }
-  ],
-  "groups": [
-    {
-      "groupId": "group-001",
-      "name": "Harbor Group",
-      "description": "Synthetic group scoped to The Harbor.",
-      "color": "#cccccc"
-    }
-  ],
-  "groupMemberships": [
-    {
-      "groupMembershipId": "group-membership-001",
-      "groupId": "group-001",
-      "memberId": "member-001",
-      "rank": 1
-    },
-    {
-      "groupMembershipId": "group-membership-002",
-      "groupId": "group-001",
-      "memberId": "member-002",
-      "rank": 2
-    }
-  ],
-  "notes": [
-    {
-      "noteId": "note-001",
-      "title": "Harbor note",
-      "body": "Synthetic note attached to The Harbor.",
-      "supportsMarkdown": true
-    },
-    {
-      "noteId": "note-002",
-      "title": "North Wing relationship note",
-      "body": "North Wing is connected to The Harbor, but the exact relationship is still forming.",
-      "supportsMarkdown": true
-    }
-  ],
-  "frontHistory": [
-    {
-      "frontHistoryId": "front-001",
-      "memberIds": ["member-001", "member-002"],
-      "startedAt": "2026-01-01T12:00:00Z",
-      "endedAt": "2026-01-01T13:00:00Z",
-      "isLive": false,
-      "status": "co-fronting"
-    },
-    {
-      "frontHistoryId": "front-002",
-      "memberIds": ["member-003"],
-      "startedAt": "2026-01-01T14:00:00Z",
-      "endedAt": null,
-      "isLive": true,
-      "status": null
-    }
-  ],
-  "customFields": [
-    {
-      "customFieldId": "custom-field-001",
-      "fieldName": "System Role",
-      "fieldType": "text",
-      "description": "Synthetic custom field defined in The Harbor.",
-      "supportsMarkdown": false
-    }
-  ],
-  "privacyBuckets": [
-    {
-      "privacyBucketId": "privacy-bucket-001",
-      "name": "Trusted",
-      "description": "Synthetic privacy bucket defined in The Harbor.",
-      "color": "#1998a8"
-    }
-  ],
-  "visibilityScopes": [
-    {
-      "visibilityScopeId": "visibility-scope-001",
-      "name": "Private",
-      "description": "Visible only through explicit private visibility rules.",
-      "isSystemDefault": false,
-      "isActive": true,
-      "memberIds": ["member-001"]
-    }
-  ],
-  "provenance": {
-    "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
-    "sourceIdsPreserved": true,
-    "lossyMappings": []
-  },
   "audit": {
     "createdAt": "2026-01-01T00:00:00Z",
     "updatedAt": "2026-01-01T00:00:00Z"
   },
+  "customFields": [
+    {
+      "customFieldId": "custom-field-001",
+      "description": "Synthetic custom field defined in The Harbor.",
+      "fieldName": "System Role",
+      "fieldType": "text",
+      "supportsMarkdown": false
+    }
+  ],
+  "frontHistory": [
+    {
+      "endedAt": "2026-01-01T13:00:00Z",
+      "frontHistoryId": "front-001",
+      "isLive": false,
+      "memberIds": [
+        "member-001",
+        "member-002"
+      ],
+      "startedAt": "2026-01-01T12:00:00Z",
+      "status": "co-fronting"
+    },
+    {
+      "endedAt": null,
+      "frontHistoryId": "front-002",
+      "isLive": true,
+      "memberIds": [
+        "member-003"
+      ],
+      "startedAt": "2026-01-01T14:00:00Z",
+      "status": null
+    }
+  ],
+  "groupMemberships": [
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-002",
+      "rank": 2
+    }
+  ],
+  "groups": [
+    {
+      "color": "#cccccc",
+      "description": "Synthetic group scoped to The Harbor.",
+      "groupId": "group-001",
+      "name": "Harbor Group"
+    }
+  ],
   "lookups": {
-    "roles": ["Owner"],
-    "membershipStatuses": ["Active"],
-    "relationshipTypes": ["root", "evolving"],
-    "relationshipStatuses": ["uncertain"]
-  }
+    "membershipStatuses": [
+      "Active"
+    ],
+    "placementRoles": [
+      "container-child"
+    ],
+    "relationshipStatuses": [
+      "unknown"
+    ],
+    "relationshipTypes": [
+      "root",
+      "evolving"
+    ],
+    "roles": [
+      "Owner"
+    ]
+  },
+  "members": [
+    {
+      "color": "#69d563",
+      "description": "Synthetic member A in The Harbor.",
+      "displayName": "A",
+      "isArchived": false,
+      "memberId": "member-001",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Synthetic member B in The Harbor.",
+      "displayName": "B",
+      "isArchived": false,
+      "memberId": "member-002",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#f5a623",
+      "description": "Synthetic member C in North Wing.",
+      "displayName": "C",
+      "isArchived": false,
+      "memberId": "member-003",
+      "pronouns": "she/they"
+    },
+    {
+      "color": "#7ed321",
+      "description": "Synthetic member D in North Wing.",
+      "displayName": "D",
+      "isArchived": false,
+      "memberId": "member-004",
+      "pronouns": "he/they"
+    }
+  ],
+  "memberships": [
+    {
+      "accountId": "account-007",
+      "membershipId": "membership-001",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    },
+    {
+      "accountId": "account-007",
+      "membershipId": "membership-002",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-002"
+    }
+  ],
+  "notes": [
+    {
+      "body": "Synthetic note attached to The Harbor.",
+      "noteId": "note-001",
+      "supportsMarkdown": true,
+      "title": "Harbor note"
+    },
+    {
+      "body": "North Wing is connected to The Harbor, but the exact relationship is still forming.",
+      "noteId": "note-002",
+      "supportsMarkdown": true,
+      "title": "North Wing relationship note"
+    }
+  ],
+  "placeMemberships": [],
+  "places": [],
+  "pluralBridgeExport": {
+    "exampleId": "example-007",
+    "exampleName": "Evolving / Uncertain Relationship Model",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example preserves a real but unresolved relationship between two Systems without prematurely naming it as parent, child, sibling, subsystem, or ownership."
+  },
+  "privacyBuckets": [
+    {
+      "color": "#1998a8",
+      "description": "Synthetic privacy bucket defined in The Harbor.",
+      "name": "Trusted",
+      "privacyBucketId": "privacy-bucket-001"
+    }
+  ],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-001",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-002",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-002",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-003",
+      "linkRole": "scoped-to-system",
+      "objectId": "group-001",
+      "objectType": "group",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-004",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-001",
+      "objectType": "note",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-005",
+      "linkRole": "fronting-context",
+      "objectId": "front-001",
+      "objectType": "frontHistory",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-006",
+      "linkRole": "defined-in-system",
+      "objectId": "custom-field-001",
+      "objectType": "customField",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-007",
+      "linkRole": "defined-in-system",
+      "objectId": "privacy-bucket-001",
+      "objectType": "privacyBucket",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-008",
+      "linkRole": "defined-in-system",
+      "objectId": "visibility-scope-001",
+      "objectType": "visibilityScope",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-009",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-003",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-010",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-004",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-011",
+      "linkRole": "scoped-to-system",
+      "objectId": "note-002",
+      "objectType": "note",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-012",
+      "linkRole": "fronting-context",
+      "objectId": "front-002",
+      "objectType": "frontHistory",
+      "systemId": "system-002"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    }
+  ],
+  "systemRelationships": [
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-001",
+      "relationshipType": "root",
+      "systemId": "system-001",
+      "targetSystemId": null
+    },
+    {
+      "parentSystemId": null,
+      "rank": 2,
+      "relationshipId": "relationship-002",
+      "relationshipType": "root",
+      "systemId": "system-002",
+      "targetSystemId": null
+    },
+    {
+      "description": "North Wing is connected to The Harbor, but the user has not resolved whether that connection is sibling, child, subsystem, related, or another structure.",
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-003",
+      "relationshipStatus": "unknown",
+      "relationshipType": "evolving",
+      "systemId": "system-002",
+      "targetSystemId": "system-001"
+    }
+  ],
+  "systems": [
+    {
+      "color": "#8367ea",
+      "description": "Root-level System with an unresolved relationship to North Wing.",
+      "name": "The Harbor",
+      "systemId": "system-001"
+    },
+    {
+      "color": "#4f8fcf",
+      "description": "System connected to The Harbor. The exact relationship is still forming.",
+      "name": "North Wing",
+      "systemId": "system-002"
+    }
+  ],
+  "visibilityScopes": [
+    {
+      "description": "Visible only through explicit private visibility rules.",
+      "isActive": true,
+      "isSystemDefault": false,
+      "memberIds": [
+        "member-001"
+      ],
+      "name": "Private",
+      "visibilityScopeId": "visibility-scope-001"
+    }
+  ]
 }

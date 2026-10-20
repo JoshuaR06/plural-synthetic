@@ -1,16 +1,13 @@
 {
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
+      "accountId": "account-009",
+      "displayName": "Example 9",
+      "email": "example-9@pluralbridge.org",
       "status": "Active",
-      "username": "jasmine"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "status": "Active",
-      "username": "brianna"
+      "username": "example-9"
     }
   ],
   "audit": {
@@ -85,6 +82,9 @@
     "membershipStatuses": [
       "Active"
     ],
+    "placementRoles": [
+      "container-child"
+    ],
     "relationshipTypes": [
       "root",
       "related",
@@ -131,7 +131,7 @@
   ],
   "memberships": [
     {
-      "accountId": "account-001",
+      "accountId": "account-009",
       "membershipId": "membership-001",
       "roles": [
         "Owner"
@@ -140,44 +140,17 @@
       "systemId": "system-001"
     },
     {
-      "accountId": "account-002",
+      "accountId": "account-009",
       "membershipId": "membership-002",
       "roles": [
         "Owner"
       ],
       "status": "Active",
-      "systemId": "system-001"
+      "systemId": "system-002"
     },
     {
-      "accountId": "account-001",
+      "accountId": "account-009",
       "membershipId": "membership-003",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-004",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-001",
-      "membershipId": "membership-005",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-003"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-006",
       "roles": [
         "Owner"
       ],
@@ -205,6 +178,8 @@
       "title": "System C graph note"
     }
   ],
+  "placeMemberships": [],
+  "places": [],
   "pluralBridgeExport": {
     "exampleId": "example-009",
     "exampleName": "Non-Tree / Graph Model",
@@ -223,7 +198,7 @@
   "provenance": {
     "lossyMappings": [],
     "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceGenerator": "plural-synthetic",
     "sourceIdsPreserved": true
   },
   "systemObjectLinks": [
@@ -323,6 +298,18 @@
       "linkRole": "defined-in-system",
       "objectId": "visibility-scope-001",
       "objectType": "visibilityScope",
+      "systemId": "system-001"
+    }
+  ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
       "systemId": "system-001"
     }
   ],

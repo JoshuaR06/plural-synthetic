@@ -2,99 +2,226 @@
 A person signs in and has one System.
 
 Account
-└── System: The Harbor
-    ├── Member: A
-    ├── Member: B
-    ├── Member: C
-    ├── Groups
-    ├── Notes
-    └── Front history
-This is the default model: one account, one System, members inside it, and one focused System context.
+├── System: The Harbor
+│   ├── Member: A
+│   ├── Member: B
+│   ├── Member: C
+│   └── Groups
+│       ├── Group: Dancers
+│       │   ├── Member: B
+│       │   └── Group: Ballet
+│       │       └── Member: A
+│       └── Group: Musicians
+│           ├── Member: A
+│           └── Member: C
+├── Notes
+└── Front history
+This is the default model: one account, one System, members and groups inside it, and one focused System context.
 
 2. Multiple Top-Level Systems Model
 A person has more than one root-level System. Neither root owns the other.
 
 Account
 ├── System: The Harbor
-│   ├── Members
-│   └── Front history
-└── System: The Observatory
-    ├── Members
-    └── Notes
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Harbor Group
+│           ├── Member: A
+│           └── Member: B
+├── System: The Observatory
+│   └── Member: C
+├── Notes
+└── Front history
 This supports a user who experiences two distinct top-level structures. The app treats both as root Systems because neither has a parent relationship.
 
 3. Parent / Child System Model
 One System contains or relates to a smaller child System.
 
 Account
-└── System: Main House
-    ├── Member: Rowan
-    ├── Member: Tess
-    └── Child System: The Workshop
-        ├── Member: Kit
-        └── Member: Lark
+├── System: Main House
+│   ├── Member: Rowan
+│   ├── Member: Tess
+│   ├── Groups
+│   │   └── Group: Main House Group
+│   │       ├── Member: Rowan
+│   │       └── Member: Tess
+│   └── Child System: The Workshop
+│       ├── Member: Kit
+│       └── Member: Lark
+├── Notes
+└── Front history
 The parent / child relationship describes structure. Access and privacy remain governed by membership, consent, and policy.
 
 4. Sibling Systems Model
 Two Systems share a common relationship, but neither controls the other.
 
 Account
-├── System: Day Team
-└── System: Night Team
+├── System: Day Team (sibling)
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Day Team Group
+│           ├── Member: A
+│           └── Member: B
+├── System: Night Team (sibling)
+│   ├── Member: C
+│   └── Member: D
+├── Notes
+└── Front history
 This is useful for Systems that see themselves as parallel, cooperative, or operationally separate.
 
 5. Related Systems Model
 Two Systems are associated without a parent / child shape.
 
 Account
-├── System: The Harbor
-└── System: The Archive
-    └── relationship to The Harbor: "related"
+├── System: The Archive (related)
+│   └── Member: C
+├── System: The Harbor (related)
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Harbor Group
+│           ├── Member: A
+│           └── Member: B
+├── Notes
+└── Front history
 This could represent shared history, partial overlap, a past structure, or a loosely connected internal organization.
+
+Encoding: related is a directed graph record (systemId -> targetSystemId). It is not parent/child and does not grant access. Both Systems are labeled (related) with no arrow, so encode two records: The Archive related -> The Harbor, and The Harbor related -> The Archive.
 
 6. Subsystem Model
 A member, group, or internal cluster may have its own structure.
 
-System: The Harbor
-├── Member: Alex
-├── Member: Morgan
-│   └── Subsystem: Morgan's Room
+Account
+├── System: The Harbor
+│   ├── Member: Alex
+│   ├── Member: Morgan
+│   ├── Member: Rae
+│   ├── Groups
+│   │   └── Group: Harbor Group
+│   │       ├── Member: Alex
+│   │       ├── Member: Morgan
+│   │       └── Member: Rae
+│   └── Place: Morgan's Room
 │       ├── Member: M1
 │       └── Member: M2
-└── Member: Rae
+├── Notes
+└── Front history
+
 This is one of the models where a strict flat member list starts to run out of descriptive power.
+
+Encoding: Harbor is the only System. Morgan's Room is a Place contained in Harbor (systemObjectPlacements, parent = Harbor). Alex, Morgan, and Rae are Harbor members and Harbor Group members. M1 and M2 belong to the Place (placeMemberships) and are not Harbor System members. The name "Morgan's Room" is a label. This example does not record a member-to-Place association and does not set associatedObjectId.
+
+Model 6 uses the Place structure shown in its diagram. The permitted endpoints and associated-object semantics of the subsystem relationship remain a separate specification question.
 
 7. Evolving / Uncertain Relationship Model
 The user knows two structures are connected, and the exact relationship is still forming.
 
 Account
+├── System: North Wing (evolving, unknown)
+│   ├── Member: C
+│   └── Member: D
 ├── System: The Harbor
-└── System: North Wing
-    └── relationship to The Harbor: "unknown" or "evolving"
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Harbor Group
+│           ├── Member: A
+│           └── Member: B
+├── Notes
+└── Front history
 This gives the user a way to preserve reality-in-progress without prematurely naming it.
+
+Encoding: North Wing and The Harbor are both root Systems. Encode one directed graph record: relationshipType evolving, systemId = North Wing, targetSystemId = The Harbor, relationshipStatus unknown. Do not name the connection as parent, child, sibling, related, subsystem, or ownership. unknown is the status of that evolving record, not a separate relationship type.
 
 8. Archived System Model
 A System or structure still matters historically, but is no longer active.
 
 Account
 ├── System: Current System
-└── System: Old Map
-    └── status: archived
+│   ├── Member: A
+│   ├── Member: B
+│   └── Groups
+│       └── Group: Current Group
+│           ├── Member: A
+│           └── Member: B
+├── System: Old Map (archived)
+│   ├── Member: Archive A
+│   ├── Member: Archive B
+│   └── Groups
+│       └── Group: Old Map Group
+│           ├── Member: Archive A
+│           └── Member: Archive B
+├── Notes
+└── Front history
 This helps preserve migration meaning, old fronting records, old notes, and past organization.
+
+Encoding: Old Map is a root System that is no longer active. Encode lifecycle on that System: status archived, isArchived true. Current System remains status active, isArchived false. Both Systems remain relationshipType root. This example does not include a predecessor or other graph edge between Old Map and Current System.
+
+Historical meaning is preserved by retaining Old Map and its existing members, groups, notes, front history, and associations. Archiving the System does not automatically change the lifecycle state of those associated objects. Per-object archive flags on those associated records are independent facts, not an automatic cascade.
 
 9. Non-Tree / Graph Model
 Some Systems may have overlapping or cross-linked relationships.
 
 Account
-├── System: A
-├── System: B
-└── System: C
+├── System: A (related->B)
+│   ├── Member: A1
+│   ├── Member: A2
+│   └── Groups
+│       └── Group: A Group
+│           ├── Member: A1
+│           └── Member: A2
+├── System: B (sibling->C)
+│   └── Member: B1
+├── System: C (associated->A)
+│   └── Member: C1
+├── Notes
+└── Front history
 Relationship examples:
 
-A related to B
-B sibling of C
-C associated with A
+A --related--> B
+B --sibling--> C
+C --associated--> A
 This breaks the ordinary tree assumption. The structure becomes a graph of relationships instead of a single trunk with branches.
+
+Encoding: encode exactly the three directed edges drawn here, plus a root record for each System: A related -> B, B sibling -> C, C associated -> A. Do not add B related -> A, C sibling -> B, or A associated -> C. Reciprocal records are used only where a diagram labels both sides with no arrow.
+
+10. Group Collection of Systems
+A top level group that contains two Systems
+This allows us to make a Group the same class as a System
+
+Account
+├── Group: Household
+│   ├── Member: A
+│   ├── Member: E
+│   ├── Member: I
+│   ├── Member: O
+│   ├── System: The Harbor
+│   │   ├── Member: W
+│   │   └── Member: Y
+│   └── System: Main House
+│       ├── Member: X
+│       └── Member: Z
+├── Notes
+└── Front history
+This allows us to make a Group the same class as a System
+
+11. 'Place' Collection of Systems
+A top level named object that contains two Systems and another named object
+
+Account
+├── Place: Central Hub
+│   ├── System: The Harbor
+│   │   ├── Member: Popeye
+│   │   └── Member: Gilligan
+│   └── System: Main House
+│       └── Place: Waiting Room
+│           ├── Member: Mickey
+│           └── Member: Minnie
+├── Notes
+└── Front history
+This gives plurals a more fluid way of describing themselves
 
 Design Notes
 These examples imply several important PluralBridge design rules:
@@ -109,3 +236,15 @@ Fronting should be modeled inside the focused System context.
 The default user experience can remain simple while the underlying model stays flexible.
 Therapist-facing views should be user-controlled and privacy-aware.
 Professional input can improve safety without overriding lived experience.
+
+Encoding convention for these canonical examples
+
+Graph records are directed. systemId is the source. Named peer associations use targetSystemId. Parent/child uses parentSystemId on the child record (relationshipType child).
+
+When a diagram labels two Systems with the same peer type and draws no arrow, encode two directed records, one in each direction. When a diagram draws a single arrow (X --type--> Y), encode one directed record.
+
+relationshipStatus is a state of a graph record. For Model 7 the established status token is unknown.
+
+Archived is a System lifecycle state (status archived, isArchived true), not a graph relationship type. Model 8 does not include a predecessor edge.
+
+Containment uses placements. Member-in-group and member-in-place use membership collections. Access uses memberships. None of these is implied by a graph relationship.

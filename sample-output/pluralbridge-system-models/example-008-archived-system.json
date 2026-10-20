@@ -1,16 +1,13 @@
 {
+  "accountObjectLinks": [],
+  "accountObjectPlacements": [],
   "accounts": [
     {
-      "accountId": "account-001",
-      "displayName": "Jasmine",
+      "accountId": "account-008",
+      "displayName": "Example 8",
+      "email": "example-8@pluralbridge.org",
       "status": "Active",
-      "username": "jasmine"
-    },
-    {
-      "accountId": "account-002",
-      "displayName": "Brianna",
-      "status": "Active",
-      "username": "brianna"
+      "username": "example-8"
     }
   ],
   "audit": {
@@ -98,9 +95,11 @@
       "Active",
       "Historical"
     ],
+    "placementRoles": [
+      "container-child"
+    ],
     "relationshipTypes": [
-      "root",
-      "archived-predecessor"
+      "root"
     ],
     "roles": [
       "Owner"
@@ -148,7 +147,7 @@
   ],
   "memberships": [
     {
-      "accountId": "account-001",
+      "accountId": "account-008",
       "membershipId": "membership-001",
       "roles": [
         "Owner"
@@ -157,26 +156,8 @@
       "systemId": "system-001"
     },
     {
-      "accountId": "account-002",
+      "accountId": "account-008",
       "membershipId": "membership-002",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Active",
-      "systemId": "system-001"
-    },
-    {
-      "accountId": "account-001",
-      "membershipId": "membership-003",
-      "roles": [
-        "Owner"
-      ],
-      "status": "Historical",
-      "systemId": "system-002"
-    },
-    {
-      "accountId": "account-002",
-      "membershipId": "membership-004",
       "roles": [
         "Owner"
       ],
@@ -200,12 +181,14 @@
       "title": "Old Map migration note"
     }
   ],
+  "placeMemberships": [],
+  "places": [],
   "pluralBridgeExport": {
     "exampleId": "example-008",
     "exampleName": "Archived System Model",
     "exportKind": "self-contained-pluralbridge-example",
     "exportVersion": "0.1-draft",
-    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example preserves an archived System as historically meaningful data. Archived status does not erase old notes, old fronting records, past organization, or migration context."
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. This example preserves an archived System as historically meaningful data. Old Map and its existing members, groups, notes, front history, and associations are retained. Per-object archive flags on those associated records are independent facts, not an automatic cascade from the System lifecycle."
   },
   "privacyBuckets": [
     {
@@ -218,7 +201,7 @@
   "provenance": {
     "lossyMappings": [],
     "source": "synthetic",
-    "sourceGenerator": "plural-synthetic-compatible-draft",
+    "sourceGenerator": "plural-synthetic",
     "sourceIdsPreserved": true
   },
   "systemObjectLinks": [
@@ -314,6 +297,28 @@
       "systemId": "system-002"
     }
   ],
+  "systemObjectPlacements": [
+    {
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "system-001",
+      "parentObjectType": "system",
+      "placementId": "placement-001",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-001"
+    },
+    {
+      "objectId": "group-002",
+      "objectType": "group",
+      "parentObjectId": "system-002",
+      "parentObjectType": "system",
+      "placementId": "placement-002",
+      "placementRole": "container-child",
+      "rank": 1,
+      "systemId": "system-002"
+    }
+  ],
   "systemRelationships": [
     {
       "parentSystemId": null,
@@ -330,15 +335,6 @@
       "relationshipType": "root",
       "systemId": "system-002",
       "targetSystemId": null
-    },
-    {
-      "description": "Old Map is an archived historical structure related to the active Current System.",
-      "parentSystemId": null,
-      "rank": 1,
-      "relationshipId": "relationship-003",
-      "relationshipType": "archived-predecessor",
-      "systemId": "system-002",
-      "targetSystemId": "system-001"
     }
   ],
   "systems": [

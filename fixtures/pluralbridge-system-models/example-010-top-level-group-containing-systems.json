@@ -1,0 +1,325 @@
+{
+  "accountObjectLinks": [
+    {
+      "accountId": "account-010",
+      "linkId": "account-link-001",
+      "linkRole": "account-structure-root",
+      "objectId": "group-001",
+      "objectType": "group"
+    },
+    {
+      "accountId": "account-010",
+      "linkId": "account-link-002",
+      "linkRole": "scoped-to-account",
+      "objectId": "system-001",
+      "objectType": "system"
+    },
+    {
+      "accountId": "account-010",
+      "linkId": "account-link-003",
+      "linkRole": "scoped-to-account",
+      "objectId": "system-002",
+      "objectType": "system"
+    },
+    {
+      "accountId": "account-010",
+      "linkId": "account-link-004",
+      "linkRole": "account-note",
+      "objectId": "note-001",
+      "objectType": "note"
+    },
+    {
+      "accountId": "account-010",
+      "linkId": "account-link-005",
+      "linkRole": "fronting-context",
+      "objectId": "front-001",
+      "objectType": "frontHistory"
+    }
+  ],
+  "accountObjectPlacements": [
+    {
+      "accountId": "account-010",
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "account-010",
+      "parentObjectType": "account",
+      "placementId": "account-placement-001",
+      "placementRole": "container-child",
+      "rank": 1
+    },
+    {
+      "accountId": "account-010",
+      "objectId": "system-001",
+      "objectType": "system",
+      "parentObjectId": "group-001",
+      "parentObjectType": "group",
+      "placementId": "account-placement-002",
+      "placementRole": "container-child",
+      "rank": 1
+    },
+    {
+      "accountId": "account-010",
+      "objectId": "system-002",
+      "objectType": "system",
+      "parentObjectId": "group-001",
+      "parentObjectType": "group",
+      "placementId": "account-placement-003",
+      "placementRole": "container-child",
+      "rank": 2
+    }
+  ],
+  "accounts": [
+    {
+      "accountId": "account-010",
+      "displayName": "Example 10",
+      "email": "example-10@pluralbridge.org",
+      "status": "Active",
+      "username": "example-10"
+    }
+  ],
+  "audit": {
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "customFields": [],
+  "frontHistory": [
+    {
+      "endedAt": null,
+      "frontHistoryId": "front-001",
+      "isLive": true,
+      "memberIds": [
+        "member-001"
+      ],
+      "startedAt": "2026-01-01T12:00:00Z",
+      "status": null
+    }
+  ],
+  "groupMemberships": [
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-002",
+      "rank": 2
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-003",
+      "memberId": "member-003",
+      "rank": 3
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-004",
+      "memberId": "member-004",
+      "rank": 4
+    }
+  ],
+  "groups": [
+    {
+      "color": "#cccccc",
+      "description": "Top-level account group containing two systems.",
+      "groupId": "group-001",
+      "name": "Household"
+    }
+  ],
+  "lookups": {
+    "accountObjectTypes": [
+      "group",
+      "system",
+      "note",
+      "frontHistory"
+    ],
+    "membershipStatuses": [
+      "Active"
+    ],
+    "placementRoles": [
+      "container-child"
+    ],
+    "relationshipTypes": [
+      "root"
+    ],
+    "roles": [
+      "Owner"
+    ]
+  },
+  "members": [
+    {
+      "color": "#69d563",
+      "description": "Synthetic household member A.",
+      "displayName": "A",
+      "isArchived": false,
+      "memberId": "member-001",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Synthetic household member E.",
+      "displayName": "E",
+      "isArchived": false,
+      "memberId": "member-002",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#f5a623",
+      "description": "Synthetic household member I.",
+      "displayName": "I",
+      "isArchived": false,
+      "memberId": "member-003",
+      "pronouns": "she/they"
+    },
+    {
+      "color": "#7ed321",
+      "description": "Synthetic household member O.",
+      "displayName": "O",
+      "isArchived": false,
+      "memberId": "member-004",
+      "pronouns": "he/they"
+    },
+    {
+      "color": "#bd10e0",
+      "description": "Synthetic member in The Harbor.",
+      "displayName": "W",
+      "isArchived": false,
+      "memberId": "member-005",
+      "pronouns": "they/them"
+    },
+    {
+      "color": "#50e3c2",
+      "description": "Synthetic member in Main House.",
+      "displayName": "X",
+      "isArchived": false,
+      "memberId": "member-006",
+      "pronouns": "she/her"
+    },
+    {
+      "color": "#b8e986",
+      "description": "Synthetic member in The Harbor.",
+      "displayName": "Y",
+      "isArchived": false,
+      "memberId": "member-007",
+      "pronouns": "he/him"
+    },
+    {
+      "color": "#9013fe",
+      "description": "Synthetic member in Main House.",
+      "displayName": "Z",
+      "isArchived": false,
+      "memberId": "member-008",
+      "pronouns": "they/them"
+    }
+  ],
+  "memberships": [
+    {
+      "accountId": "account-010",
+      "membershipId": "membership-001",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-001"
+    },
+    {
+      "accountId": "account-010",
+      "membershipId": "membership-002",
+      "roles": [
+        "Owner"
+      ],
+      "status": "Active",
+      "systemId": "system-002"
+    }
+  ],
+  "notes": [
+    {
+      "body": "Synthetic account-level note for Group Collection of Systems.",
+      "noteId": "note-001",
+      "supportsMarkdown": true,
+      "title": "Example 10 note"
+    }
+  ],
+  "placeMemberships": [],
+  "places": [],
+  "pluralBridgeExport": {
+    "exampleId": "example-010",
+    "exampleName": "Top-Level Group Containing Systems",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example using flattened top-level collections. Account-level structure is represented by explicit account object-link and placement records so a group can act as a top-level container for systems. Systems remain relationship-graph roots because they have no parent System."
+  },
+  "privacyBuckets": [],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [
+    {
+      "linkId": "link-001",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-005",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-002",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-007",
+      "objectType": "member",
+      "systemId": "system-001"
+    },
+    {
+      "linkId": "link-003",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-006",
+      "objectType": "member",
+      "systemId": "system-002"
+    },
+    {
+      "linkId": "link-004",
+      "linkRole": "scoped-to-system",
+      "objectId": "member-008",
+      "objectType": "member",
+      "systemId": "system-002"
+    }
+  ],
+  "systemObjectPlacements": [],
+  "systemRelationships": [
+    {
+      "parentSystemId": null,
+      "rank": 1,
+      "relationshipId": "relationship-001",
+      "relationshipType": "root",
+      "systemId": "system-001",
+      "targetSystemId": null
+    },
+    {
+      "parentSystemId": null,
+      "rank": 2,
+      "relationshipId": "relationship-002",
+      "relationshipType": "root",
+      "systemId": "system-002",
+      "targetSystemId": null
+    }
+  ],
+  "systems": [
+    {
+      "color": "#8367ea",
+      "description": "Synthetic system contained within the Household group.",
+      "name": "The Harbor",
+      "systemId": "system-001"
+    },
+    {
+      "color": "#4a90e2",
+      "description": "Second synthetic system contained within the Household group.",
+      "name": "Main House",
+      "systemId": "system-002"
+    }
+  ],
+  "visibilityScopes": []
+}

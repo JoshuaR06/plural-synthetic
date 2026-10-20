@@ -10,6 +10,7 @@ One made-up system ("Aurora") is defined once in `generate.py` and written out a
 - a **PluralBridge** per-collection export (folder and zip)
 - an **avatars** zip
 - a set of **edge cases**: shapes real exports can contain that tend to break importers
+- eleven **PluralBridge system-model** configurations, generated from topologies in `system_models.py`
 
 No real people, members, notes, fronting history, avatars, tokens or database files were used.
 Every id starts with `synthetic-` so fixture data can never be mistaken for real data.
@@ -43,34 +44,45 @@ you can commit it as test fixtures and diff it in review.
 | `edge/fronthistory-open-without-live-flag.json` | open fronts with no `live` field at all |
 | `edge/groups-structural-edge-cases.json` | the normal groups plus damaged or unusual group structures |
 | `edge/simplyplural-official-with-edge-groups.json` | a complete Simply Plural export using those edge-case groups |
-| `pluralbridge-system-models/*.json` | nine self-contained PluralBridge system-model fixtures (001-009) |
+| `pluralbridge-system-models/*.json` | eleven generated PluralBridge system-model configurations (001-011) |
 
-## PluralBridge system-model fixtures
+## PluralBridge system-model configurations
 
-The repository includes nine self-contained PluralBridge system-model examples in
+The repository includes eleven PluralBridge system-model examples in
 [`sample-output/pluralbridge-system-models/`](sample-output/pluralbridge-system-models).
-These cover:
+They follow [`fixtures/pluralbridge-system-models/System Model Minimum Base.txt`](fixtures/pluralbridge-system-models/System%20Model%20Minimum%20Base.txt)
+and share one collection schema. Unused collections are empty arrays.
 
-- simple single-system
+They cover:
+
+- simple single-system with nested groups
 - multiple top-level roots
 - parent/child
 - sibling
-- related (non-hierarchical)
-- subsystem
-- evolving/uncertain relationship state
+- related (non-hierarchical; reciprocal records when both sides are labeled)
+- a Place inside a System (Morgan's Room)
+- evolving relationship with unknown status
 - archived system state
 - non-tree graph relationships
+- a top-level Group containing Systems
+- a top-level Place containing Systems and a nested Place
 
-Canonical source files live in
-[`fixtures/pluralbridge-system-models/`](fixtures/pluralbridge-system-models).
-`generate.py` copies them into `<out>/pluralbridge-system-models/` every run, and
+`generate.py` builds these from Python topologies in `system_models.py` (entities, memberships,
+graph relationships, and placements). It does not copy the JSON files. Canonical serialized
+examples live in [`fixtures/pluralbridge-system-models/`](fixtures/pluralbridge-system-models).
 `--sync-system-model-sample-output` refreshes the committed sample-output mirror.
 
-These fixtures keep PluralBridge's own id style, so instead of the `synthetic-` id prefix used
+System–System structure uses `systemRelationships`. Containment uses placements:
+`systemObjectPlacements` for objects inside a System, `accountObjectPlacements` for account-level
+Group/Place roots. A `root` relationship means the System has no parent System; it may still sit
+under a Group or Place.
+
+These examples keep PluralBridge's own id style, so instead of the `synthetic-` id prefix used
 everywhere else, the built-in check requires each one to declare itself synthetic in its header
 (`exportKind: self-contained-pluralbridge-example`, `modelingNote` starting with "Synthetic"). It
-also fails on any fixture not listed in `SYSTEM_MODEL_FIXTURE_NAMES`, and on a stale
-sample-output mirror. CI (`.github/workflows/check.yml`) runs all of it on every pull request.
+also fails on any example not listed in `SYSTEM_MODEL_FIXTURE_NAMES`, on a structural mismatch
+with the canonical JSON, and on a stale sample-output mirror. CI (`.github/workflows/check.yml`)
+runs `generate.py` and `python3 -m unittest` on every pull request.
 
 ## The fictional system
 
@@ -159,10 +171,12 @@ open_fronts = [e for e in export["frontHistory"] if "endTime" not in e]
 assert len(open_fronts) == 2
 ```
 
-**5. Make it your own.** Everything is defined in plain Python lists near the top of
-`generate.py` (`MEMBERS`, `GROUPS`, `EDGE_GROUPS`, `FRONT_HISTORY` and so on). Add a member or
-an edge case there, run it again, and every output format updates together. Keep new ids
-starting with `synthetic-`; the built-in check refuses to write output otherwise.
+**5. Make it your own.** Aurora and the Simply Plural / edge exports are defined in plain
+Python lists near the top of `generate.py` (`MEMBERS`, `GROUPS`, `EDGE_GROUPS`, `FRONT_HISTORY`
+and so on). The eleven PluralBridge system-model configurations are defined as topologies in
+`system_models.py`. Add a member or an edge case there, run it again, and every output format
+updates together. Keep new Aurora ids starting with `synthetic-`; the built-in check refuses to
+write that export otherwise.
 
 ## Notes on the formats
 

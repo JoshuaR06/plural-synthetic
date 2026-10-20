@@ -1,6 +1,6 @@
 # PluralBridge System-Model Samples
 
-Nine self-contained fixtures:
+Eleven generated configurations:
 
 - `example-001-simple-single-system.json`
 - `example-002-multiple-top-level-systems.json`
@@ -11,8 +11,12 @@ Nine self-contained fixtures:
 - `example-007-evolving-uncertain-relationship.json`
 - `example-008-archived-system.json`
 - `example-009-non-tree-graph.json`
+- `example-010-top-level-group-containing-systems.json`
+- `example-011-top-level-place-containing-systems.json`
 
-These files model the supported system shapes using explicit top-level collections,
-system relationship records, and system object-link records.
+These files are produced by `generate.py` from Python topologies. They use one
+shared collection schema, explicit system relationship records, and separate
+object-placement records for containment.
 
-Canonical source is in `fixtures/pluralbridge-system-models/`.
+Canonical serialized examples live in `fixtures/pluralbridge-system-models/`.
+Refresh this folder with `python3 generate.py --sync-system-model-sample-output`.
