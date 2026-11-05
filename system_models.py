@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """PluralBridge system-model topologies and export builder.
 
-Each of the eleven canonical configurations is defined as a compact topology
+Each of the twelve canonical configurations is defined as a compact topology
 (entities, graph relationships, containment placements, memberships). `assemble`
 expands that topology into the flattened PluralBridge export shape, including
 empty arrays for unused collections.
@@ -1119,14 +1119,67 @@ def spec_011():
     }
 
 
+def spec_012():
+    """Non-System anchors; structure from PluralBridge-Plural-Maps-and-Design-Rules.txt."""
+    aid = "account-012"
+    return {
+        "filename": "example-012-non-system-anchors.json",
+        "example_id": "example-012",
+        "example_name": "Non-System Anchors Plural Map",
+        "modeling_note": (
+            "Synthetic PluralBridge example following Example 12 of "
+            "PluralBridge-Plural-Maps-and-Design-Rules.txt. Central Hub is a root Place "
+            "containing The Harbor and Main House Groups. Main House contains Waiting Room Place. "
+            "No System entities or System references exist. Placements and structural memberships "
+            "do not grant access. Access grants, focus, note contents, and fronting events are not "
+            "specified by the source and are not fabricated."
+        ),
+        "account": account(12),
+        "systems": [],
+        "memberships": [],
+        "members": [
+            {"memberId": f"member-{i:03d}", "displayName": name, "isArchived": False}
+            for i, name in enumerate(("Popeye", "Gilligan", "Mickey", "Minnie"), 1)
+        ],
+        "groups": [
+            {"groupId": "group-001", "name": "The Harbor"},
+            {"groupId": "group-002", "name": "Main House"},
+        ],
+        "places": [
+            {"placeId": "place-001", "name": "Central Hub"},
+            {"placeId": "place-002", "name": "Waiting Room"},
+        ],
+        "account_links": [
+            (aid, "place", "place-001", "account-structure-root"),
+            (aid, "group", "group-001", "scoped-to-account"),
+            (aid, "group", "group-002", "scoped-to-account"),
+            (aid, "place", "place-002", "scoped-to-account"),
+        ],
+        "account_placements": [
+            (aid, "place", "place-001", "account", aid, 1),
+            (aid, "group", "group-001", "place", "place-001", 1),
+            (aid, "group", "group-002", "place", "place-001", 2),
+            (aid, "place", "place-002", "group", "group-002", 1),
+        ],
+        "group_memberships": [
+            ("group-001", "member-001", 1),
+            ("group-001", "member-002", 2),
+        ],
+        "place_memberships": [
+            ("place-002", "member-003", 1),
+            ("place-002", "member-004", 2),
+        ],
+    }
+
+
 SPECS = [
     spec_001, spec_002, spec_003, spec_004, spec_005, spec_006,
-    spec_007, spec_008, spec_009, spec_010, spec_011,
+    spec_007, spec_008, spec_009, spec_010, spec_011, spec_012,
 ]
 
 
 def build_all():
-    """Return {filename: export} for all eleven canonical configurations."""
+    """Return {filename: export} for all twelve canonical configurations."""
     out = OrderedDict()
     for spec_fn in SPECS:
         spec = spec_fn()
@@ -1147,6 +1200,7 @@ SYSTEM_MODEL_FILENAMES = [
     "example-009-non-tree-graph.json",
     "example-010-top-level-group-containing-systems.json",
     "example-011-top-level-place-containing-systems.json",
+    "example-012-non-system-anchors.json",
 ]
 
 
@@ -1388,6 +1442,53 @@ def validate_topology(export, name="export"):
                    if r["placeId"] == "place-002"}
         assert waiting == {"Mickey", "Minnie"}
         assert export["groups"] == []
+    elif example_id == "example-012":
+        aid = "account-012"
+        assert len(export["accounts"]) == 1 and export["accounts"][0]["accountId"] == aid
+        for key in ("systems", "systemRelationships", "systemObjectLinks",
+                    "systemObjectPlacements", "memberships", "notes", "frontHistory",
+                    "customFields", "privacyBuckets", "visibilityScopes"):
+            assert export[key] == [], f"{name}: {key} must be empty"
+        assert group_names == {"group-001": "The Harbor", "group-002": "Main House"}
+        assert place_names == {"place-001": "Central Hub", "place-002": "Waiting Room"}
+        assert member_names == {
+            "member-001": "Popeye", "member-002": "Gilligan",
+            "member-003": "Mickey", "member-004": "Minnie",
+        }
+        assert len(export["groups"]) == 2 and len(export["places"]) == 2
+        assert len(export["members"]) == 4
+        assert len(export["accountObjectPlacements"]) == 4
+        assert acct_places == {
+            (aid, "place", "place-001", "account", aid),
+            (aid, "group", "group-001", "place", "place-001"),
+            (aid, "group", "group-002", "place", "place-001"),
+            (aid, "place", "place-002", "group", "group-002"),
+        }
+        assert {(p["objectType"], p["objectId"], p["rank"], p["placementRole"])
+                for p in export["accountObjectPlacements"]} == {
+            ("place", "place-001", 1, "container-child"),
+            ("group", "group-001", 1, "container-child"),
+            ("group", "group-002", 2, "container-child"),
+            ("place", "place-002", 1, "container-child"),
+        }
+        assert len(export["accountObjectLinks"]) == 4
+        assert {(r["accountId"], r["objectType"], r["objectId"], r["linkRole"])
+                for r in export["accountObjectLinks"]} == {
+            (aid, "place", "place-001", "account-structure-root"),
+            (aid, "group", "group-001", "scoped-to-account"),
+            (aid, "group", "group-002", "scoped-to-account"),
+            (aid, "place", "place-002", "scoped-to-account"),
+        }
+        assert len(export["groupMemberships"]) == 2
+        assert {(r["groupId"], r["memberId"], r["rank"])
+                for r in export["groupMemberships"]} == {
+            ("group-001", "member-001", 1), ("group-001", "member-002", 2),
+        }
+        assert len(export["placeMemberships"]) == 2
+        assert {(r["placeId"], r["memberId"], r["rank"])
+                for r in export["placeMemberships"]} == {
+            ("place-002", "member-003", 1), ("place-002", "member-004", 2),
+        }
     else:
         raise AssertionError(f"{name}: unknown exampleId {example_id}")
 

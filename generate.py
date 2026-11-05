@@ -9,7 +9,7 @@ importer needs to be tested against:
   out/simplyplural-official.json  the official Simply Plural single-file export (unwrapped, _id)
   out/avatars.zip                 tiny solid-colour PNGs named <memberId>.png
   out/edge/                       deliberately off-spec variants (see EDGE CASES)
-  out/pluralbridge-system-models/ eleven generated PluralBridge graph configurations
+  out/pluralbridge-system-models/ twelve generated PluralBridge graph configurations
 
 Everything is fictional. Aurora ids are `synthetic-*`. System-model examples use PluralBridge
 id style and declare themselves synthetic in the export header. Output is byte-identical run
@@ -237,7 +237,7 @@ def write_zip(path, entries):
             z.writestr(info, entries[name])
 
 def generate_system_models():
-    """Build the eleven PluralBridge configurations from Python topologies."""
+    """Build the twelve PluralBridge configurations from Python topologies."""
     built = system_models.build_all()
     assert list(built) == SYSTEM_MODEL_FIXTURE_NAMES, list(built)
     for name, obj in built.items():
@@ -292,7 +292,7 @@ def check_system_model_fixtures(repo_root, out, generated_exports):
     src = Path(repo_root) / "fixtures" / "pluralbridge-system-models"
     mirror = Path(repo_root) / "sample-output" / "pluralbridge-system-models"
     expected = set(SYSTEM_MODEL_FIXTURE_NAMES)
-    for folder, docs in ((src, {"README.md", "System Model Minimum Base.txt"}), (mirror, {"README.md"})):
+    for folder, docs in ((src, {"README.md", "PluralBridge-Plural-Maps-and-Design-Rules.txt"}), (mirror, {"README.md"})):
         found = {p.relative_to(folder).as_posix() for p in folder.rglob("*") if p.is_file()}
         assert found == expected | docs, \
             f"{folder.relative_to(repo_root)}: unexpected {sorted(found - expected - docs)}, missing {sorted(expected - found)}"

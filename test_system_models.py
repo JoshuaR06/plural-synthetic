@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Automated checks for generated PluralBridge system-model configurations."""
+import copy
 import json
 import unittest
 from pathlib import Path
@@ -16,9 +17,9 @@ class SystemModelGenerationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.exports = generate_system_models()
 
-    def test_all_eleven_filenames(self):
+    def test_all_twelve_filenames(self):
         self.assertEqual(list(self.exports), system_models.SYSTEM_MODEL_FILENAMES)
-        self.assertEqual(len(self.exports), 11)
+        self.assertEqual(len(self.exports), 12)
 
     def test_each_export_valid(self):
         for name, obj in self.exports.items():
@@ -110,6 +111,41 @@ class SystemModelGenerationTests(unittest.TestCase):
         self.assertIn(("system-002", "place", "place-002", "system", "system-002"),
                       system_models._sys_place_set(ex11))
         self.assertFalse(any(p[2] == "place-002" for p in system_models._acct_place_set(ex11)))
+
+    def test_non_system_anchor_example(self):
+        obj = self.exports["example-012-non-system-anchors.json"]
+        for key in ("systems", "memberships", "systemRelationships",
+                    "systemObjectLinks", "systemObjectPlacements"):
+            self.assertEqual(obj[key], [])
+        self.assertEqual(system_models._acct_place_set(obj), {
+            ("account-012", "place", "place-001", "account", "account-012"),
+            ("account-012", "group", "group-001", "place", "place-001"),
+            ("account-012", "group", "group-002", "place", "place-001"),
+            ("account-012", "place", "place-002", "group", "group-002"),
+        })
+        self.assertEqual({(r["groupId"], r["memberId"]) for r in obj["groupMemberships"]},
+                         {("group-001", "member-001"), ("group-001", "member-002")})
+        self.assertEqual({(r["placeId"], r["memberId"]) for r in obj["placeMemberships"]},
+                         {("place-002", "member-003"), ("place-002", "member-004")})
+        self.assertEqual(obj["notes"], [])
+        self.assertEqual(obj["frontHistory"], [])
+
+    def test_non_system_anchor_rejects_structural_drift(self):
+        original = self.exports["example-012-non-system-anchors.json"]
+        for case in ("invented-system", "flattened-place", "wrong-group", "duplicate-placement"):
+            with self.subTest(case=case):
+                obj = copy.deepcopy(original)
+                if case == "invented-system":
+                    obj["systems"].append({"systemId": "system-001", "name": "Invented"})
+                elif case == "flattened-place":
+                    obj["accountObjectPlacements"][3]["parentObjectType"] = "place"
+                    obj["accountObjectPlacements"][3]["parentObjectId"] = "place-001"
+                elif case == "wrong-group":
+                    obj["groupMemberships"][0]["groupId"] = "group-002"
+                else:
+                    obj["accountObjectPlacements"].append(dict(obj["accountObjectPlacements"][0]))
+                with self.assertRaises(AssertionError):
+                    system_models.validate_export(obj)
 
     def test_matches_canonical_fixtures(self):
         for name, generated in self.exports.items():

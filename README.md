@@ -10,7 +10,7 @@ One made-up system ("Aurora") is defined once in `generate.py` and written out a
 - a **PluralBridge** per-collection export (folder and zip)
 - an **avatars** zip
 - a set of **edge cases**: shapes real exports can contain that tend to break importers
-- eleven **PluralBridge system-model** configurations, generated from topologies in `system_models.py`
+- twelve **PluralBridge system-model** configurations, generated from topologies in `system_models.py`
 
 No real people, members, notes, fronting history, avatars, tokens or database files were used.
 Every id starts with `synthetic-` so fixture data can never be mistaken for real data.
@@ -44,14 +44,16 @@ you can commit it as test fixtures and diff it in review.
 | `edge/fronthistory-open-without-live-flag.json` | open fronts with no `live` field at all |
 | `edge/groups-structural-edge-cases.json` | the normal groups plus damaged or unusual group structures |
 | `edge/simplyplural-official-with-edge-groups.json` | a complete Simply Plural export using those edge-case groups |
-| `pluralbridge-system-models/*.json` | eleven generated PluralBridge system-model configurations (001-011) |
+| `pluralbridge-system-models/*.json` | twelve generated PluralBridge system-model configurations (001-012) |
 
 ## PluralBridge system-model configurations
 
-The repository includes eleven PluralBridge system-model examples in
+The repository includes twelve PluralBridge system-model examples in
 [`sample-output/pluralbridge-system-models/`](sample-output/pluralbridge-system-models).
-They follow [`fixtures/pluralbridge-system-models/System Model Minimum Base.txt`](fixtures/pluralbridge-system-models/System%20Model%20Minimum%20Base.txt)
-and share one collection schema. Unused collections are empty arrays.
+The authoritative specification is
+[`PluralBridge-Plural-Maps-and-Design-Rules.txt`](fixtures/pluralbridge-system-models/PluralBridge-Plural-Maps-and-Design-Rules.txt).
+All twelve examples share one collection schema. Unused collections are empty arrays.
+The existing eleven examples retain their established encoding and output.
 
 They cover:
 
@@ -66,6 +68,7 @@ They cover:
 - non-tree graph relationships
 - a top-level Group containing Systems
 - a top-level Place containing Systems and a nested Place
+- a root Place containing Groups and a nested Place, with zero Systems (Example 12)
 
 `generate.py` builds these from Python topologies in `system_models.py` (entities, memberships,
 graph relationships, and placements). It does not copy the JSON files. Canonical serialized
@@ -173,7 +176,7 @@ assert len(open_fronts) == 2
 
 **5. Make it your own.** Aurora and the Simply Plural / edge exports are defined in plain
 Python lists near the top of `generate.py` (`MEMBERS`, `GROUPS`, `EDGE_GROUPS`, `FRONT_HISTORY`
-and so on). The eleven PluralBridge system-model configurations are defined as topologies in
+and so on). The twelve PluralBridge system-model configurations are defined as topologies in
 `system_models.py`. Add a member or an edge case there, run it again, and every output format
 updates together. Keep new Aurora ids starting with `synthetic-`; the built-in check refuses to
 write that export otherwise.

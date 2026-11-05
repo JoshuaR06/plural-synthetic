@@ -1,0 +1,192 @@
+{
+  "accountObjectLinks": [
+    {
+      "accountId": "account-012",
+      "linkId": "account-link-001",
+      "linkRole": "account-structure-root",
+      "objectId": "place-001",
+      "objectType": "place"
+    },
+    {
+      "accountId": "account-012",
+      "linkId": "account-link-002",
+      "linkRole": "scoped-to-account",
+      "objectId": "group-001",
+      "objectType": "group"
+    },
+    {
+      "accountId": "account-012",
+      "linkId": "account-link-003",
+      "linkRole": "scoped-to-account",
+      "objectId": "group-002",
+      "objectType": "group"
+    },
+    {
+      "accountId": "account-012",
+      "linkId": "account-link-004",
+      "linkRole": "scoped-to-account",
+      "objectId": "place-002",
+      "objectType": "place"
+    }
+  ],
+  "accountObjectPlacements": [
+    {
+      "accountId": "account-012",
+      "objectId": "place-001",
+      "objectType": "place",
+      "parentObjectId": "account-012",
+      "parentObjectType": "account",
+      "placementId": "account-placement-001",
+      "placementRole": "container-child",
+      "rank": 1
+    },
+    {
+      "accountId": "account-012",
+      "objectId": "group-001",
+      "objectType": "group",
+      "parentObjectId": "place-001",
+      "parentObjectType": "place",
+      "placementId": "account-placement-002",
+      "placementRole": "container-child",
+      "rank": 1
+    },
+    {
+      "accountId": "account-012",
+      "objectId": "group-002",
+      "objectType": "group",
+      "parentObjectId": "place-001",
+      "parentObjectType": "place",
+      "placementId": "account-placement-003",
+      "placementRole": "container-child",
+      "rank": 2
+    },
+    {
+      "accountId": "account-012",
+      "objectId": "place-002",
+      "objectType": "place",
+      "parentObjectId": "group-002",
+      "parentObjectType": "group",
+      "placementId": "account-placement-004",
+      "placementRole": "container-child",
+      "rank": 1
+    }
+  ],
+  "accounts": [
+    {
+      "accountId": "account-012",
+      "displayName": "Example 12",
+      "email": "example-12@pluralbridge.org",
+      "status": "Active",
+      "username": "example-12"
+    }
+  ],
+  "audit": {
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "customFields": [],
+  "frontHistory": [],
+  "groupMemberships": [
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-001",
+      "memberId": "member-001",
+      "rank": 1
+    },
+    {
+      "groupId": "group-001",
+      "groupMembershipId": "group-membership-002",
+      "memberId": "member-002",
+      "rank": 2
+    }
+  ],
+  "groups": [
+    {
+      "groupId": "group-001",
+      "name": "The Harbor"
+    },
+    {
+      "groupId": "group-002",
+      "name": "Main House"
+    }
+  ],
+  "lookups": {
+    "accountObjectTypes": [
+      "place",
+      "group"
+    ],
+    "membershipStatuses": [],
+    "placementRoles": [
+      "container-child"
+    ],
+    "relationshipTypes": [],
+    "roles": []
+  },
+  "members": [
+    {
+      "displayName": "Popeye",
+      "isArchived": false,
+      "memberId": "member-001"
+    },
+    {
+      "displayName": "Gilligan",
+      "isArchived": false,
+      "memberId": "member-002"
+    },
+    {
+      "displayName": "Mickey",
+      "isArchived": false,
+      "memberId": "member-003"
+    },
+    {
+      "displayName": "Minnie",
+      "isArchived": false,
+      "memberId": "member-004"
+    }
+  ],
+  "memberships": [],
+  "notes": [],
+  "placeMemberships": [
+    {
+      "memberId": "member-003",
+      "placeId": "place-002",
+      "placeMembershipId": "place-membership-001",
+      "rank": 1
+    },
+    {
+      "memberId": "member-004",
+      "placeId": "place-002",
+      "placeMembershipId": "place-membership-002",
+      "rank": 2
+    }
+  ],
+  "places": [
+    {
+      "name": "Central Hub",
+      "placeId": "place-001"
+    },
+    {
+      "name": "Waiting Room",
+      "placeId": "place-002"
+    }
+  ],
+  "pluralBridgeExport": {
+    "exampleId": "example-012",
+    "exampleName": "Non-System Anchors Plural Map",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic PluralBridge example following Example 12 of PluralBridge-Plural-Maps-and-Design-Rules.txt. Central Hub is a root Place containing The Harbor and Main House Groups. Main House contains Waiting Room Place. No System entities or System references exist. Placements and structural memberships do not grant access. Access grants, focus, note contents, and fronting events are not specified by the source and are not fabricated."
+  },
+  "privacyBuckets": [],
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic",
+    "sourceIdsPreserved": true
+  },
+  "systemObjectLinks": [],
+  "systemObjectPlacements": [],
+  "systemRelationships": [],
+  "systems": [],
+  "visibilityScopes": []
+}

@@ -1,6 +1,6 @@
 # PluralBridge System-Model Samples
 
-Eleven generated configurations:
+Twelve generated configurations:
 
 - `example-001-simple-single-system.json`
 - `example-002-multiple-top-level-systems.json`
@@ -13,6 +13,7 @@ Eleven generated configurations:
 - `example-009-non-tree-graph.json`
 - `example-010-top-level-group-containing-systems.json`
 - `example-011-top-level-place-containing-systems.json`
+- `example-012-non-system-anchors.json`
 
 These files are produced by `generate.py` from Python topologies. They use one
 shared collection schema, explicit system relationship records, and separate
