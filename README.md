@@ -85,6 +85,8 @@ Directed structure uses `account.relationships` (`sourceAnchorId`, `fieldId`, `t
 The label comes from the referenced custom field's `fieldName`. Reverse direction is a separate
 row. A null target is literal JSON `null`. Display combines labels for the same source/target and
 appends `->Target` only when a target exists. Root and child graph records are omitted.
+The relationship JSON format, worked examples, and per-example results are in
+[`fixtures/pluralbridge-system-models/README.md`](fixtures/pluralbridge-system-models/README.md#field-level-relationship-encoding).
 `privacyBuckets`, `visibilityScopes`, and access memberships are omitted. Notes, custom fields,
 and tree member occurrences carry visibility and permissions. Current fronting is a Boolean on
 the shared member and applies across every occurrence, independently of focused anchor.

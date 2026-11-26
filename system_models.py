@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
 """PluralBridge canonical-model topologies and export builder.
 
-Each of the twelve canonical configurations is defined as a compact topology
-(entities, graph relationships, containment placements). `assemble` expands that
-topology into the hierarchical single-account export: shared peer collections
-plus a placement tree. Link and placement tuples in a spec are generation input;
-they are not copied into the serialized JSON.
+Each of the twelve canonical configurations is a compact Python spec
+(`spec_001` … `spec_012`). `assemble` expands a spec into one hierarchical
+account: shared members/notes/fields/anchors, a containment `tree`, optional
+field-based `relationships`, and optional `frontHistory`.
+
+Spec tuples such as `system_links`, `system_placements`, `group_memberships`,
+and `account_placements` are generation input. They are not copied into the
+serialized JSON. The tree is nesting; graph relationships are a separate
+account-level collection whose labels come from custom fields.
 
 This is generation, not JSON embedding: anchors, tree nodes, identifier
 references, inherit settings, and member-wide fronting are created
-programmatically from the topology.
+programmatically from the topology. Aurora/Simply Plural emission lives in
+generate.py and must not be mixed with this schema.
 """
 from collections import OrderedDict, defaultdict
 
 EXPORT_VERSION = "0.1-draft"
 EXPORT_KIND = "self-contained-pluralbridge-example"
 SOURCE_GENERATOR = "plural-synthetic"
-NOTE_ASSIGNEE = "member-001"
+NOTE_ASSIGNEE = "member-001"  # every noteId in an example is assigned to this shared member
 
 # Roles that describe topology structure. Any other linkRole becomes a tag on
 # the corresponding serialized record (member occurrence, group, note, or front).
@@ -38,6 +43,7 @@ REQUIRED_ACCOUNT_FIELDS = (
 OPTIONAL_ACCOUNT_ARRAYS = (
     "notes", "customFields", "relationships", "frontHistory",
 )
+# Present in some specs as unused generation input; assemble must not emit them.
 REMOVED_ACCOUNT_COLLECTIONS = (
     "privacyBuckets", "visibilityScopes", "memberships",
 )
@@ -116,6 +122,7 @@ def front_rec(front_id, member_ids, started, ended, live, status, archived=None)
 
 
 def field_rec(field_id, name, description):
+    """Payload-bearing field. Uses customFieldId until _shape_custom_field normalizes to fieldId."""
     return {
         "customFieldId": field_id,
         "fieldName": name,
@@ -126,7 +133,11 @@ def field_rec(field_id, name, description):
 
 
 def relationship_field_rec(field_id, field_name):
-    """Account-owned label field referenced by relationship rows. Not placed on anchors."""
+    """Account-owned label field referenced by relationship rows.
+
+    These ids must not be copied onto `anchor.fieldIds` merely to display a
+    relationship label. `field_rec` is the unrelated payload-bearing field.
+    """
     return {
         "fieldId": field_id,
         "fieldName": field_name,
@@ -136,6 +147,7 @@ def relationship_field_rec(field_id, field_name):
 
 
 def bucket_rec(bucket_id, name, description, color="#1998a8"):
+    """Spec-only privacy bucket. Not serialized into the canonical JSON account."""
     return {
         "privacyBucketId": bucket_id,
         "name": name,
@@ -145,6 +157,7 @@ def bucket_rec(bucket_id, name, description, color="#1998a8"):
 
 
 def scope_rec(scope_id, member_ids, name="Private"):
+    """Spec-only visibility scope. Not serialized into the canonical JSON account."""
     return {
         "visibilityScopeId": scope_id,
         "name": name,
@@ -156,7 +169,11 @@ def scope_rec(scope_id, member_ids, name="Private"):
 
 
 def _ensure_inherit_settings(rec):
-    """Add approved inherit visibility/permissions without overwriting explicit values."""
+    """Add approved inherit visibility/permissions without overwriting explicit values.
+
+    Applied to notes, custom fields, and tree occurrences. Shared members do not
+    receive these keys; do not derive them from the omitted privacy collections.
+    """
     if "visibility" not in rec:
         rec["visibility"] = dict(INHERIT_SETTING)
     if "permissions" not in rec:
@@ -201,6 +218,7 @@ def _current_fronting_ids(front_history):
 
 
 def _placements(spec):
+    """Flatten system and account placement tuples. The owner id is generation input only."""
     rows = []
     for item in list(spec.get("system_placements", [])) + list(spec.get("account_placements", [])):
         _owner, object_type, object_id, parent_type, parent_id, rank = item[:6]
@@ -222,6 +240,7 @@ def _shape_anchor(rec, object_type, field_ids=None, tags=None):
 
 
 def _shape_member(rec, field_ids, note_ids, fronting):
+    """Shared account.members[] payload. Fronting is member-wide, never copied onto tree occurrences."""
     shaped = _id_first(rec, "memberId")
     shaped["fieldIds"] = list(field_ids)
     shaped["noteIds"] = list(note_ids)
@@ -230,6 +249,7 @@ def _shape_member(rec, field_ids, note_ids, fronting):
 
 
 def _member_occ(member_id, tags=None):
+    """Tree occurrence of a shared member. Settings belong here; identity stays on account.members."""
     occ = {"memberId": member_id}
     if tags:
         occ["tags"] = list(tags)
@@ -237,6 +257,7 @@ def _member_occ(member_id, tags=None):
 
 
 def _shape_relationship(rel, index):
+    """One directed row. Label is customFields.fieldName for fieldId; targetAnchorId may be JSON null."""
     rec = {
         "relationshipId": rel.get("relationshipId", f"relationship-{index:03d}"),
         "sourceAnchorId": rel["sourceAnchorId"],
@@ -247,6 +268,7 @@ def _shape_relationship(rel, index):
 
 
 def _shape_custom_field(rec):
+    """Normalize field_rec (customFieldId) and relationship_field_rec (fieldId) to one shape."""
     payload = dict(rec)
     if "customFieldId" in payload:
         payload["fieldId"] = payload.pop("customFieldId")
@@ -255,6 +277,7 @@ def _shape_custom_field(rec):
 
 
 def _shape_membership(system_id, index, override):
+    """Leftover access-membership builder. Canonical exports omit memberships."""
     return {
         "membershipId": f"membership-{index:03d}",
         "anchorId": system_id,
@@ -264,6 +287,7 @@ def _shape_membership(system_id, index, override):
 
 
 def _tree_node(anchor_id, children_by_parent, members_by_anchor):
+    """One tree node: anchor reference, occurrence list, children in rank order."""
     child_rows = sorted(children_by_parent.get(anchor_id, []), key=lambda row: row[0])
     return {
         "anchorId": anchor_id,
@@ -287,7 +311,19 @@ def _provenance(spec):
 
 
 def assemble(spec):
-    """Expand a compact topology into a hierarchical single-account export."""
+    """Expand a compact topology into a hierarchical single-account export.
+
+    Member order on a System comes from `system_links` of type member.
+    Group/place occurrence order comes from ranked membership tuples.
+    Tree shape comes from placements: account-parented rows are roots; otherwise
+    unplaced systems become top-level roots. Custom fields listed as
+    defined-in-system are the only fields copied onto `anchor.fieldIds`.
+
+    Shared members currently receive empty fieldIds. All notes in a spec are
+    assigned to NOTE_ASSIGNEE. Fronting is derived from current front-history
+    events unless `explicit_fronting` is present (Example 12). Empty optional
+    collections are omitted; members, anchors, and tree are always emitted.
+    """
     account_rec = spec["account"]
     systems = list(spec.get("systems", []))
     groups = list(spec.get("groups", []))
@@ -303,6 +339,7 @@ def assemble(spec):
     tags_by_front = defaultdict(list)
     member_tags_by_system = defaultdict(dict)
     system_member_order = defaultdict(list)
+    # account_links, if present on a spec, are unused; tree roots come from placements.
     for owner_id, object_type, object_id, link_role in system_links:
         if object_type == "customField" and link_role == "defined-in-system":
             field_ids_by_anchor[owner_id].append(object_id)
@@ -319,6 +356,7 @@ def assemble(spec):
         elif tag and object_type == "frontHistory":
             tags_by_front[object_id].append(tag)
 
+    # Same memberId may appear under several anchors; identity stays on account.members.
     members_by_anchor = {}
     for system_id, member_ids in system_member_order.items():
         members_by_anchor[system_id] = [
@@ -350,6 +388,7 @@ def assemble(spec):
     if account_roots:
         root_ids = [oid for _rank, _otype, oid in sorted(account_roots)]
     else:
+        # Examples 1–9: any system not placed under another anchor is a tree root.
         root_ids = [row["systemId"] for row in systems if row["systemId"] not in child_ids]
 
     tree = [_tree_node(root_id, children_by_parent, members_by_anchor) for root_id in root_ids]
@@ -376,11 +415,13 @@ def assemble(spec):
     for rec in spec.get("members", []):
         mid = rec["memberId"]
         if explicit_fronting is not None:
+            # Presence of the map is the override. Every member must be listed, including False.
             assert mid in explicit_fronting, f"{spec['example_id']}: explicit_fronting missing {mid}"
             fronting = explicit_fronting[mid]
         else:
             fronting = mid in derived_fronting
         assigned_notes = note_ids if mid == NOTE_ASSIGNEE else []
+        # Shared members keep empty fieldIds; inherit settings are not applied here.
         shared_members.append(_shape_member(rec, [], assigned_notes, fronting))
 
     shaped_notes = []
@@ -420,6 +461,7 @@ def assemble(spec):
         "relationships": relationships,
         "frontHistory": shaped_fronts,
     }
+    # Omit empty optional arrays. privacyBuckets/visibilityScopes/memberships are never copied.
     for key in ACCOUNT_COLLECTION_ORDER:
         if key in ("members", "anchors", "tree") or collections[key]:
             account_obj[key] = collections[key]
@@ -440,9 +482,12 @@ def assemble(spec):
 
 
 # ---------------------------------------------------------------- topologies
+# Compact generation input. Filenames are stable, including example-006-subsystem.json
+# whose exampleName is Nested Structure Model. Do not emit spec tuples into JSON.
 
 
 def spec_001():
+    """One System. Member A occurs on The Harbor, Musicians, and Ballet."""
     harbor = "system-001"
     return {
         "filename": "example-001-simple-single-system.json",
@@ -506,6 +551,7 @@ def spec_001():
 
 
 def spec_002():
+    """Two root Systems. Sibling containment is not implied; no relationship rows."""
     harbor, observatory = "system-001", "system-002"
     return {
         "filename": "example-002-multiple-top-level-systems.json",
@@ -562,6 +608,7 @@ def spec_002():
 
 
 def spec_003():
+    """The Workshop is nested under Main House. No relationship rows; containment is the tree."""
     main, workshop = "system-001", "system-002"
     return {
         "filename": "example-003-parent-child-system.json",
@@ -626,6 +673,7 @@ def spec_003():
 
 
 def spec_004():
+    """Peer Systems. Reciprocity is two directed rows sharing the sibling field."""
     day, night = "system-001", "system-002"
     return {
         "filename": "example-004-sibling-systems.json",
@@ -693,6 +741,7 @@ def spec_004():
 
 
 def spec_005():
+    """Peer Systems. Reciprocity is two directed rows sharing the related field."""
     harbor, archive = "system-001", "system-002"
     return {
         "filename": "example-005-related-systems.json",
@@ -765,6 +814,7 @@ def spec_005():
 
 
 def spec_006():
+    """Place nested in one System. Filename keeps -subsystem; exampleName is Nested Structure Model."""
     harbor = "system-001"
     return {
         "filename": "example-006-subsystem.json",
@@ -835,6 +885,7 @@ def spec_006():
 
 
 def spec_007():
+    """Two independent null-target labels on North Wing: evolving and unknown."""
     harbor, north = "system-001", "system-002"
     return {
         "filename": "example-007-evolving-uncertain-relationship.json",
@@ -907,6 +958,7 @@ def spec_007():
 
 
 def spec_008():
+    """Archived relationship label does not cascade isArchived/status on Old Map or its records."""
     current, old = "system-001", "system-002"
     return {
         "filename": "example-008-archived-system.json",
@@ -929,6 +981,7 @@ def spec_008():
                        status="archived", isArchived=True, archivedAt="2026-01-01T00:00:00Z",
                        archivedReason="Superseded by Current System during migration."),
         ],
+        # Leftover access-membership input. assemble does not emit memberships.
         "membership_overrides": {old: {"status": "Historical"}},
         "relationships": [
             {"relationshipId": "relationship-001", "sourceAnchorId": old,
@@ -1000,6 +1053,7 @@ def spec_008():
 
 
 def spec_009():
+    """Three directed edges. Graph rows are not tree containment; all three Systems remain roots."""
     a, b, c = "system-001", "system-002", "system-003"
     return {
         "filename": "example-009-non-tree-graph.json",
@@ -1079,6 +1133,7 @@ def spec_009():
 
 
 def spec_010():
+    """Account placements make Household the tree root. Empty relationships[] is omitted."""
     harbor, house = "system-001", "system-002"
     acct = account(10)
     aid = acct["accountId"]
@@ -1143,6 +1198,7 @@ def spec_010():
 
 
 def spec_011():
+    """Account placements make Central Hub the tree root. Main House members live on Waiting Room."""
     harbor, house = "system-001", "system-002"
     acct = account(11)
     aid = acct["accountId"]
@@ -1205,7 +1261,7 @@ def spec_011():
 
 
 def spec_012():
-    """Non-System anchors; structure from Canonical Model Minimum Base.txt."""
+    """Non-System anchors. Tree from account_placements; account_links are unused by assemble."""
     aid = "account-012"
     return {
         "filename": "example-012-non-system-anchors.json",
@@ -1254,12 +1310,14 @@ def spec_012():
             ("place-002", "member-004", 2),
         ],
         # Explicit fixture decision for Example 12, not a missing-history default.
+        # There is no frontHistory collection; do not derive False from empty history.
         "explicit_fronting": {
             "member-001": False,
             "member-002": False,
             "member-003": False,
             "member-004": False,
         },
+        # Historical transcription provenance; the live spec filename may differ.
         "provenance": {
             "sourceDocument": "PluralBridge-Plural-Maps-and-Design-Rules.txt",
             "sourceExample": 12,
@@ -1276,7 +1334,7 @@ SPECS = [
 
 
 def build_all():
-    """Return {filename: export} for all twelve canonical configurations."""
+    """Return {filename: export} for all twelve canonical configurations, in SPECS order."""
     out = OrderedDict()
     for spec_fn in SPECS:
         spec = spec_fn()
@@ -1285,6 +1343,7 @@ def build_all():
     return dict(out)
 
 
+# Fixture contract: order and names must match generate.py's expected file set.
 SYSTEM_MODEL_FILENAMES = [
     "example-001-simple-single-system.json",
     "example-002-multiple-top-level-systems.json",
@@ -1349,6 +1408,7 @@ def _anchor_names(export, object_type):
 
 
 def _rel_labels(export):
+    """Compare relationships by (source, fieldName, target). Target None is JSON null."""
     names = {f["fieldId"]: f["fieldName"] for f in _acct(export).get("customFields") or []}
     return {(r["sourceAnchorId"], names[r["fieldId"]], r["targetAnchorId"])
             for r in _acct(export).get("relationships") or []}
@@ -1363,6 +1423,7 @@ def _system_members(export, system_id):
 
 
 def validate_schema(export, name="export"):
+    """Envelope, required collections, omitted empty arrays, and forbidden legacy collections."""
     extra = [key for key in export if key not in REQUIRED_TOP_LEVEL]
     missing = [key for key in REQUIRED_TOP_LEVEL if key not in export]
     assert not missing, f"{name}: missing top-level keys {missing}"
@@ -1388,10 +1449,12 @@ def validate_schema(export, name="export"):
 
 
 def validate_unique_memberships(export, name="export"):
+    """Name kept for callers. Access memberships are omitted from this format."""
     assert "memberships" not in _acct(export), f"{name}: memberships collection was removed"
 
 
 def validate_references(export, name="export"):
+    """IDs unique, every reference in-account, relationship rows use the approved fields only."""
     account = _acct(export)
     member_ids = ids_in(account["members"], "memberId")
     assert len(member_ids) == len(account["members"]), f"{name}: duplicate memberId"
@@ -1464,6 +1527,7 @@ def validate_references(export, name="export"):
 
 
 def validate_topology(export, name="export"):
+    """Per-example structural contract: names, tree order, relationship labels, fronting, archives."""
     example_id = export["pluralBridgeExport"]["exampleId"]
     account = _acct(export)
     names = _anchor_names(export, "system")
@@ -1528,6 +1592,7 @@ def validate_topology(export, name="export"):
         assert len(_anchors_of_type(export, "system")) == 1
         assert not any(m["fronting"] for m in account["members"])
     elif example_id == "example-007":
+        # evolving and unknown are separate rows; neither is copied onto anchor.fieldIds.
         assert len(relationships) == 2
         evolving = relationships[0]
         unknown = relationships[1]
@@ -1552,6 +1617,7 @@ def validate_topology(export, name="export"):
         assert _child_ids(tree["system-001"]) == ["group-001"]
         assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"C"}
     elif example_id == "example-008":
+        # Archive flags on systems, members, groups, notes, and fronts are independent of the label.
         assert len(relationships) == 1
         archived = relationships[0]
         assert archived["relationshipId"] == "relationship-001"
@@ -1612,6 +1678,7 @@ def validate_topology(export, name="export"):
         assert "relationships" not in account
         assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"Popeye"}
     elif example_id == "example-012":
+        # Keep the historical provenance filename even if the live spec was renamed.
         assert account["accountId"] == "account-012"
         assert _anchors_of_type(export, "system") == []
         for key in ("memberships", "relationships", "notes", "frontHistory",
@@ -1644,6 +1711,7 @@ def validate_topology(export, name="export"):
 
 
 def validate_export(export, name="export"):
+    """Synthetic header plus schema, reference, and topology checks used by generate.py."""
     header = export["pluralBridgeExport"]
     assert header.get("exportKind") == EXPORT_KIND, f"{name}: exportKind"
     assert str(header.get("modelingNote", "")).startswith("Synthetic"), f"{name}: modelingNote"

@@ -20,8 +20,10 @@ one account with shared peer collections (members, notes, custom fields, anchors
 and a hierarchical `tree`. Tree nodes reference anchors; member occurrences
 reference shared members. Nesting is containment; array order is display order.
 Directed graph records stay in `relationships` (`sourceAnchorId`, `fieldId`,
-`targetAnchorId`); the label comes from the referenced custom field. Empty
-relationship collections are omitted. `privacyBuckets`, `visibilityScopes`, and
+`targetAnchorId`); the label comes from the referenced custom field. The
+relationship JSON format, worked examples, and per-example results are in
+[`fixtures/pluralbridge-system-models/README.md`](../../fixtures/pluralbridge-system-models/README.md#field-level-relationship-encoding).
+Empty relationship collections are omitted. `privacyBuckets`, `visibilityScopes`, and
 access memberships are omitted. Notes, custom fields, and tree member occurrences
 carry visibility and permissions. Current fronting is a Boolean on the shared
 member and applies across every occurrence, independently of focused anchor.

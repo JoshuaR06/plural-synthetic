@@ -370,3 +370,5 @@ When a diagram labels two Systems with the same peer type and draws no arrow, en
 Archived is a System lifecycle state (status archived, isArchived true). Model 8 also records an archived null-target label on Old Map. That label does not change or cascade per-object archive flags.
 
 Examples 1, 2, 3, 6, and 10–12 have no relationship rows.
+
+Worked JSON excerpts and the relationship results for Examples 004, 005, 007, 008, and 009 are documented in README.md in this folder.
