@@ -1,0 +1,81 @@
+{
+  "account": {
+    "accountId": "12345",
+    "members": [
+      {
+        "memberId": "member-A",
+        "displayName": "Member A",
+        "fieldIds": ["field-1"],
+        "noteIds": [],
+		"fronting": true
+      },
+      {
+        "memberId": "member-B",
+        "displayName": "Member B",
+        "fieldIds": [],
+        "noteIds": ["note-1"],
+		"fronting": false
+      }
+    ],
+    "notes": [
+      {
+        "noteId": "note-1",
+        "title": "Archive Note",
+        "body": "some body text",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      }
+    ],
+    "customFields": [
+      {
+        "fieldId": "field-1",
+        "fieldName": "related",
+        "description": "Relationship label for related anchors",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      }
+    ],
+    "anchors": [
+      {
+        "anchorId": "place-Hub",
+        "objectType": "place",
+        "name": "Place Hub"
+      }
+    ],
+    "tree": [
+      {
+        "anchorId": "place-Hub",
+        "members": [
+          {
+            "memberId": "member-A",
+            "visibility": {
+              "mode": "explicit",
+              "value": "self"
+            },
+            "permissions": {
+              "mode": "inherit"
+            }
+          },
+          {
+            "memberId": "member-B",
+            "visibility": {
+              "mode": "inherit"
+            },
+            "permissions": {
+              "mode": "inherit"
+            }
+          }
+        ],
+        "children": []
+      }
+    ]
+  }
+}

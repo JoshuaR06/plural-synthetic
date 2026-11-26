@@ -1,57 +1,52 @@
 #!/usr/bin/env python3
-"""PluralBridge system-model topologies and export builder.
+"""PluralBridge canonical-model topologies and export builder.
 
 Each of the twelve canonical configurations is defined as a compact topology
-(entities, graph relationships, containment placements, memberships). `assemble`
-expands that topology into the flattened PluralBridge export shape, including
-empty arrays for unused collections.
+(entities, graph relationships, containment placements). `assemble` expands that
+topology into the hierarchical single-account export: shared peer collections
+plus a placement tree. Link and placement tuples in a spec are generation input;
+they are not copied into the serialized JSON.
 
-This is generation, not JSON embedding: link, placement, membership, lookup, and
-wrapper records are created programmatically from the topology.
+This is generation, not JSON embedding: anchors, tree nodes, identifier
+references, inherit settings, and member-wide fronting are created
+programmatically from the topology.
 """
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 EXPORT_VERSION = "0.1-draft"
 EXPORT_KIND = "self-contained-pluralbridge-example"
 SOURCE_GENERATOR = "plural-synthetic"
+NOTE_ASSIGNEE = "member-001"
 
-REQUIRED_COLLECTIONS = (
-    "pluralBridgeExport",
-    "accounts",
-    "memberships",
-    "systems",
-    "systemRelationships",
-    "accountObjectLinks",
-    "accountObjectPlacements",
-    "systemObjectLinks",
-    "systemObjectPlacements",
-    "members",
-    "groups",
-    "groupMemberships",
-    "places",
-    "placeMemberships",
-    "notes",
-    "frontHistory",
-    "customFields",
-    "privacyBuckets",
-    "visibilityScopes",
-    "provenance",
-    "audit",
-    "lookups",
-)
-
-OBJECT_ID_FIELDS = {
-    "member": ("members", "memberId"),
-    "group": ("groups", "groupId"),
-    "place": ("places", "placeId"),
-    "note": ("notes", "noteId"),
-    "frontHistory": ("frontHistory", "frontHistoryId"),
-    "customField": ("customFields", "customFieldId"),
-    "privacyBucket": ("privacyBuckets", "privacyBucketId"),
-    "visibilityScope": ("visibilityScopes", "visibilityScopeId"),
-    "system": ("systems", "systemId"),
-    "account": ("accounts", "accountId"),
+# Roles that describe topology structure. Any other linkRole becomes a tag on
+# the corresponding serialized record (member occurrence, group, note, or front).
+STRUCTURAL_LINK_ROLES = {
+    "scoped-to-system",
+    "scoped-to-account",
+    "account-structure-root",
+    "account-note",
+    "fronting-context",
+    "defined-in-system",
+    "container-child",
 }
+
+REQUIRED_TOP_LEVEL = ("account", "audit", "pluralBridgeExport", "provenance")
+REQUIRED_ACCOUNT_FIELDS = (
+    "accountId", "displayName", "email", "status", "username",
+    "members", "anchors", "tree",
+)
+OPTIONAL_ACCOUNT_ARRAYS = (
+    "notes", "customFields", "relationships", "frontHistory",
+)
+REMOVED_ACCOUNT_COLLECTIONS = (
+    "privacyBuckets", "visibilityScopes", "memberships",
+)
+ACCOUNT_COLLECTION_ORDER = (
+    "members", "notes", "customFields",
+    "anchors", "tree", "relationships", "frontHistory",
+)
+INHERIT_SETTING = {"mode": "inherit"}
+ANCHOR_ID_FIELDS = {"system": "systemId", "group": "groupId", "place": "placeId"}
 
 FIXED_AUDIT = {"createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z"}
 
@@ -130,6 +125,16 @@ def field_rec(field_id, name, description):
     }
 
 
+def relationship_field_rec(field_id, field_name):
+    """Account-owned label field referenced by relationship rows. Not placed on anchors."""
+    return {
+        "fieldId": field_id,
+        "fieldName": field_name,
+        "visibility": {"mode": "inherit"},
+        "permissions": {"mode": "inherit"},
+    }
+
+
 def bucket_rec(bucket_id, name, description, color="#1998a8"):
     return {
         "privacyBucketId": bucket_id,
@@ -150,171 +155,288 @@ def scope_rec(scope_id, member_ids, name="Private"):
     }
 
 
-def unique_append(seq, value):
-    if value not in seq:
-        seq.append(value)
+def _ensure_inherit_settings(rec):
+    """Add approved inherit visibility/permissions without overwriting explicit values."""
+    if "visibility" not in rec:
+        rec["visibility"] = dict(INHERIT_SETTING)
+    if "permissions" not in rec:
+        rec["permissions"] = dict(INHERIT_SETTING)
+    return rec
 
 
-def _numbered(prefix, rows, id_field):
-    out = []
-    for i, row in enumerate(rows, 1):
-        rec = dict(row)
-        rec.setdefault(id_field, f"{prefix}-{i:03d}")
-        out.append(rec)
+def _id_first(rec, id_field, extra_last=()):
+    """Keep the identifier first, sort remaining payload keys, then extras."""
+    rest = {k: rec[k] for k in rec if k != id_field and k not in extra_last}
+    out = {id_field: rec[id_field]}
+    for key in sorted(rest):
+        out[key] = rest[key]
+    for key in extra_last:
+        if key in rec:
+            out[key] = rec[key]
     return out
 
 
-def _link_rows(pairs, id_prefix, owner_field):
+def _sorted_keys(rec, extra_last=()):
+    rest = {k: rec[k] for k in rec if k not in extra_last}
+    out = {key: rest[key] for key in sorted(rest)}
+    for key in extra_last:
+        if key in rec:
+            out[key] = rec[key]
+    return out
+
+
+def _tag_for_role(role):
+    if role in STRUCTURAL_LINK_ROLES:
+        return None
+    return role
+
+
+def _current_fronting_ids(front_history):
+    """Members listed on a current event: endedAt is null and isLive is true."""
+    current = set()
+    for rec in front_history:
+        if rec.get("endedAt") is None and rec.get("isLive") is True:
+            current.update(rec.get("memberIds") or [])
+    return current
+
+
+def _placements(spec):
     rows = []
-    for item in pairs:
-        owner_id, object_type, object_id, link_role = item
-        rows.append({
-            owner_field: owner_id,
-            "objectType": object_type,
-            "objectId": object_id,
-            "linkRole": link_role,
-        })
-    return _numbered(id_prefix, rows, "linkId")
+    for item in list(spec.get("system_placements", [])) + list(spec.get("account_placements", [])):
+        _owner, object_type, object_id, parent_type, parent_id, rank = item[:6]
+        rows.append((object_type, object_id, parent_type, parent_id, rank))
+    return rows
 
 
-def _placement_rows(items, id_prefix, owner_field):
-    rows = []
-    for item in items:
-        owner_id, object_type, object_id, parent_type, parent_id, rank = item[:6]
-        role = item[6] if len(item) > 6 else "container-child"
-        rows.append({
-            owner_field: owner_id,
-            "objectType": object_type,
-            "objectId": object_id,
-            "parentObjectType": parent_type,
-            "parentObjectId": parent_id,
-            "placementRole": role,
-            "rank": rank,
-        })
-    return _numbered(id_prefix, rows, "placementId")
+def _shape_anchor(rec, object_type, field_ids=None, tags=None):
+    id_field = ANCHOR_ID_FIELDS[object_type]
+    payload = {k: v for k, v in rec.items() if k != id_field}
+    out = {"anchorId": rec[id_field], "objectType": object_type}
+    for key in sorted(payload):
+        out[key] = payload[key]
+    if field_ids:
+        out["fieldIds"] = list(field_ids)
+    if tags:
+        out["tags"] = list(tags)
+    return out
 
 
-def _membership_rows(pairs, id_prefix):
-    rows = []
-    for item in pairs:
-        group_or_place_field, container_id, member_id, rank = item
-        rows.append({group_or_place_field: container_id, "memberId": member_id, "rank": rank})
-    key = "groupMembershipId" if id_prefix.startswith("group-membership") else "placeMembershipId"
-    return _numbered(id_prefix, rows, key)
+def _shape_member(rec, field_ids, note_ids, fronting):
+    shaped = _id_first(rec, "memberId")
+    shaped["fieldIds"] = list(field_ids)
+    shaped["noteIds"] = list(note_ids)
+    shaped["fronting"] = fronting
+    return shaped
 
 
-def derive_lookups(export):
-    lookups = OrderedDict()
-    roles, statuses, rel_types = [], [], []
-    for rec in export["memberships"]:
-        unique_append(statuses, rec["status"])
-        for role in rec.get("roles", []):
-            unique_append(roles, role)
-    for rec in export["systemRelationships"]:
-        unique_append(rel_types, rec["relationshipType"])
-    lookups["roles"] = roles
-    lookups["membershipStatuses"] = statuses
-    lookups["relationshipTypes"] = rel_types
+def _member_occ(member_id, tags=None):
+    occ = {"memberId": member_id}
+    if tags:
+        occ["tags"] = list(tags)
+    return _ensure_inherit_settings(occ)
 
-    rel_statuses, sys_statuses, account_types, placement_roles = [], [], [], []
-    for rec in export["systemRelationships"]:
-        if rec.get("relationshipStatus"):
-            unique_append(rel_statuses, rec["relationshipStatus"])
-    for rec in export["systems"]:
-        if rec.get("status"):
-            unique_append(sys_statuses, rec["status"])
-    for rec in export["accountObjectLinks"]:
-        unique_append(account_types, rec["objectType"])
-    for rec in export["accountObjectPlacements"] + export["systemObjectPlacements"]:
-        unique_append(placement_roles, rec["placementRole"])
-    if rel_statuses:
-        lookups["relationshipStatuses"] = rel_statuses
-    if sys_statuses:
-        lookups["systemStatuses"] = sys_statuses
-    if account_types:
-        lookups["accountObjectTypes"] = account_types
-    if placement_roles:
-        lookups["placementRoles"] = placement_roles
-    return dict(lookups)
+
+def _shape_relationship(rel, index):
+    rec = {
+        "relationshipId": rel.get("relationshipId", f"relationship-{index:03d}"),
+        "sourceAnchorId": rel["sourceAnchorId"],
+        "fieldId": rel["fieldId"],
+        "targetAnchorId": rel.get("targetAnchorId"),
+    }
+    return rec
+
+
+def _shape_custom_field(rec):
+    payload = dict(rec)
+    if "customFieldId" in payload:
+        payload["fieldId"] = payload.pop("customFieldId")
+    shaped = _id_first(payload, "fieldId", extra_last=("visibility", "permissions"))
+    return _ensure_inherit_settings(shaped)
+
+
+def _shape_membership(system_id, index, override):
+    return {
+        "membershipId": f"membership-{index:03d}",
+        "anchorId": system_id,
+        "roles": list(override.get("roles", ["Owner"])),
+        "status": override.get("status", "Active"),
+    }
+
+
+def _tree_node(anchor_id, children_by_parent, members_by_anchor):
+    child_rows = sorted(children_by_parent.get(anchor_id, []), key=lambda row: row[0])
+    return {
+        "anchorId": anchor_id,
+        "members": list(members_by_anchor.get(anchor_id, [])),
+        "children": [
+            _tree_node(child_id, children_by_parent, members_by_anchor)
+            for _rank, _ctype, child_id in child_rows
+        ],
+    }
+
+
+def _provenance(spec):
+    rec = {
+        "lossyMappings": [],
+        "source": "synthetic",
+        "sourceGenerator": SOURCE_GENERATOR,
+        "sourceIdsPreserved": True,
+    }
+    rec.update(spec.get("provenance") or {})
+    return {key: rec[key] for key in sorted(rec)}
 
 
 def assemble(spec):
-    """Expand a compact topology into a complete flattened export."""
+    """Expand a compact topology into a hierarchical single-account export."""
     account_rec = spec["account"]
-    systems = list(spec["systems"])
-    membership_specs = spec.get("memberships")
-    if membership_specs is None:
-        memberships = []
-        for i, system in enumerate(systems, 1):
-            override = spec.get("membership_overrides", {}).get(system["systemId"], {})
-            memberships.append({
-                "membershipId": f"membership-{i:03d}",
-                "accountId": account_rec["accountId"],
-                "systemId": system["systemId"],
-                "status": override.get("status", "Active"),
-                "roles": list(override.get("roles", ["Owner"])),
-            })
+    systems = list(spec.get("systems", []))
+    groups = list(spec.get("groups", []))
+    places = list(spec.get("places", []))
+    notes = list(spec.get("notes", []))
+    fields = list(spec.get("custom_fields", []))
+    front_history = list(spec.get("front_history", []))
+    system_links = list(spec.get("system_links", []))
+
+    field_ids_by_anchor = defaultdict(list)
+    tags_by_group = defaultdict(list)
+    tags_by_note = defaultdict(list)
+    tags_by_front = defaultdict(list)
+    member_tags_by_system = defaultdict(dict)
+    system_member_order = defaultdict(list)
+    for owner_id, object_type, object_id, link_role in system_links:
+        if object_type == "customField" and link_role == "defined-in-system":
+            field_ids_by_anchor[owner_id].append(object_id)
+        tag = _tag_for_role(link_role)
+        if object_type == "member":
+            if object_id not in system_member_order[owner_id]:
+                system_member_order[owner_id].append(object_id)
+            if tag:
+                member_tags_by_system[owner_id][object_id] = [tag]
+        elif tag and object_type == "group":
+            tags_by_group[object_id].append(tag)
+        elif tag and object_type == "note":
+            tags_by_note[object_id].append(tag)
+        elif tag and object_type == "frontHistory":
+            tags_by_front[object_id].append(tag)
+
+    members_by_anchor = {}
+    for system_id, member_ids in system_member_order.items():
+        members_by_anchor[system_id] = [
+            _member_occ(mid, member_tags_by_system.get(system_id, {}).get(mid))
+            for mid in member_ids
+        ]
+    group_rows = defaultdict(list)
+    for group_id, member_id, rank in spec.get("group_memberships", []):
+        group_rows[group_id].append((rank, _member_occ(member_id)))
+    for group_id, rows in group_rows.items():
+        members_by_anchor[group_id] = [occ for _rank, occ in sorted(rows)]
+    place_rows = defaultdict(list)
+    for place_id, member_id, rank in spec.get("place_memberships", []):
+        place_rows[place_id].append((rank, _member_occ(member_id)))
+    for place_id, rows in place_rows.items():
+        members_by_anchor[place_id] = [occ for _rank, occ in sorted(rows)]
+
+    placements = _placements(spec)
+    children_by_parent = defaultdict(list)
+    child_ids = set()
+    account_roots = []
+    account_id = account_rec["accountId"]
+    for object_type, object_id, parent_type, parent_id, rank in placements:
+        child_ids.add(object_id)
+        if parent_type == "account" and parent_id == account_id:
+            account_roots.append((rank, object_type, object_id))
+        else:
+            children_by_parent[parent_id].append((rank, object_type, object_id))
+    if account_roots:
+        root_ids = [oid for _rank, _otype, oid in sorted(account_roots)]
     else:
-        memberships = _numbered("membership", membership_specs, "membershipId")
+        root_ids = [row["systemId"] for row in systems if row["systemId"] not in child_ids]
 
-    relationships = []
-    for i, rel in enumerate(spec.get("relationships", []), 1):
-        rec = {
-            "relationshipId": rel.get("relationshipId", f"relationship-{i:03d}"),
-            "systemId": rel["systemId"],
-            "relationshipType": rel["relationshipType"],
-            "parentSystemId": rel.get("parentSystemId"),
-            "targetSystemId": rel.get("targetSystemId"),
-            "rank": rel.get("rank", 1),
-        }
-        for key in ("associatedObjectType", "associatedObjectId", "relationshipStatus", "description"):
-            if key in rel:
-                rec[key] = rel[key]
-        relationships.append(rec)
+    tree = [_tree_node(root_id, children_by_parent, members_by_anchor) for root_id in root_ids]
 
-    export = {
-        "pluralBridgeExport": {
-            "exportVersion": EXPORT_VERSION,
-            "exportKind": EXPORT_KIND,
-            "exampleId": spec["example_id"],
-            "exampleName": spec["example_name"],
-            "modelingNote": spec["modeling_note"],
-        },
-        "accounts": [account_rec],
-        "memberships": memberships,
-        "systems": systems,
-        "systemRelationships": relationships,
-        "accountObjectLinks": _link_rows(spec.get("account_links", []), "account-link", "accountId"),
-        "accountObjectPlacements": _placement_rows(
-            spec.get("account_placements", []), "account-placement", "accountId"),
-        "systemObjectLinks": _link_rows(spec.get("system_links", []), "link", "systemId"),
-        "systemObjectPlacements": _placement_rows(
-            spec.get("system_placements", []), "placement", "systemId"),
-        "members": list(spec.get("members", [])),
-        "groups": list(spec.get("groups", [])),
-        "groupMemberships": _membership_rows(
-            [("groupId", gid, mid, rank) for gid, mid, rank in spec.get("group_memberships", [])],
-            "group-membership"),
-        "places": list(spec.get("places", [])),
-        "placeMemberships": _membership_rows(
-            [("placeId", pid, mid, rank) for pid, mid, rank in spec.get("place_memberships", [])],
-            "place-membership"),
-        "notes": list(spec.get("notes", [])),
-        "frontHistory": list(spec.get("front_history", [])),
-        "customFields": list(spec.get("custom_fields", [])),
-        "privacyBuckets": list(spec.get("privacy_buckets", [])),
-        "visibilityScopes": list(spec.get("visibility_scopes", [])),
-        "provenance": {
-            "source": "synthetic",
-            "sourceGenerator": SOURCE_GENERATOR,
-            "sourceIdsPreserved": True,
-            "lossyMappings": [],
-        },
-        "audit": dict(FIXED_AUDIT),
+    anchors = []
+    for rec in systems:
+        anchors.append(_shape_anchor(
+            rec, "system",
+            field_ids=field_ids_by_anchor.get(rec["systemId"]),
+            tags=None,
+        ))
+    for rec in groups:
+        anchors.append(_shape_anchor(
+            rec, "group",
+            tags=tags_by_group.get(rec["groupId"]),
+        ))
+    for rec in places:
+        anchors.append(_shape_anchor(rec, "place"))
+
+    explicit_fronting = spec.get("explicit_fronting")
+    derived_fronting = _current_fronting_ids(front_history)
+    note_ids = [rec["noteId"] for rec in notes]
+    shared_members = []
+    for rec in spec.get("members", []):
+        mid = rec["memberId"]
+        if explicit_fronting is not None:
+            assert mid in explicit_fronting, f"{spec['example_id']}: explicit_fronting missing {mid}"
+            fronting = explicit_fronting[mid]
+        else:
+            fronting = mid in derived_fronting
+        assigned_notes = note_ids if mid == NOTE_ASSIGNEE else []
+        shared_members.append(_shape_member(rec, [], assigned_notes, fronting))
+
+    shaped_notes = []
+    for rec in notes:
+        shaped = _id_first(rec, "noteId", extra_last=("visibility", "permissions"))
+        _ensure_inherit_settings(shaped)
+        if tags_by_note.get(rec["noteId"]):
+            shaped["tags"] = list(tags_by_note[rec["noteId"]])
+        shaped_notes.append(shaped)
+
+    shaped_fields = [_shape_custom_field(rec) for rec in fields]
+
+    shaped_fronts = []
+    for rec in front_history:
+        shaped = _sorted_keys(rec)
+        if tags_by_front.get(rec["frontHistoryId"]):
+            shaped["tags"] = list(tags_by_front[rec["frontHistoryId"]])
+        shaped_fronts.append(shaped)
+
+    relationships = [
+        _shape_relationship(rel, i) for i, rel in enumerate(spec.get("relationships", []), 1)
+    ]
+
+    account_obj = {
+        "accountId": account_rec["accountId"],
+        "displayName": account_rec["displayName"],
+        "email": account_rec["email"],
+        "status": account_rec["status"],
+        "username": account_rec["username"],
     }
-    export["lookups"] = derive_lookups(export)
-    assert list(export) == list(REQUIRED_COLLECTIONS)
-    return export
+    collections = {
+        "members": shared_members,
+        "notes": shaped_notes,
+        "customFields": shaped_fields,
+        "anchors": anchors,
+        "tree": tree,
+        "relationships": relationships,
+        "frontHistory": shaped_fronts,
+    }
+    for key in ACCOUNT_COLLECTION_ORDER:
+        if key in ("members", "anchors", "tree") or collections[key]:
+            account_obj[key] = collections[key]
+
+    header = {
+        "exampleId": spec["example_id"],
+        "exampleName": spec["example_name"],
+        "exportKind": EXPORT_KIND,
+        "exportVersion": EXPORT_VERSION,
+        "modelingNote": spec["modeling_note"],
+    }
+    return {
+        "account": account_obj,
+        "audit": dict(FIXED_AUDIT),
+        "pluralBridgeExport": header,
+        "provenance": _provenance(spec),
+    }
 
 
 # ---------------------------------------------------------------- topologies
@@ -327,17 +449,13 @@ def spec_001():
         "example_id": "example-001",
         "example_name": "Simple Single-System Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "System context is represented by explicit relationship and object-link records. "
-            "Group placement is modeled explicitly so groups can be anchored anywhere within a system."
+            "Synthetic PluralBridge example with one account and one System. "
+            "Groups nest under The Harbor in the tree so they can be placed anywhere within that System."
         ),
         "account": account(1),
         "systems": [system_rec(harbor, "The Harbor",
                                "A simple single-system example with one shared System context.", "#8367ea")],
-        "relationships": [
-            {"systemId": harbor, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-        ],
+        "relationships": [],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A.", "#69d563"),
             member_rec("member-002", "B", "they/them", "Synthetic member B.", "#4a90e2"),
@@ -394,8 +512,8 @@ def spec_002():
         "example_id": "example-002",
         "example_name": "Multiple Top-Level Systems Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example has two root-level Systems. Neither System owns or contains the other."
+            "Synthetic PluralBridge example with two top-level Systems. "
+            "Neither System owns or contains the other. This example has no relationship rows."
         ),
         "account": account(2),
         "systems": [
@@ -403,12 +521,7 @@ def spec_002():
             system_rec(observatory, "The Observatory",
                        "Second root-level System. Neither root owns the other.", "#4f8fcf"),
         ],
-        "relationships": [
-            {"systemId": harbor, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": observatory, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
-        ],
+        "relationships": [],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A in The Harbor.", "#69d563"),
             member_rec("member-002", "B", "they/them", "Synthetic member B in The Harbor.", "#4a90e2"),
@@ -455,10 +568,9 @@ def spec_003():
         "example_id": "example-003",
         "example_name": "Parent / Child System Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example has one root-level System and one child System. The parent/child "
-            "relationship describes structure; access is represented through explicit memberships "
-            "rather than inherited ownership."
+            "Synthetic PluralBridge example with The Workshop nested beneath Main House. "
+            "The parent/child structure is tree containment; it does not grant access or "
+            "inherited ownership. This example has no relationship rows."
         ),
         "account": account(3),
         "systems": [
@@ -467,12 +579,7 @@ def spec_003():
                        "Child System structurally related to Main House. Access and privacy remain "
                        "governed by membership, consent, and policy.", "#4f8fcf"),
         ],
-        "relationships": [
-            {"systemId": main, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": workshop, "relationshipType": "child", "parentSystemId": main,
-             "targetSystemId": None, "rank": 1},
-        ],
+        "relationships": [],
         "members": [
             member_rec("member-001", "Rowan", "she/her", "Synthetic member in Main House.", "#69d563"),
             member_rec("member-002", "Tess", "they/them", "Synthetic member in Main House.", "#4a90e2"),
@@ -498,6 +605,7 @@ def spec_003():
         ],
         "system_placements": [
             (main, "group", "group-001", "system", main, 1),
+            (main, "system", workshop, "system", main, 2),
         ],
         "notes": [
             note_rec("note-001", "Main House note", "Synthetic note attached to the parent System context."),
@@ -524,9 +632,8 @@ def spec_004():
         "example_id": "example-004",
         "example_name": "Sibling Systems Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example has two sibling Systems with an explicit peer relationship. "
-            "Neither System owns, contains, or controls the other."
+            "Synthetic PluralBridge example with two sibling Systems and two reciprocal "
+            "sibling relationship rows. Neither System owns, contains, or controls the other."
         ),
         "account": account(4),
         "systems": [
@@ -534,14 +641,10 @@ def spec_004():
             system_rec(night, "Night Team", "Root-level System operating in parallel with Day Team.", "#4f8fcf"),
         ],
         "relationships": [
-            {"systemId": day, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": night, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
-            {"systemId": day, "relationshipType": "sibling", "parentSystemId": None,
-             "targetSystemId": night, "rank": 1},
-            {"systemId": night, "relationshipType": "sibling", "parentSystemId": None,
-             "targetSystemId": day, "rank": 1},
+            {"relationshipId": "relationship-003", "sourceAnchorId": day,
+             "fieldId": "custom-field-sibling", "targetAnchorId": night},
+            {"relationshipId": "relationship-004", "sourceAnchorId": night,
+             "fieldId": "custom-field-sibling", "targetAnchorId": day},
         ],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A in Day Team.", "#69d563"),
@@ -578,8 +681,11 @@ def spec_004():
             front_rec("front-002", ["member-003", "member-004"], "2026-01-01T22:00:00Z",
                       None, True, "co-fronting"),
         ],
-        "custom_fields": [field_rec("custom-field-001", "System Role",
-                                    "Synthetic custom field defined in Day Team.")],
+        "custom_fields": [
+            field_rec("custom-field-001", "System Role",
+                      "Synthetic custom field defined in Day Team."),
+            relationship_field_rec("custom-field-sibling", "sibling"),
+        ],
         "privacy_buckets": [bucket_rec("privacy-bucket-001", "Trusted",
                                        "Synthetic privacy bucket defined in Day Team.")],
         "visibility_scopes": [scope_rec("visibility-scope-001", ["member-001"])],
@@ -593,11 +699,10 @@ def spec_005():
         "example_id": "example-005",
         "example_name": "Related Systems Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example has two Systems associated by reciprocal related records. "
-            "Each System is labeled related with no arrow, so both directions are encoded. "
-            "The records describe association without parentage, containment, ownership, "
-            "or automatic authority."
+            "Synthetic PluralBridge example with two Systems associated by reciprocal related "
+            "records. Each System is labeled related with no arrow, so both directions are "
+            "encoded. The records describe association without parentage, containment, "
+            "ownership, or automatic authority."
         ),
         "account": account(5),
         "systems": [
@@ -608,14 +713,10 @@ def spec_005():
                        "partial overlap, or a loosely connected internal organization.", "#4f8fcf"),
         ],
         "relationships": [
-            {"systemId": harbor, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": archive, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
-            {"systemId": archive, "relationshipType": "related", "parentSystemId": None,
-             "targetSystemId": harbor, "rank": 1},
-            {"systemId": harbor, "relationshipType": "related", "parentSystemId": None,
-             "targetSystemId": archive, "rank": 1},
+            {"relationshipId": "relationship-004", "sourceAnchorId": harbor,
+             "fieldId": "custom-field-related", "targetAnchorId": archive},
+            {"relationshipId": "relationship-003", "sourceAnchorId": archive,
+             "fieldId": "custom-field-related", "targetAnchorId": harbor},
         ],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A in The Harbor.", "#69d563"),
@@ -655,6 +756,7 @@ def spec_005():
         "custom_fields": [
             field_rec("custom-field-001", "System Role", "Synthetic custom field defined in The Harbor."),
             field_rec("custom-field-002", "Archive Context", "Synthetic custom field defined in The Archive."),
+            relationship_field_rec("custom-field-related", "related"),
         ],
         "privacy_buckets": [bucket_rec("privacy-bucket-001", "Trusted",
                                        "Synthetic privacy bucket defined in The Harbor.")],
@@ -667,20 +769,16 @@ def spec_006():
     return {
         "filename": "example-006-subsystem.json",
         "example_id": "example-006",
-        "example_name": "Subsystem Model",
+        "example_name": "Nested Structure Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "Morgan's Room is a Place inside The Harbor, not a second System. Place containment "
-            "uses system object-link and placement records; M1 and M2 belong to the Place rather "
-            "than to The Harbor member list."
+            "Synthetic PluralBridge Nested Structure Model. Morgan's Room is a Place inside "
+            "The Harbor, not a second System. M1 and M2 belong to the Place rather than to "
+            "The Harbor member list. This example has no relationship rows."
         ),
         "account": account(6),
         "systems": [system_rec(harbor, "The Harbor",
                                "Root-level System containing members, a group, and a Place.", "#8367ea")],
-        "relationships": [
-            {"systemId": harbor, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-        ],
+        "relationships": [],
         "members": [
             member_rec("member-001", "Alex", "she/her", "Synthetic member in The Harbor.", "#69d563"),
             member_rec("member-002", "Morgan", "they/them",
@@ -743,9 +841,10 @@ def spec_007():
         "example_id": "example-007",
         "example_name": "Evolving / Uncertain Relationship Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example preserves a real but unresolved relationship between two Systems "
-            "without prematurely naming it as parent, child, sibling, subsystem, or ownership."
+            "Synthetic PluralBridge example that preserves a real but unresolved relationship "
+            "between two Systems. North Wing has evolving and unknown as separate null-target "
+            "rows, without naming the connection as parent, child, sibling, related, subsystem, "
+            "or ownership."
         ),
         "account": account(7),
         "systems": [
@@ -755,15 +854,10 @@ def spec_007():
                        "System connected to The Harbor. The exact relationship is still forming.", "#4f8fcf"),
         ],
         "relationships": [
-            {"systemId": harbor, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": north, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
-            {"systemId": north, "relationshipType": "evolving", "parentSystemId": None,
-             "targetSystemId": harbor, "relationshipStatus": "unknown",
-             "description": "North Wing is connected to The Harbor, but the user has not resolved "
-                            "whether that connection is sibling, child, subsystem, related, or another structure.",
-             "rank": 1},
+            {"relationshipId": "relationship-003", "sourceAnchorId": north,
+             "fieldId": "custom-field-evolving", "targetAnchorId": None},
+            {"relationshipId": "relationship-004", "sourceAnchorId": north,
+             "fieldId": "custom-field-unknown", "targetAnchorId": None},
         ],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A in The Harbor.", "#69d563"),
@@ -800,8 +894,12 @@ def spec_007():
                       "2026-01-01T13:00:00Z", False, "co-fronting"),
             front_rec("front-002", ["member-003"], "2026-01-01T14:00:00Z", None, True, None),
         ],
-        "custom_fields": [field_rec("custom-field-001", "System Role",
-                                    "Synthetic custom field defined in The Harbor.")],
+        "custom_fields": [
+            field_rec("custom-field-001", "System Role",
+                      "Synthetic custom field defined in The Harbor."),
+            relationship_field_rec("custom-field-evolving", "evolving"),
+            relationship_field_rec("custom-field-unknown", "unknown"),
+        ],
         "privacy_buckets": [bucket_rec("privacy-bucket-001", "Trusted",
                                        "Synthetic privacy bucket defined in The Harbor.")],
         "visibility_scopes": [scope_rec("visibility-scope-001", ["member-001"])],
@@ -815,11 +913,11 @@ def spec_008():
         "example_id": "example-008",
         "example_name": "Archived System Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example preserves an archived System as historically meaningful data. "
-            "Old Map and its existing members, groups, notes, front history, and associations "
-            "are retained. Per-object archive flags on those associated records are independent "
-            "facts, not an automatic cascade from the System lifecycle."
+            "Synthetic PluralBridge example that preserves an archived System as historically "
+            "meaningful data. Old Map has an archived null-target relationship label. Archive "
+            "flags remain independent lifecycle data; the label does not change or cascade those "
+            "flags. Old Map and its existing members, groups, notes, front history, and "
+            "associations are retained."
         ),
         "account": account(8),
         "systems": [
@@ -833,10 +931,8 @@ def spec_008():
         ],
         "membership_overrides": {old: {"status": "Historical"}},
         "relationships": [
-            {"systemId": current, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": old, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
+            {"relationshipId": "relationship-001", "sourceAnchorId": old,
+             "fieldId": "custom-field-archived", "targetAnchorId": None},
         ],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic member A in Current System.", "#69d563"),
@@ -892,8 +988,11 @@ def spec_008():
             front_rec("front-002", ["member-003"], "2025-06-01T12:00:00Z",
                       "2025-06-01T13:00:00Z", False, "historical", archived=True),
         ],
-        "custom_fields": [field_rec("custom-field-001", "System Role",
-                                    "Synthetic custom field defined in Current System.")],
+        "custom_fields": [
+            field_rec("custom-field-001", "System Role",
+                      "Synthetic custom field defined in Current System."),
+            relationship_field_rec("custom-field-archived", "archived"),
+        ],
         "privacy_buckets": [bucket_rec("privacy-bucket-001", "Trusted",
                                        "Synthetic privacy bucket defined in Current System.")],
         "visibility_scopes": [scope_rec("visibility-scope-001", ["member-001"])],
@@ -907,10 +1006,9 @@ def spec_009():
         "example_id": "example-009",
         "example_name": "Non-Tree / Graph Model",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "This example breaks the ordinary tree assumption by representing Systems as graph "
-            "nodes connected through multiple explicit relationship records. No single trunk, "
-            "root hierarchy, or forced parentage is required."
+            "Synthetic PluralBridge example that breaks the ordinary tree assumption by "
+            "representing Systems as graph nodes: A related to B, B sibling of C, and C "
+            "associated with A. No single trunk, root hierarchy, or forced parentage is required."
         ),
         "account": account(9),
         "systems": [
@@ -919,18 +1017,12 @@ def spec_009():
             system_rec(c, "C", "Graph node System C.", "#f5a623"),
         ],
         "relationships": [
-            {"systemId": a, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": b, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
-            {"systemId": c, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 3},
-            {"systemId": a, "relationshipType": "related", "parentSystemId": None,
-             "targetSystemId": b, "rank": 1, "description": "System A is related to System B."},
-            {"systemId": b, "relationshipType": "sibling", "parentSystemId": None,
-             "targetSystemId": c, "rank": 1, "description": "System B is a sibling of System C."},
-            {"systemId": c, "relationshipType": "associated", "parentSystemId": None,
-             "targetSystemId": a, "rank": 1, "description": "System C is associated with System A."},
+            {"relationshipId": "relationship-004", "sourceAnchorId": a,
+             "fieldId": "custom-field-related", "targetAnchorId": b},
+            {"relationshipId": "relationship-005", "sourceAnchorId": b,
+             "fieldId": "custom-field-sibling", "targetAnchorId": c},
+            {"relationshipId": "relationship-006", "sourceAnchorId": c,
+             "fieldId": "custom-field-associated", "targetAnchorId": a},
         ],
         "members": [
             member_rec("member-001", "A1", "she/her", "Synthetic member in System A.", "#69d563"),
@@ -973,8 +1065,13 @@ def spec_009():
                       "2026-01-01T15:00:00Z", False, None),
             front_rec("front-003", ["member-004"], "2026-01-01T16:00:00Z", None, True, None),
         ],
-        "custom_fields": [field_rec("custom-field-001", "System Role",
-                                    "Synthetic custom field defined in System A.")],
+        "custom_fields": [
+            field_rec("custom-field-001", "System Role",
+                      "Synthetic custom field defined in System A."),
+            relationship_field_rec("custom-field-related", "related"),
+            relationship_field_rec("custom-field-sibling", "sibling"),
+            relationship_field_rec("custom-field-associated", "associated"),
+        ],
         "privacy_buckets": [bucket_rec("privacy-bucket-001", "Trusted",
                                        "Synthetic privacy bucket defined in System A.")],
         "visibility_scopes": [scope_rec("visibility-scope-001", ["member-001"])],
@@ -990,10 +1087,8 @@ def spec_010():
         "example_id": "example-010",
         "example_name": "Top-Level Group Containing Systems",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "Account-level structure is represented by explicit account object-link and placement "
-            "records so a group can act as a top-level container for systems. Systems remain "
-            "relationship-graph roots because they have no parent System."
+            "Synthetic PluralBridge example where the Household Group is the tree root and "
+            "contains two Systems. This example has no relationship rows."
         ),
         "account": acct,
         "systems": [
@@ -1002,12 +1097,7 @@ def spec_010():
             system_rec(house, "Main House",
                        "Second synthetic system contained within the Household group.", "#4a90e2"),
         ],
-        "relationships": [
-            {"systemId": harbor, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": house, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
-        ],
+        "relationships": [],
         "members": [
             member_rec("member-001", "A", "she/her", "Synthetic household member A.", "#69d563"),
             member_rec("member-002", "E", "they/them", "Synthetic household member E.", "#4a90e2"),
@@ -1061,9 +1151,9 @@ def spec_011():
         "example_id": "example-011",
         "example_name": "Place Collection of Systems",
         "modeling_note": (
-            "Synthetic PluralBridge example using flattened top-level collections. "
-            "A top-level place contains two systems via account placements. Waiting Room is a "
-            "Place inside Main House and is modeled with system object-link and placement records."
+            "Synthetic PluralBridge example where Central Hub is the tree root and contains "
+            "two Systems. Waiting Room is a Place nested inside Main House. This example has "
+            "no relationship rows."
         ),
         "account": acct,
         "systems": [
@@ -1071,12 +1161,7 @@ def spec_011():
             system_rec(house, "Main House",
                        "System under Central Hub place containing nested Waiting Room place.", "#4a90e2"),
         ],
-        "relationships": [
-            {"systemId": harbor, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 1},
-            {"systemId": house, "relationshipType": "root", "parentSystemId": None,
-             "targetSystemId": None, "rank": 2},
-        ],
+        "relationships": [],
         "members": [
             member_rec("member-001", "Popeye", "he/him", "Synthetic member in The Harbor.", "#69d563"),
             member_rec("member-002", "Gilligan", "he/him", "Synthetic member in The Harbor.", "#4a90e2"),
@@ -1120,17 +1205,16 @@ def spec_011():
 
 
 def spec_012():
-    """Non-System anchors; structure from PluralBridge-Plural-Maps-and-Design-Rules.txt."""
+    """Non-System anchors; structure from Canonical Model Minimum Base.txt."""
     aid = "account-012"
     return {
         "filename": "example-012-non-system-anchors.json",
         "example_id": "example-012",
         "example_name": "Non-System Anchors Plural Map",
         "modeling_note": (
-            "Synthetic PluralBridge example following Example 12 of "
-            "PluralBridge-Plural-Maps-and-Design-Rules.txt. Central Hub is a root Place "
+            "Synthetic PluralBridge example following Example 12. Central Hub is a root Place "
             "containing The Harbor and Main House Groups. Main House contains Waiting Room Place. "
-            "No System entities or System references exist. Placements and structural memberships "
+            "No System entities or System references exist. Tree nesting and member occurrences "
             "do not grant access. Access grants, focus, note contents, and fronting events are not "
             "specified by the source and are not fabricated."
         ),
@@ -1169,6 +1253,19 @@ def spec_012():
             ("place-002", "member-003", 1),
             ("place-002", "member-004", 2),
         ],
+        # Explicit fixture decision for Example 12, not a missing-history default.
+        "explicit_fronting": {
+            "member-001": False,
+            "member-002": False,
+            "member-003": False,
+            "member-004": False,
+        },
+        "provenance": {
+            "sourceDocument": "PluralBridge-Plural-Maps-and-Design-Rules.txt",
+            "sourceExample": 12,
+            "sourceGenerator": "example-012-document-transcription",
+            "sourceIdsPreserved": False,
+        },
     }
 
 
@@ -1211,284 +1308,337 @@ def ids_in(collection, id_field):
     return {row[id_field] for row in collection}
 
 
-def validate_schema(export, name="export"):
-    missing = [key for key in REQUIRED_COLLECTIONS if key not in export]
-    extra = [key for key in export if key not in REQUIRED_COLLECTIONS]
-    assert not missing, f"{name}: missing collections {missing}"
-    assert not extra, f"{name}: unexpected collections {extra}"
-    for key in REQUIRED_COLLECTIONS:
-        if key in ("pluralBridgeExport", "provenance", "audit", "lookups"):
-            assert isinstance(export[key], dict), f"{name}: {key} must be an object"
-        else:
-            assert isinstance(export[key], list), f"{name}: {key} must be an array"
+def _assert_inherit_settings(rec, name, where):
+    for key in ("visibility", "permissions"):
+        assert key in rec, f"{name}: {where} missing {key}"
+        setting = rec[key]
+        assert isinstance(setting, dict), f"{name}: {where}.{key} must be an object"
+        assert "mode" in setting, f"{name}: {where}.{key} missing mode"
+        if setting["mode"] == "inherit":
+            assert setting == INHERIT_SETTING, f"{name}: {where}.{key} inherit syntax"
 
 
-def validate_unique_memberships(export, name="export"):
-    seen = []
-    for rec in export["memberships"]:
-        key = (rec["accountId"], rec["systemId"])
-        assert key not in seen, f"{name}: duplicate membership for {key}"
-        seen.append(key)
+def _acct(export):
+    return export["account"]
 
 
-def _resolve(export, object_type, object_id, name, context):
-    if object_type not in OBJECT_ID_FIELDS:
-        raise AssertionError(f"{name}: unknown objectType {object_type!r} in {context}")
-    coll, field = OBJECT_ID_FIELDS[object_type]
-    assert object_id in ids_in(export[coll], field), (
-        f"{name}: {context} references {object_type} {object_id} missing from {coll}")
+def walk_tree(nodes):
+    for node in nodes or []:
+        yield node
+        yield from walk_tree(node.get("children"))
 
 
-def validate_references(export, name="export"):
-    account_ids = ids_in(export["accounts"], "accountId")
-    system_ids = ids_in(export["systems"], "systemId")
-    member_ids = ids_in(export["members"], "memberId")
-    group_ids = ids_in(export["groups"], "groupId")
-    place_ids = ids_in(export["places"], "placeId")
-
-    for rec in export["memberships"]:
-        assert rec["accountId"] in account_ids, f"{name}: membership account {rec['accountId']}"
-        assert rec["systemId"] in system_ids, f"{name}: membership system {rec['systemId']}"
-    for rec in export["systemRelationships"]:
-        assert rec["systemId"] in system_ids, f"{name}: relationship system {rec['systemId']}"
-        for key in ("parentSystemId", "targetSystemId"):
-            if rec.get(key) is not None:
-                assert rec[key] in system_ids, f"{name}: relationship {key} {rec[key]}"
-        if rec.get("associatedObjectType"):
-            _resolve(export, rec["associatedObjectType"], rec["associatedObjectId"],
-                     name, rec["relationshipId"])
-    for rec in export["systemObjectLinks"]:
-        assert rec["systemId"] in system_ids, f"{name}: system link {rec['linkId']}"
-        _resolve(export, rec["objectType"], rec["objectId"], name, rec["linkId"])
-    for rec in export["accountObjectLinks"]:
-        assert rec["accountId"] in account_ids, f"{name}: account link {rec['linkId']}"
-        _resolve(export, rec["objectType"], rec["objectId"], name, rec["linkId"])
-    for rec in export["systemObjectPlacements"]:
-        assert rec["systemId"] in system_ids, f"{name}: placement {rec['placementId']}"
-        _resolve(export, rec["objectType"], rec["objectId"], name, rec["placementId"])
-        _resolve(export, rec["parentObjectType"], rec["parentObjectId"],
-                 name, rec["placementId"] + " parent")
-    for rec in export["accountObjectPlacements"]:
-        assert rec["accountId"] in account_ids, f"{name}: account placement {rec['placementId']}"
-        _resolve(export, rec["objectType"], rec["objectId"], name, rec["placementId"])
-        _resolve(export, rec["parentObjectType"], rec["parentObjectId"],
-                 name, rec["placementId"] + " parent")
-    for rec in export["groupMemberships"]:
-        assert rec["groupId"] in group_ids, f"{name}: groupMembership {rec['groupMembershipId']}"
-        assert rec["memberId"] in member_ids, f"{name}: groupMembership member {rec['memberId']}"
-    for rec in export["placeMemberships"]:
-        assert rec["placeId"] in place_ids, f"{name}: placeMembership {rec['placeMembershipId']}"
-        assert rec["memberId"] in member_ids, f"{name}: placeMembership member {rec['memberId']}"
-    for rec in export["frontHistory"]:
-        for mid in rec["memberIds"]:
-            assert mid in member_ids, f"{name}: frontHistory {rec['frontHistoryId']} member {mid}"
-    for rec in export["visibilityScopes"]:
-        for mid in rec["memberIds"]:
-            assert mid in member_ids, f"{name}: visibilityScope {rec['visibilityScopeId']} member {mid}"
+def _tree_index(export):
+    return {node["anchorId"]: node for node in walk_tree(_acct(export).get("tree"))}
 
 
-def _rel_set(export):
-    return {(r["systemId"], r["relationshipType"], r.get("parentSystemId"), r.get("targetSystemId"))
-            for r in export["systemRelationships"]}
+def _child_ids(node):
+    return [child["anchorId"] for child in node.get("children") or []]
 
 
-def _sys_place_set(export):
-    return {(p["systemId"], p["objectType"], p["objectId"], p["parentObjectType"], p["parentObjectId"])
-            for p in export["systemObjectPlacements"]}
+def _tree_member_ids(node):
+    return [occ["memberId"] for occ in node.get("members") or []]
 
 
-def _acct_place_set(export):
-    return {(p["accountId"], p["objectType"], p["objectId"], p["parentObjectType"], p["parentObjectId"])
-            for p in export["accountObjectPlacements"]}
+def _anchors_of_type(export, object_type):
+    return [a for a in _acct(export)["anchors"] if a["objectType"] == object_type]
 
 
-def _sys_link_set(export):
-    return {(l["systemId"], l["objectType"], l["objectId"], l["linkRole"])
-            for l in export["systemObjectLinks"]}
+def _anchor_names(export, object_type):
+    return {a["anchorId"]: a["name"] for a in _anchors_of_type(export, object_type)}
+
+
+def _rel_labels(export):
+    names = {f["fieldId"]: f["fieldName"] for f in _acct(export).get("customFields") or []}
+    return {(r["sourceAnchorId"], names[r["fieldId"]], r["targetAnchorId"])
+            for r in _acct(export).get("relationships") or []}
 
 
 def _system_members(export, system_id):
-    member_ids = {l["objectId"] for l in export["systemObjectLinks"]
-                  if l["systemId"] == system_id and l["objectType"] == "member"}
-    names = {m["memberId"]: m["displayName"] for m in export["members"]}
-    return {names[mid] for mid in member_ids}
+    node = _tree_index(export).get(system_id)
+    names = {m["memberId"]: m["displayName"] for m in _acct(export)["members"]}
+    if node is None:
+        return set()
+    return {names[mid] for mid in _tree_member_ids(node)}
+
+
+def validate_schema(export, name="export"):
+    extra = [key for key in export if key not in REQUIRED_TOP_LEVEL]
+    missing = [key for key in REQUIRED_TOP_LEVEL if key not in export]
+    assert not missing, f"{name}: missing top-level keys {missing}"
+    assert not extra, f"{name}: unexpected top-level keys {extra}"
+    for key in ("audit", "pluralBridgeExport", "provenance"):
+        assert isinstance(export[key], dict), f"{name}: {key} must be an object"
+    account = export["account"]
+    assert isinstance(account, dict), f"{name}: account must be an object"
+    for key in REQUIRED_ACCOUNT_FIELDS:
+        assert key in account, f"{name}: account missing {key}"
+    for key in ("members", "anchors", "tree"):
+        assert isinstance(account[key], list), f"{name}: account.{key} must be an array"
+    for key in OPTIONAL_ACCOUNT_ARRAYS:
+        if key in account:
+            assert isinstance(account[key], list), f"{name}: account.{key} must be an array"
+            assert account[key], f"{name}: omit empty account.{key}"
+    for key in REMOVED_ACCOUNT_COLLECTIONS:
+        assert key not in account, f"{name}: account.{key} was removed"
+    assert "permissionIds" not in str(account.get("anchors")), f"{name}: permissionIds are not in this format"
+    for anchor in account["anchors"]:
+        assert "permissionIds" not in anchor and "visibilityIds" not in anchor, (
+            f"{name}: anchors must not carry permissionIds/visibilityIds")
+
+
+def validate_unique_memberships(export, name="export"):
+    assert "memberships" not in _acct(export), f"{name}: memberships collection was removed"
+
+
+def validate_references(export, name="export"):
+    account = _acct(export)
+    member_ids = ids_in(account["members"], "memberId")
+    assert len(member_ids) == len(account["members"]), f"{name}: duplicate memberId"
+    anchor_ids = ids_in(account["anchors"], "anchorId")
+    assert len(anchor_ids) == len(account["anchors"]), f"{name}: duplicate anchorId"
+    # Anchor names are unique across the account, including mixed object types.
+    seen_anchor_names = []
+    for anchor in account["anchors"]:
+        anchor_name = anchor["name"]
+        assert anchor_name not in seen_anchor_names, f"{name}: duplicate anchor name {anchor_name!r}"
+        seen_anchor_names.append(anchor_name)
+    notes = account.get("notes") or []
+    note_ids = ids_in(notes, "noteId")
+    assert len(note_ids) == len(notes), f"{name}: duplicate noteId"
+    field_ids = ids_in(account.get("customFields") or [], "fieldId")
+
+    for member in account["members"]:
+        assert isinstance(member.get("fronting"), bool), (
+            f"{name}: member {member.get('memberId')} fronting must be a boolean")
+        for nid in member.get("noteIds") or []:
+            assert nid in note_ids, f"{name}: member {member['memberId']} note {nid} missing"
+        for fid in member.get("fieldIds") or []:
+            assert fid in field_ids, f"{name}: member {member['memberId']} field {fid} missing"
+
+    for rec in account.get("notes") or []:
+        _assert_inherit_settings(rec, name, f"note {rec.get('noteId')}")
+        for tag in rec.get("tags") or []:
+            assert tag, f"{name}: empty note tag"
+
+    for rec in account.get("customFields") or []:
+        assert rec["fieldId"] in field_ids
+        _assert_inherit_settings(rec, name, f"custom field {rec['fieldId']}")
+    seen_rel_ids = []
+    for rec in account.get("relationships") or []:
+        rid = rec.get("relationshipId")
+        assert rid, f"{name}: relationship missing relationshipId"
+        assert rid not in seen_rel_ids, f"{name}: duplicate relationshipId {rid}"
+        seen_rel_ids.append(rid)
+        for key in ("relationshipType", "relationshipStatus", "parentAnchorId", "anchorId"):
+            assert key not in rec, f"{name}: relationship {rid} still has {key}"
+        source = rec.get("sourceAnchorId")
+        field_id = rec.get("fieldId")
+        assert source, f"{name}: relationship {rid} sourceAnchorId is required"
+        assert field_id, f"{name}: relationship {rid} fieldId is required"
+        assert source in anchor_ids, f"{name}: relationship {rid} source {source} missing"
+        assert field_id in field_ids, f"{name}: relationship {rid} field {field_id} missing"
+        assert "targetAnchorId" in rec, f"{name}: relationship {rid} targetAnchorId is required"
+        target = rec["targetAnchorId"]
+        assert target not in (0, "", "null"), f"{name}: relationship {rid} targetAnchorId must be an id or JSON null"
+        if target is not None:
+            assert target in anchor_ids, f"{name}: relationship {rid} target {target} missing"
+    for rec in account.get("frontHistory") or []:
+        for mid in rec["memberIds"]:
+            assert mid in member_ids, f"{name}: frontHistory {rec['frontHistoryId']} member {mid}"
+
+    for anchor in account["anchors"]:
+        for fid in anchor.get("fieldIds") or []:
+            assert fid in field_ids, f"{name}: anchor {anchor['anchorId']} field {fid} missing"
+
+    seen_tree = []
+    for node in walk_tree(account["tree"]):
+        assert node["anchorId"] in anchor_ids, f"{name}: tree anchor {node['anchorId']} missing"
+        assert node["anchorId"] not in seen_tree, f"{name}: tree repeats anchor {node['anchorId']}"
+        seen_tree.append(node["anchorId"])
+        for occ in node.get("members") or []:
+            assert occ["memberId"] in member_ids, (
+                f"{name}: tree member {occ['memberId']} missing from shared members")
+            assert "fronting" not in occ, f"{name}: fronting belongs on shared members, not tree occurrences"
+            _assert_inherit_settings(occ, name, f"tree occurrence {occ['memberId']} under {node['anchorId']}")
 
 
 def validate_topology(export, name="export"):
     example_id = export["pluralBridgeExport"]["exampleId"]
-    names = {s["systemId"]: s["name"] for s in export["systems"]}
-    member_names = {m["memberId"]: m["displayName"] for m in export["members"]}
-    group_names = {g["groupId"]: g["name"] for g in export["groups"]}
-    place_names = {p["placeId"]: p["name"] for p in export["places"]}
-    rels = _rel_set(export)
-    sys_places = _sys_place_set(export)
-    acct_places = _acct_place_set(export)
+    account = _acct(export)
+    names = _anchor_names(export, "system")
+    member_names = {m["memberId"]: m["displayName"] for m in account["members"]}
+    group_names = _anchor_names(export, "group")
+    place_names = _anchor_names(export, "place")
+    tree = _tree_index(export)
+    relationships = account.get("relationships") or []
 
     if example_id == "example-001":
         assert names == {"system-001": "The Harbor"}
-        assert {m["displayName"] for m in export["members"]} == {"A", "B", "C"}
+        assert set(member_names.values()) == {"A", "B", "C"}
         assert set(group_names.values()) == {"Musicians", "Dancers", "Ballet"}
-        assert ("system-001", "group", "group-003", "group", "group-002") in sys_places
-        assert ("system-001", "frontHistory", "front-002", "fronting-context") in _sys_link_set(export)
-        assert export["places"] == []
-        assert len(export["memberships"]) == 1
-        assert len(export["systemRelationships"]) == 1
-        root = export["systemRelationships"][0]
-        assert root["systemId"] == "system-001"
-        assert root["relationshipType"] == "root"
-        assert root["parentSystemId"] is None
-        assert root["targetSystemId"] is None
+        assert _child_ids(tree["group-002"]) == ["group-003"]
+        assert "group-003" in tree
+        assert _tree_member_ids(tree["system-001"]) == ["member-001", "member-002", "member-003"]
+        assert _tree_member_ids(tree["group-001"]) == ["member-001", "member-003"]
+        assert _tree_member_ids(tree["group-003"]) == ["member-001"]
+        assert place_names == {}
+        assert "relationships" not in account
+        assert [m["displayName"] for m in account["members"] if m["fronting"]] == ["A", "B"]
     elif example_id == "example-002":
         assert set(names.values()) == {"The Harbor", "The Observatory"}
-        assert {r[1] for r in rels} == {"root"}
-        assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
-        assert len(export["memberships"]) == 2
+        assert "relationships" not in account
+        assert _child_ids(tree["system-001"]) == ["group-001"]
+        assert [node["anchorId"] for node in account["tree"]] == ["system-001", "system-002"]
         assert _system_members(export, "system-002") == {"C"}
+        assert not any(m["fronting"] for m in account["members"])
     elif example_id == "example-003":
-        assert ("system-002", "child", "system-001", None) in rels
-        assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
-        assert not any(p[2] == "system-002" for p in sys_places)
+        assert "relationships" not in account
+        assert [node["anchorId"] for node in account["tree"]] == ["system-001"]
+        assert _child_ids(tree["system-001"]) == ["group-001", "system-002"]
+        assert _tree_member_ids(tree["system-002"]) == ["member-003", "member-004"]
+        assert _child_ids(tree["system-002"]) == []
         assert _system_members(export, "system-002") == {"Kit", "Lark"}
+        assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"Kit", "Lark"}
     elif example_id == "example-004":
-        assert ("system-001", "sibling", None, "system-002") in rels
-        assert ("system-002", "sibling", None, "system-001") in rels
-        assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
-        assert len(export["memberships"]) == 2
+        assert _rel_labels(export) == {
+            ("system-001", "sibling", "system-002"),
+            ("system-002", "sibling", "system-001"),
+        }
+        assert len({r["fieldId"] for r in relationships}) == 1
+        assert _child_ids(tree["system-001"]) == ["group-001"]
+        assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"C", "D"}
     elif example_id == "example-005":
-        assert ("system-002", "related", None, "system-001") in rels
-        assert ("system-001", "related", None, "system-002") in rels
-        assert {r[1] for r in rels if r[1] != "root"} == {"related"}
-        assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
+        assert _rel_labels(export) == {
+            ("system-001", "related", "system-002"),
+            ("system-002", "related", "system-001"),
+        }
+        assert len({r["fieldId"] for r in relationships}) == 1
+        assert _child_ids(tree["system-001"]) == ["group-001"]
+        assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"C"}
     elif example_id == "example-006":
         assert names == {"system-001": "The Harbor"}
+        assert export["pluralBridgeExport"]["exampleName"] == "Nested Structure Model"
         assert set(place_names.values()) == {"Morgan's Room"}
-        assert ("system-001", "place", "place-001", "system", "system-001") in sys_places
-        assert ("system-001", "place", "place-001", "scoped-to-system") in _sys_link_set(export)
+        assert _child_ids(tree["system-001"]) == ["group-001", "place-001"]
         assert _system_members(export, "system-001") == {"Alex", "Morgan", "Rae"}
-        assert {member_names[r["memberId"]] for r in export["placeMemberships"]} == {"M1", "M2"}
-        # This example uses Place containment under Harbor. Broader subsystem
-        # endpoints and associated-object semantics are unspecified; this example
-        # must not encode either.
-        assert not any(r["relationshipType"] == "subsystem" for r in export["systemRelationships"])
-        assert not any(r.get("associatedObjectId") == "member-002" for r in export["systemRelationships"])
-        assert len(export["memberships"]) == 1
-        assert len(export["systems"]) == 1
+        assert _tree_member_ids(tree["place-001"]) == ["member-004", "member-005"]
+        assert {member_names[mid] for mid in _tree_member_ids(tree["place-001"])} == {"M1", "M2"}
+        assert "relationships" not in account
+        assert len(_anchors_of_type(export, "system")) == 1
+        assert not any(m["fronting"] for m in account["members"])
     elif example_id == "example-007":
-        evolving = [r for r in export["systemRelationships"] if r["relationshipType"] == "evolving"]
-        assert len(evolving) == 1
-        assert evolving[0]["systemId"] == "system-002"
-        assert evolving[0]["targetSystemId"] == "system-001"
-        assert evolving[0]["relationshipType"] == "evolving"
-        assert evolving[0]["parentSystemId"] is None
-        assert ("system-002", "evolving", None, "system-001") in rels
-        assert evolving[0]["relationshipStatus"] == "unknown"
-        assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
-        assert len(export["memberships"]) == 2
+        assert len(relationships) == 2
+        evolving = relationships[0]
+        unknown = relationships[1]
+        assert evolving["relationshipId"] == "relationship-003"
+        assert evolving["sourceAnchorId"] == "system-002"
+        assert evolving["fieldId"] == "custom-field-evolving"
+        assert evolving["targetAnchorId"] is None
+        assert unknown["relationshipId"] == "relationship-004"
+        assert unknown["sourceAnchorId"] == "system-002"
+        assert unknown["fieldId"] == "custom-field-unknown"
+        assert unknown["targetAnchorId"] is None
+        assert _rel_labels(export) == {
+            ("system-002", "evolving", None),
+            ("system-002", "unknown", None),
+        }
+        harbor_fields = next(a for a in account["anchors"] if a["anchorId"] == "system-001").get("fieldIds") or []
+        north_fields = next(a for a in account["anchors"] if a["anchorId"] == "system-002").get("fieldIds") or []
+        assert "custom-field-evolving" not in harbor_fields
+        assert "custom-field-evolving" not in north_fields
+        assert "custom-field-unknown" not in harbor_fields
+        assert "custom-field-unknown" not in north_fields
+        assert _child_ids(tree["system-001"]) == ["group-001"]
+        assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"C"}
     elif example_id == "example-008":
-        assert {r[1] for r in rels} == {"root"}
-        assert not any(r[1] == "archived-predecessor" for r in rels)
-        old = next(s for s in export["systems"] if s["systemId"] == "system-002")
-        current = next(s for s in export["systems"] if s["systemId"] == "system-001")
+        assert len(relationships) == 1
+        archived = relationships[0]
+        assert archived["relationshipId"] == "relationship-001"
+        assert archived["sourceAnchorId"] == "system-002"
+        assert archived["fieldId"] == "custom-field-archived"
+        assert archived["targetAnchorId"] is None
+        assert _rel_labels(export) == {("system-002", "archived", None)}
+        old = next(a for a in account["anchors"] if a["anchorId"] == "system-002")
+        assert "custom-field-archived" not in (old.get("fieldIds") or [])
+        assert "custom-field-archived" not in (
+            next(a for a in account["anchors"] if a["anchorId"] == "system-001").get("fieldIds") or [])
+        current = next(a for a in account["anchors"] if a["anchorId"] == "system-001")
         assert old["isArchived"] is True and old["status"] == "archived"
         assert current["isArchived"] is False and current["status"] == "active"
-        statuses = {m["systemId"]: m["status"] for m in export["memberships"]}
-        assert statuses == {"system-001": "Active", "system-002": "Historical"}
-        assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
-        assert ("system-002", "group", "group-002", "system", "system-002") in sys_places
-        archive_members = [m for m in export["members"] if m["memberId"] in ("member-003", "member-004")]
+        assert _child_ids(tree["system-001"]) == ["group-001"]
+        assert _child_ids(tree["system-002"]) == ["group-002"]
+        archive_members = [m for m in account["members"] if m["memberId"] in ("member-003", "member-004")]
         assert all(m["isArchived"] is True for m in archive_members)
-        old_group = next(g for g in export["groups"] if g["groupId"] == "group-002")
+        old_group = next(a for a in account["anchors"] if a["anchorId"] == "group-002")
         assert old_group["isArchived"] is True
-        old_note = next(n for n in export["notes"] if n["noteId"] == "note-002")
+        assert old_group.get("tags") == ["historical-organization"]
+        old_note = next(n for n in account["notes"] if n["noteId"] == "note-002")
         assert old_note["isArchived"] is True
-        old_front = next(f for f in export["frontHistory"] if f["frontHistoryId"] == "front-002")
+        assert old_note.get("tags") == ["historical-note"]
+        old_front = next(f for f in account["frontHistory"] if f["frontHistoryId"] == "front-002")
         assert old_front["isArchived"] is True
+        assert old_front.get("tags") == ["historical-fronting-context"]
+        assert all(occ.get("tags") == ["historical-system-member"] for occ in tree["system-002"]["members"])
+        assert not any(m["fronting"] for m in account["members"])
     elif example_id == "example-009":
-        graph_edges = {
-            ("system-001", "related", None, "system-002"),
-            ("system-002", "sibling", None, "system-003"),
-            ("system-003", "associated", None, "system-001"),
+        assert _rel_labels(export) == {
+            ("system-001", "related", "system-002"),
+            ("system-002", "sibling", "system-003"),
+            ("system-003", "associated", "system-001"),
         }
-        assert graph_edges <= rels
-        assert {r[1] for r in rels} == {"root", "related", "sibling", "associated"}
-        assert not any(r[1] == "child" for r in rels)
-        assert len(export["memberships"]) == 3
-        assert ("system-001", "group", "group-001", "system", "system-001") in sys_places
+        assert _child_ids(tree["system-001"]) == ["group-001"]
+        assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"C1"}
     elif example_id == "example-010":
         assert group_names["group-001"] == "Household"
-        aid = export["accounts"][0]["accountId"]
-        assert (aid, "group", "group-001", "account", aid) in acct_places
-        assert (aid, "system", "system-001", "group", "group-001") in acct_places
-        assert (aid, "system", "system-002", "group", "group-001") in acct_places
-        assert {r[1] for r in rels} == {"root"}
+        assert [node["anchorId"] for node in account["tree"]] == ["group-001"]
+        assert _child_ids(tree["group-001"]) == ["system-001", "system-002"]
+        assert "relationships" not in account
         assert _system_members(export, "system-001") == {"W", "Y"}
         assert _system_members(export, "system-002") == {"X", "Z"}
-        household = {member_names[r["memberId"]] for r in export["groupMemberships"]}
-        assert household == {"A", "E", "I", "O"}
-        assert export["places"] == []
-        assert export["systemObjectPlacements"] == []
+        assert {member_names[mid] for mid in _tree_member_ids(tree["group-001"])} == {"A", "E", "I", "O"}
+        assert place_names == {}
+        assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"A"}
     elif example_id == "example-011":
         assert set(place_names.values()) == {"Central Hub", "Waiting Room"}
-        aid = export["accounts"][0]["accountId"]
-        assert (aid, "place", "place-001", "account", aid) in acct_places
-        assert (aid, "system", "system-001", "place", "place-001") in acct_places
-        assert (aid, "system", "system-002", "place", "place-001") in acct_places
-        assert not any(p[2] == "place-002" for p in acct_places)
-        assert ("system-002", "place", "place-002", "system", "system-002") in sys_places
-        assert ("system-002", "place", "place-002", "scoped-to-system") in _sys_link_set(export)
+        assert [node["anchorId"] for node in account["tree"]] == ["place-001"]
+        assert _child_ids(tree["place-001"]) == ["system-001", "system-002"]
+        assert "place-002" not in _child_ids(tree["place-001"])
+        assert _child_ids(tree["system-002"]) == ["place-002"]
         assert _system_members(export, "system-001") == {"Popeye", "Gilligan"}
         assert _system_members(export, "system-002") == set()
-        waiting = {member_names[r["memberId"]] for r in export["placeMemberships"]
-                   if r["placeId"] == "place-002"}
-        assert waiting == {"Mickey", "Minnie"}
-        assert export["groups"] == []
+        assert {member_names[mid] for mid in _tree_member_ids(tree["place-002"])} == {"Mickey", "Minnie"}
+        assert _anchors_of_type(export, "group") == []
+        assert "relationships" not in account
+        assert {m["displayName"] for m in account["members"] if m["fronting"]} == {"Popeye"}
     elif example_id == "example-012":
-        aid = "account-012"
-        assert len(export["accounts"]) == 1 and export["accounts"][0]["accountId"] == aid
-        for key in ("systems", "systemRelationships", "systemObjectLinks",
-                    "systemObjectPlacements", "memberships", "notes", "frontHistory",
+        assert account["accountId"] == "account-012"
+        assert _anchors_of_type(export, "system") == []
+        for key in ("memberships", "relationships", "notes", "frontHistory",
                     "customFields", "privacyBuckets", "visibilityScopes"):
-            assert export[key] == [], f"{name}: {key} must be empty"
+            assert key not in account, f"{name}: {key} must be omitted"
         assert group_names == {"group-001": "The Harbor", "group-002": "Main House"}
         assert place_names == {"place-001": "Central Hub", "place-002": "Waiting Room"}
         assert member_names == {
             "member-001": "Popeye", "member-002": "Gilligan",
             "member-003": "Mickey", "member-004": "Minnie",
         }
-        assert len(export["groups"]) == 2 and len(export["places"]) == 2
-        assert len(export["members"]) == 4
-        assert len(export["accountObjectPlacements"]) == 4
-        assert acct_places == {
-            (aid, "place", "place-001", "account", aid),
-            (aid, "group", "group-001", "place", "place-001"),
-            (aid, "group", "group-002", "place", "place-001"),
-            (aid, "place", "place-002", "group", "group-002"),
-        }
-        assert {(p["objectType"], p["objectId"], p["rank"], p["placementRole"])
-                for p in export["accountObjectPlacements"]} == {
-            ("place", "place-001", 1, "container-child"),
-            ("group", "group-001", 1, "container-child"),
-            ("group", "group-002", 2, "container-child"),
-            ("place", "place-002", 1, "container-child"),
-        }
-        assert len(export["accountObjectLinks"]) == 4
-        assert {(r["accountId"], r["objectType"], r["objectId"], r["linkRole"])
-                for r in export["accountObjectLinks"]} == {
-            (aid, "place", "place-001", "account-structure-root"),
-            (aid, "group", "group-001", "scoped-to-account"),
-            (aid, "group", "group-002", "scoped-to-account"),
-            (aid, "place", "place-002", "scoped-to-account"),
-        }
-        assert len(export["groupMemberships"]) == 2
-        assert {(r["groupId"], r["memberId"], r["rank"])
-                for r in export["groupMemberships"]} == {
-            ("group-001", "member-001", 1), ("group-001", "member-002", 2),
-        }
-        assert len(export["placeMemberships"]) == 2
-        assert {(r["placeId"], r["memberId"], r["rank"])
-                for r in export["placeMemberships"]} == {
-            ("place-002", "member-003", 1), ("place-002", "member-004", 2),
-        }
+        assert len(account["anchors"]) == 4
+        assert len(account["members"]) == 4
+        assert [node["anchorId"] for node in account["tree"]] == ["place-001"]
+        assert _child_ids(tree["place-001"]) == ["group-001", "group-002"]
+        assert _child_ids(tree["group-002"]) == ["place-002"]
+        assert _tree_member_ids(tree["group-001"]) == ["member-001", "member-002"]
+        assert _tree_member_ids(tree["group-002"]) == []
+        assert _tree_member_ids(tree["place-002"]) == ["member-003", "member-004"]
+        assert _tree_member_ids(tree["place-001"]) == []
+        assert "member-004" not in _tree_member_ids(tree["group-001"])
+        assert all(m["fronting"] is False for m in account["members"])
+        prov = export["provenance"]
+        assert prov["sourceGenerator"] == "example-012-document-transcription"
+        assert prov["sourceIdsPreserved"] is False
+        assert prov["sourceDocument"] == "PluralBridge-Plural-Maps-and-Design-Rules.txt"
+        assert prov["sourceExample"] == 12
     else:
         raise AssertionError(f"{name}: unknown exampleId {example_id}")
 
@@ -1504,33 +1654,19 @@ def validate_export(export, name="export"):
 
 
 def structural_facts(export):
-    """Order-independent facts used to compare generated output with fixtures."""
-    def freeze_links(rows, owner):
-        return sorted((r[owner], r["objectType"], r["objectId"], r["linkRole"]) for r in rows)
-
-    def freeze_places(rows, owner):
-        return sorted((r[owner], r["objectType"], r["objectId"], r["parentObjectType"],
-                       r["parentObjectId"], r["placementRole"], r["rank"]) for r in rows)
-
+    """Order-independent facts used as a secondary summary of a hierarchical export."""
+    account = _acct(export)
+    tree = [
+        (node["anchorId"], tuple(_tree_member_ids(node)), tuple(_child_ids(node)))
+        for node in walk_tree(account.get("tree"))
+    ]
     return {
         "example_id": export["pluralBridgeExport"]["exampleId"],
-        "collections": tuple(sorted(export)),
-        "account_ids": sorted(ids_in(export["accounts"], "accountId")),
-        "system_names": sorted((s["systemId"], s["name"]) for s in export["systems"]),
-        "member_names": sorted((m["memberId"], m["displayName"]) for m in export["members"]),
-        "group_names": sorted((g["groupId"], g["name"]) for g in export["groups"]),
-        "place_names": sorted((p["placeId"], p["name"]) for p in export["places"]),
-        "memberships": sorted((m["accountId"], m["systemId"], m["status"]) for m in export["memberships"]),
+        "account_id": account["accountId"],
+        "anchor_names": sorted((a["anchorId"], a["objectType"], a["name"]) for a in account["anchors"]),
+        "member_names": sorted((m["memberId"], m["displayName"], m["fronting"]) for m in account["members"]),
         "relationships": sorted(
-            (r["systemId"], r["relationshipType"], r.get("parentSystemId"), r.get("targetSystemId"),
-             r.get("relationshipStatus"))
-            for r in export["systemRelationships"]),
-        "system_links": freeze_links(export["systemObjectLinks"], "systemId"),
-        "account_links": freeze_links(export["accountObjectLinks"], "accountId"),
-        "system_placements": freeze_places(export["systemObjectPlacements"], "systemId"),
-        "account_placements": freeze_places(export["accountObjectPlacements"], "accountId"),
-        "group_memberships": sorted(
-            (g["groupId"], g["memberId"], g["rank"]) for g in export["groupMemberships"]),
-        "place_memberships": sorted(
-            (p["placeId"], p["memberId"], p["rank"]) for p in export["placeMemberships"]),
+            (r["sourceAnchorId"], r["fieldId"], r.get("targetAnchorId"))
+            for r in account.get("relationships") or []),
+        "tree": tree,
     }

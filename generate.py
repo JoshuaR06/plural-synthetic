@@ -9,11 +9,12 @@ importer needs to be tested against:
   out/simplyplural-official.json  the official Simply Plural single-file export (unwrapped, _id)
   out/avatars.zip                 tiny solid-colour PNGs named <memberId>.png
   out/edge/                       deliberately off-spec variants (see EDGE CASES)
-  out/pluralbridge-system-models/ twelve generated PluralBridge graph configurations
+  out/pluralbridge-system-models/ twelve generated PluralBridge canonical models
 
 Everything is fictional. Aurora ids are `synthetic-*`. System-model examples use PluralBridge
 id style and declare themselves synthetic in the export header. Output is byte-identical run
-to run (fixed timestamps, sorted keys, fixed zip dates), so fixtures can be committed and diffed.
+to run (fixed timestamps, insertion-order canonical models, sorted-key Aurora/edge JSON,
+fixed zip dates), so fixtures can be committed and diffed.
 
 Standard library only. Usage:  python3 generate.py [--out DIR]
 """
@@ -169,6 +170,14 @@ def unwrap(recs):
 def dump(obj):
     return json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
 
+def dump_system_model(obj):
+    """Insertion-order JSON for canonical models. Aurora/edge output still uses dump()."""
+    return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
+
+def write_json(path, text):
+    with open(path, "w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
 def pluralbridge_files():
     files = {
         "me.json": {"exists": True, "id": SYSTEM_ID, "content": ME},
@@ -247,14 +256,14 @@ def generate_system_models():
     return built
 
 def write_system_model_exports(target, exports):
-    """Write generated system-model JSON under target/."""
+    """Write generated canonical-model JSON under target/. Does not touch example-shape.json."""
     target = Path(target)
     target.mkdir(parents=True, exist_ok=True)
     for name, obj in exports.items():
-        (target / name).write_text(dump(obj), encoding="utf-8")
+        write_json(target / name, dump_system_model(obj))
 
 def load_canonical_system_models(repo_root):
-    """Load committed canonical JSON for structural comparison with generated output."""
+    """Load committed canonical JSON for complete comparison with generated output."""
     fixtures_root = Path(repo_root) / "fixtures" / "pluralbridge-system-models"
     loaded = {}
     for name in SYSTEM_MODEL_FIXTURE_NAMES:
@@ -287,30 +296,41 @@ def check(out):
     assert all(i.startswith("synthetic-") for i in ids), "non-synthetic id"
 
 def check_system_model_fixtures(repo_root, out, generated_exports):
-    """Generated system models must match the complete schema, preserve graph vs placement
-    structure, stay in sync with committed canonical JSON, and match the sample-output mirror."""
+    """Generated canonical models must match committed fixtures completely (objects and
+    serialized text), keep independent topology checks, and leave example-shape.json alone."""
     src = Path(repo_root) / "fixtures" / "pluralbridge-system-models"
     mirror = Path(repo_root) / "sample-output" / "pluralbridge-system-models"
     expected = set(SYSTEM_MODEL_FIXTURE_NAMES)
-    for folder, docs in ((src, {"README.md", "PluralBridge-Plural-Maps-and-Design-Rules.txt"}), (mirror, {"README.md"})):
-        found = {p.relative_to(folder).as_posix() for p in folder.rglob("*") if p.is_file()}
-        assert found == expected | docs, \
-            f"{folder.relative_to(repo_root)}: unexpected {sorted(found - expected - docs)}, missing {sorted(expected - found)}"
+    fixture_allowed = expected | {"README.md", "Canonical Model Minimum Base.txt"}
+    found_src = {p.relative_to(src).as_posix() for p in src.rglob("*") if p.is_file()}
+    assert found_src == fixture_allowed, (
+        f"fixtures/pluralbridge-system-models: unexpected {sorted(found_src - fixture_allowed)}, "
+        f"missing {sorted(fixture_allowed - found_src)}")
+    found_mirror = {p.relative_to(mirror).as_posix() for p in mirror.rglob("*") if p.is_file()}
+    missing_mirror = expected - found_mirror
+    assert not missing_mirror, f"sample-output/pluralbridge-system-models missing {sorted(missing_mirror)}"
+    extra_examples = sorted(
+        name for name in found_mirror
+        if name.startswith("example-") and name.endswith(".json")
+        and name not in expected and name != "example-shape.json"
+    )
+    assert not extra_examples, f"sample-output has unexpected canonical JSON {extra_examples}"
     canonical = load_canonical_system_models(repo_root)
     for name in SYSTEM_MODEL_FIXTURE_NAMES:
         generated_obj = generated_exports[name]
         generated_text = (Path(out) / "pluralbridge-system-models" / name).read_text(encoding="utf-8")
-        assert dump(generated_obj) == generated_text, f"{name}: written output drifted from generated object"
+        fixture_text = (src / name).read_text(encoding="utf-8")
+        assert dump_system_model(generated_obj) == generated_text, (
+            f"{name}: written output drifted from generated object")
+        assert generated_obj == canonical[name], f"{name}: generated object diverged from canonical fixture"
+        assert generated_text == fixture_text, f"{name}: generated text diverged from canonical fixture"
         header = generated_obj["pluralBridgeExport"]
         assert header.get("exportKind") == SYSTEM_MODEL_EXPORT_KIND, f"{name}: exportKind must be {SYSTEM_MODEL_EXPORT_KIND!r}"
         assert str(header.get("modelingNote", "")).startswith("Synthetic"), f"{name}: modelingNote must start with 'Synthetic'"
         system_models.validate_export(canonical[name], f"fixture {name}")
-        gen_facts = system_models.structural_facts(generated_obj)
-        fixture_facts = system_models.structural_facts(canonical[name])
-        assert gen_facts == fixture_facts, f"{name}: generated structure diverged from canonical fixture"
         committed = mirror / name
-        assert committed.exists() and committed.read_text(encoding="utf-8") == generated_text, \
-            f"sample-output/pluralbridge-system-models/{name} is stale: run generate.py --sync-system-model-sample-output"
+        assert committed.exists() and committed.read_text(encoding="utf-8") == generated_text, (
+            f"sample-output/pluralbridge-system-models/{name} is stale: run generate.py --sync-system-model-sample-output")
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
