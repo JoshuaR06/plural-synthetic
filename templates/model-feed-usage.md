@@ -6,7 +6,7 @@ This is the syntax accepted by `gen-import-engine.py` for a PluralBridge import.
 python gen-import-engine.py --model pluralbridge --scriptfspec <path>
 ```
 
-PluralBridge JSON is `out/imports/pluralbridge/<feed-stem>.json`. Its PNGs are `out/imports/pluralbridge/<feed-stem>-avatars/<memberId>.png`. Simply Plural JSON is `out/imports/simplyplural/<feed-stem>.json`, with PNGs in `out/imports/simplyplural/<feed-stem>-avatars/<member _id>.png`. A failed run replaces neither that target’s JSON nor that feed’s avatar directory. `pluralport` prints `to be implemented`. `lighthouse` is not implemented.
+PluralBridge JSON is `out/imports/pluralbridge/<feed-stem>.json`. Its PNGs are `out/imports/pluralbridge/<feed-stem>-avatars/<memberId>.png`. Simply Plural JSON is `out/imports/simplyplural/<feed-stem>.json`, with PNGs in `out/imports/simplyplural/<feed-stem>-avatars/<member _id>.png`. PluralPort JSON is `out/imports/pluralport/<feed-stem>.json`. Avatar bytes are inside that JSON. A failed run replaces neither that target’s JSON nor that feed’s avatar directory. `lighthouse` is not implemented.
 
 ## Blocks
 
@@ -146,4 +146,4 @@ Account name, email, permission, and visibility are serialized. They are not rep
 
 Anchor-level permission and visibility still have no JSON field. A feed that sets them is reported as a gap and those values are not serialized. The templates in this directory do not set them.
 
-Simply Plural for `templates/model-feed-single.txt` is a separate proof of concept. Its field names, privacy flags, avatar file names, and defaults are documented in `docs/simplyplural/simplyplural-source-analysis.md`, section 11. PluralBridge reports buckets, friends, custom fronts, archive state, and field values as unsupported gaps instead of inventing JSON for them.
+Simply Plural for `templates/model-feed-single.txt` is a separate proof of concept. Its field names, privacy flags, avatar file names, and defaults are documented in `docs/simplyplural/simplyplural-source-analysis.md`, section 11. PluralPort for the same feed is documented in `docs/pluralport/pluralport-feed-mapping.md`. PluralBridge reports buckets, friends, custom fronts, archive state, and field values as unsupported gaps instead of inventing JSON for them.

@@ -1049,6 +1049,41 @@ def _run_simplyplural(feed_path):
     return 0
 
 
+def _run_pluralport(feed_path):
+    """Parse with the shared engine, then let gen-pluralport.py map and write."""
+    model = parse_feed(feed_path)
+    pluralport = _load_sibling("gen-pluralport.py", "gen_pluralport")
+    try:
+        export, warnings = pluralport.render_import_model(model)
+        destination = Path("out") / "imports" / "pluralport" / f"{model['stem']}.json"
+        pluralport.write_import_export(destination, export)
+    except pluralport.PluralPortError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+    for notice in model["notices"]:
+        print(f"notice: {notice}", file=sys.stderr)
+    for warning in warnings:
+        print(f"warning: {warning['message']}", file=sys.stderr)
+    print(destination.as_posix())
+    print(
+        "systems={systems} members={members} groups={groups} "
+        "group_memberships={memberships} custom_fields={fields} "
+        "custom_field_values={values} notes={notes} front_periods={periods} "
+        "assets={assets}".format(
+            systems=len(export["systems"]),
+            members=len(export["members"]),
+            groups=len(export.get("groups") or []),
+            memberships=len(export.get("group_memberships") or []),
+            fields=len(export.get("custom_fields") or []),
+            values=len(export.get("custom_field_values") or []),
+            notes=len(export.get("notes") or []),
+            periods=len(export.get("front_periods") or []),
+            assets=len(export.get("assets") or []),
+        )
+    )
+    return 0
+
+
 def _run_stub(filename, module_name):
     module = _load_sibling(filename, module_name)
     module.run()
@@ -1058,7 +1093,7 @@ def _run_stub(filename, module_name):
 def main(argv=None):
     """Command line for the proof-of-concept importer."""
     parser = argparse.ArgumentParser(
-        description="Proof-of-concept model-feed importer. PluralBridge is the only implemented target.",
+        description="Proof-of-concept model-feed importer.",
     )
     parser.add_argument("--model", required=True, help="pluralbridge, simplyplural, pluralport, or lighthouse")
     parser.add_argument("--scriptfspec", required=True, help="Path to a model-feed text file")
@@ -1074,7 +1109,11 @@ def main(argv=None):
             print(str(exc), file=sys.stderr)
             return 1
     if model == "pluralport":
-        return _run_stub("gen-pluralport.py", "gen_pluralport")
+        try:
+            return _run_pluralport(args.scriptfspec)
+        except FeedError as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
     if model != "pluralbridge":
         print(f"unknown model {args.model!r}", file=sys.stderr)
         return 2
