@@ -52,6 +52,12 @@ ACCOUNT_COLLECTION_ORDER = (
     "anchors", "tree", "relationships", "frontHistory",
 )
 INHERIT_SETTING = {"mode": "inherit"}
+# First account property on every canonical example. Feed imports do not use this.
+CANONICAL_AVATAR_CONFIG = {
+    "avatar-width": 64,
+    "avatar-height": 64,
+    "avatar": "solid",
+}
 ANCHOR_ID_FIELDS = {"system": "systemId", "group": "groupId", "place": "placeId"}
 
 FIXED_AUDIT = {"createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z"}
@@ -446,6 +452,7 @@ def assemble(spec):
     ]
 
     account_obj = {
+        "config": dict(CANONICAL_AVATAR_CONFIG),
         "accountId": account_rec["accountId"],
         "displayName": account_rec["displayName"],
         "email": account_rec["email"],

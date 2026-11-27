@@ -1,5 +1,10 @@
 {
   "account": {
+    "config": {
+      "avatar-width": 64,
+      "avatar-height": 64,
+      "avatar": "solid"
+    },
     "accountId": "account-011",
     "displayName": "Example 11",
     "email": "example-11@pluralbridge.org",

@@ -13,6 +13,8 @@ Two generation worlds share this entry point and must stay independent:
   The twelve PluralBridge canonical models (topologies in system_models.py) are a different
   schema: one hierarchical account per file under out/pluralbridge-system-models/. They are
   not derived from Aurora and must not reuse Aurora dump() key-sorting or synthetic-* ids.
+  Serialization, --out writing, sample-output sync, and fixture checks live in
+  gen-pluralbridge.py (loaded by importlib; the hyphen is not a valid import name).
 
 Everything is fictional. Aurora ids are `synthetic-*`. System-model examples use PluralBridge
 id style and declare themselves synthetic in the export header. Output is byte-identical run
@@ -25,11 +27,8 @@ sample-output/pluralbridge-system-models/ and never overwrites example-shape.jso
 
 Standard library only. Usage:  python3 generate.py [--out DIR]
 """
-import argparse, json, os, shutil, struct, zipfile, zlib
-from pathlib import Path
+import argparse, importlib.util, json, os, shutil, struct, zipfile, zlib
 from datetime import datetime, timezone
-
-import system_models
 
 BASE_EPOCH = 1756000000  # fixed, so output never depends on the clock
 MS = lambda day, hour=12: int((BASE_EPOCH + day * 86400 + hour * 3600) * 1000)
@@ -162,8 +161,18 @@ NOTES = {
 AVATAR_COLOURS = {"synthetic-member-0001": (124, 92, 191), "synthetic-member-0002": (217, 72, 43),
                   "synthetic-member-0003": (43, 140, 107), "synthetic-member-0005": (232, 161, 60)}
 
-SYSTEM_MODEL_FIXTURE_NAMES = system_models.SYSTEM_MODEL_FILENAMES  # twelve examples; never example-shape.json
-SYSTEM_MODEL_EXPORT_KIND = system_models.EXPORT_KIND
+def _load_gen_pluralbridge():
+    """Load gen-pluralbridge.py. A hyphen is not a valid Python import name."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen-pluralbridge.py")
+    spec = importlib.util.spec_from_file_location("gen_pluralbridge", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+# Canonical-model writers. Importing this module does not generate; emit_system_models does.
+gen_pluralbridge = _load_gen_pluralbridge()
+dump_system_model = gen_pluralbridge.dump_system_model
+generate_system_models = gen_pluralbridge.generate_system_models
 
 # ---------------------------------------------------------------- shapes
 
@@ -178,15 +187,6 @@ def unwrap(recs):
 def dump(obj):
     """Sorted-key JSON for Aurora, zip, and edge files. Do not use for canonical models."""
     return json.dumps(obj, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
-
-def dump_system_model(obj):
-    """Insertion-order JSON for canonical models. Aurora/edge output still uses dump()."""
-    return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
-
-def write_json(path, text):
-    """Write UTF-8 text with LF newlines so Windows checkout does not scramble fixtures."""
-    with open(path, "w", encoding="utf-8", newline="\n") as handle:
-        handle.write(text)
 
 def pluralbridge_files():
     """Aurora as a PluralBridge collection folder. Includes privacy buckets; canonical models do not."""
@@ -257,60 +257,11 @@ def write_zip(path, entries):
             info.compress_type = zipfile.ZIP_DEFLATED
             z.writestr(info, entries[name])
 
-def generate_system_models():
-    """Build and validate the twelve canonical models from Python topologies.
-
-    Filename order is part of the fixture contract. exampleId is derived from the
-    filename prefix (example-001-...), not from the topology's display name.
-    """
-    built = system_models.build_all()
-    assert list(built) == SYSTEM_MODEL_FIXTURE_NAMES, list(built)
-    for name, obj in built.items():
-        expected_example_id = name.split("-", 2)[0] + "-" + name.split("-", 2)[1]
-        assert obj["pluralBridgeExport"]["exampleId"] == expected_example_id, name
-        system_models.validate_export(obj, name)
-    return built
-
-def write_system_model_exports(target, exports):
-    """Write the twelve generated example JSON files under target/.
-
-    Only names in SYSTEM_MODEL_FIXTURE_NAMES are written. example-shape.json is
-    illustrative and is never generated or overwritten, including during sample-output sync.
-    """
-    target = Path(target)
-    target.mkdir(parents=True, exist_ok=True)
-    for name, obj in exports.items():
-        write_json(target / name, dump_system_model(obj))
-
-def load_canonical_system_models(repo_root):
-    """Load committed canonical JSON for complete comparison with generated output."""
-    fixtures_root = Path(repo_root) / "fixtures" / "pluralbridge-system-models"
-    loaded = {}
-    for name in SYSTEM_MODEL_FIXTURE_NAMES:
-        obj = json.loads((fixtures_root / name).read_text(encoding="utf-8"))
-        loaded[name] = obj
-    return loaded
-
-def write_system_model_fixtures(out, exports):
-    """Write generated system-model JSON under <out>/pluralbridge-system-models/.
-
-    This is the --out copy used for comparison. It does not update committed fixtures.
-    """
-    write_system_model_exports(Path(out) / "pluralbridge-system-models", exports)
-
-def sync_system_model_sample_output(repo_root, exports):
-    """Refresh sample-output/pluralbridge-system-models from generated exports.
-
-    Opt-in via --sync-system-model-sample-output. Committed fixtures/ are updated
-    separately; this flag must not be pointed at fixtures or used to rewrite example-shape.json.
-    """
-    write_system_model_exports(Path(repo_root) / "sample-output" / "pluralbridge-system-models", exports)
-
 def check(out):
     """Aurora/edge sanity: parse JSON, keep synthetic-* ids, preserve known dangling refs.
 
     The deleted-member front-history id is required, not an accident. Open fronts are
-    entries with no endTime. Canonical-model checks live in check_system_model_fixtures.
+    entries with no endTime. Canonical-model checks live in gen-pluralbridge.py.
     """
     ids = set()
     for root, _, names in os.walk(out):
@@ -326,49 +277,6 @@ def check(out):
         ids |= {rid for rid, _ in recs}
     assert all(i.startswith("synthetic-") for i in ids), "non-synthetic id"
 
-def check_system_model_fixtures(repo_root, out, generated_exports):
-    """Generated canonical models must match committed fixtures completely (objects and
-    serialized text), keep independent topology checks, and leave example-shape.json alone.
-
-    Fixtures/ is an exact file set: the twelve examples plus README and Canonical Model
-    Minimum Base.txt. Sample-output may also contain example-shape.json, which is compared
-    against nothing and must not be treated as a thirteenth model. Object equality and
-    LF-serialized text must both match; dumping with sort_keys would fail this check.
-    """
-    src = Path(repo_root) / "fixtures" / "pluralbridge-system-models"
-    mirror = Path(repo_root) / "sample-output" / "pluralbridge-system-models"
-    expected = set(SYSTEM_MODEL_FIXTURE_NAMES)
-    fixture_allowed = expected | {"README.md", "Canonical Model Minimum Base.txt"}
-    found_src = {p.relative_to(src).as_posix() for p in src.rglob("*") if p.is_file()}
-    assert found_src == fixture_allowed, (
-        f"fixtures/pluralbridge-system-models: unexpected {sorted(found_src - fixture_allowed)}, "
-        f"missing {sorted(fixture_allowed - found_src)}")
-    found_mirror = {p.relative_to(mirror).as_posix() for p in mirror.rglob("*") if p.is_file()}
-    missing_mirror = expected - found_mirror
-    assert not missing_mirror, f"sample-output/pluralbridge-system-models missing {sorted(missing_mirror)}"
-    extra_examples = sorted(
-        name for name in found_mirror
-        if name.startswith("example-") and name.endswith(".json")
-        and name not in expected and name != "example-shape.json"
-    )
-    assert not extra_examples, f"sample-output has unexpected canonical JSON {extra_examples}"
-    canonical = load_canonical_system_models(repo_root)
-    for name in SYSTEM_MODEL_FIXTURE_NAMES:
-        generated_obj = generated_exports[name]
-        generated_text = (Path(out) / "pluralbridge-system-models" / name).read_text(encoding="utf-8")
-        fixture_text = (src / name).read_text(encoding="utf-8")
-        assert dump_system_model(generated_obj) == generated_text, (
-            f"{name}: written output drifted from generated object")
-        assert generated_obj == canonical[name], f"{name}: generated object diverged from canonical fixture"
-        assert generated_text == fixture_text, f"{name}: generated text diverged from canonical fixture"
-        header = generated_obj["pluralBridgeExport"]
-        assert header.get("exportKind") == SYSTEM_MODEL_EXPORT_KIND, f"{name}: exportKind must be {SYSTEM_MODEL_EXPORT_KIND!r}"
-        assert str(header.get("modelingNote", "")).startswith("Synthetic"), f"{name}: modelingNote must start with 'Synthetic'"
-        system_models.validate_export(canonical[name], f"fixture {name}")
-        committed = mirror / name
-        assert committed.exists() and committed.read_text(encoding="utf-8") == generated_text, (
-            f"sample-output/pluralbridge-system-models/{name} is stale: run generate.py --sync-system-model-sample-output")
-
 def main():
     """Wipe --out, emit Aurora formats, emit the twelve models, then run both check suites.
 
@@ -383,7 +291,7 @@ def main():
     out = args.out
     repo_root = os.path.dirname(os.path.abspath(__file__))
     shutil.rmtree(out, ignore_errors=True)
-    # Aurora formats use dump() (sorted keys). Canonical models use dump_system_model() later.
+    # Aurora formats use dump() (sorted keys). Canonical models use gen-pluralbridge.dump_system_model().
     pb = pluralbridge_files()
     for path, obj in pb.items():
         full = os.path.join(out, "pluralbridge", path)
@@ -396,12 +304,10 @@ def main():
     os.makedirs(os.path.join(out, "edge"))
     for name, obj in edge_variants().items():
         open(os.path.join(out, "edge", name), "w", encoding="utf-8").write(dump(obj))
-    system_model_exports = generate_system_models()
-    write_system_model_fixtures(out, system_model_exports)
-    if args.sync_system_model_sample_output:
-        sync_system_model_sample_output(repo_root, system_model_exports)
+    system_model_exports = gen_pluralbridge.emit_system_models(
+        repo_root, out, sync_sample_output=args.sync_system_model_sample_output)
     check(out)
-    check_system_model_fixtures(repo_root, out, system_model_exports)
+    gen_pluralbridge.check_system_model_fixtures(repo_root, out, system_model_exports)
     print(f"wrote {out}: {len(MEMBERS)} members, {len(GROUPS)} groups (2 nested) + {len(EDGE_GROUPS)} edge groups, "
           f"{len(FRONT_HISTORY)} front entries (2 open, 1 deleted-member), "
           f"{sum(len(v) for v in NOTES.values())} notes, {len(AVATAR_COLOURS)} avatars, 4 edge variants, "
