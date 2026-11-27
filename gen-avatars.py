@@ -194,13 +194,41 @@ def _crosshatch_rows(width, height, base):
     return rows
 
 
+def _zlib_store(data):
+    """RFC 1950 zlib stream of stored deflate blocks.
+
+    zlib.compress at level 9 does not emit the same bytes on every zlib
+    build. GitHub's Python 3.12 and local zlib-ng disagree, so committed
+    avatar digests failed in CI while passing here. Stored blocks are
+    defined by the format, and zlib.adler32 is the checksum both builds share.
+    """
+    header = b"\x78\x01"
+    blocks = []
+    if not data:
+        pieces = [b""]
+    else:
+        pieces = [data[start:start + 65535] for start in range(0, len(data), 65535)]
+    for index, piece in enumerate(pieces):
+        final = 1 if index == len(pieces) - 1 else 0
+        blocks.append(bytes((final,)) + struct.pack("<HH", len(piece), len(piece) ^ 0xFFFF) + piece)
+    checksum = zlib.adler32(data) & 0xFFFFFFFF
+    return header + b"".join(blocks) + struct.pack(">I", checksum)
+
+
 def _encode_png(width, height, rows):
-    """Truecolor PNG. Each row is stored with filter byte 0, matching generate.png's layout."""
+    """Truecolor PNG. Each row is stored with filter byte 0, matching generate.png's layout.
+
+    The IDAT payload is a stored zlib stream, so the file bytes do not follow
+    the host zlib compressor. generate.png still uses zlib.compress for Aurora.
+    """
     raw = b"".join(b"\x00" + b"".join(bytes(pixel) for pixel in row) for row in rows)
+    compressed = _zlib_store(raw)
+    if zlib.decompress(compressed) != raw:
+        raise RuntimeError("stored zlib stream did not round-trip")
     return (
         _PNG_SIGNATURE
         + _chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
-        + _chunk(b"IDAT", zlib.compress(raw, 9))
+        + _chunk(b"IDAT", compressed)
         + _chunk(b"IEND", b"")
     )
 
