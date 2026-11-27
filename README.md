@@ -1,19 +1,25 @@
 # plural-synthetic
 
-A small generator that makes a **completely fictional** plural-system export, in the formats
-that plural apps actually exchange, so importers can be built and tested without anyone's real
-data.
+A small generator that makes **completely fictional** plural-system exports, so importers can be
+built and tested without anyone's real data.
 
-One made-up system ("Aurora") is defined once in `generate.py` and written out as:
+Two workflows are available.
 
-- a **Simply Plural** official single-file export
-- a **PluralBridge** per-collection export (folder and zip)
-- an **avatars** zip
-- a set of **edge cases**: shapes real exports can contain that tend to break importers
-- twelve **PluralBridge system-model** configurations, generated from topologies in `system_models.py`
+**`generate.py`** is Joshua's original generator. It writes the Aurora exports (Simply Plural,
+PluralBridge collection folder and zip, and an avatar zip), the edge-case files, and the twelve
+canonical PluralBridge models. Those twelve models come from `system_models.py`. They are a
+separate product from Aurora.
 
-No real people, members, notes, fronting history, avatars, tokens or database files were used.
-Every id starts with `synthetic-` so fixture data can never be mistaken for real data.
+**`gen-import-engine.py`** is a proof of concept. It reads a user-authored model-feed file and
+writes a target-specific test import. A file produced this way is a fixture. It is not evidence
+that a particular app accepts the import.
+
+The directory map is [`repo-map.md`](repo-map.md).
+
+No real people, members, notes, fronting history, avatars, tokens, or database files were used.
+Identifiers are fictional and chosen so a run does not depend on the clock. Aurora and the edge
+files use the `synthetic-` prefix. The other workflows use their own identifier styles, described
+below.
 
 ## Quick start
 
@@ -24,15 +30,106 @@ git clone https://github.com/JoshuaR06/plural-synthetic.git
 cd plural-synthetic
 python3 generate.py            # writes everything to ./out
 python3 generate.py --out DIR  # or somewhere else
-python3 generate.py --sync-system-model-sample-output  # refresh sample-output/pluralbridge-system-models
+python3 generate.py --out DIR --sync-system-model-sample-output  # refresh the twelve canonical JSON files
 ```
 
-Don't want to run anything? The same files are already in [`sample-output/`](sample-output/).
+`--out` deletes the selected directory and writes it again. The default directory is `out` next
+to `generate.py`. Feed files written from the repository root also live under that `out/`, so
+the default `generate.py` command removes them. Use a separate `--out` directory when you want
+to keep the feed files.
 
-The output is **byte-identical every run** (fixed dates, sorted keys, fixed zip timestamps), so
-you can commit it as test fixtures and diff it in review.
+The same Aurora files and the twelve canonical models are already in
+[`sample-output/`](sample-output/). Feed import files are written only when you run the engine.
 
-## What you get
+`generate.py` is byte-identical every run: fixed dates, insertion-order canonical models,
+sorted-key Aurora and edge JSON, and fixed zip timestamps. Feed runs also use fixed timestamps
+and identifiers derived from the feed, so the same feed and target repeat. Each target has its
+own identifier convention.
+
+From the repository root, the feed commands are:
+
+```sh
+python gen-import-engine.py --model pluralbridge --scriptfspec templates/model-feed-multiple.txt
+python gen-import-engine.py --model pluralbridge --scriptfspec templates/acceptance-two-systems.txt
+python gen-import-engine.py --model simplyplural --scriptfspec templates/model-feed-single.txt
+python gen-import-engine.py --model pluralport --scriptfspec templates/model-feed-single.txt
+python gen-import-engine.py --model pluralkit --scriptfspec templates/model-feed-single.txt
+```
+
+Syntax and behavior are in
+[`templates/model-feed-usage.md`](templates/model-feed-usage.md).
+Each template has its own guide:
+
+- [`templates/model-feed-multiple.md`](templates/model-feed-multiple.md)
+- [`templates/model-feed-single.md`](templates/model-feed-single.md)
+- [`templates/acceptance-two-systems.md`](templates/acceptance-two-systems.md)
+
+`templates/model-feed-multiple.txt` includes `note: id2` on Group Theatre. That
+note stays on the Group.
+
+## Supported feed targets
+
+This table is the proof-of-concept feed path. It does not mean every target can store every
+feed feature.
+
+| Target | What this cut writes | What it does not take as-is |
+|---|---|---|
+| PluralBridge | One hierarchical account. Place, System, and Group anchors, shared members, repeated placements, and relationships. | Anchor permission and visibility, field values, archive state, privacy buckets, friends, custom fronts, and member descriptions are printed as gaps and left out of the JSON. Visibility `self` is kept and printed as a notice. |
+| Simply Plural | The observed direct-export shape: collection arrays and `_id` records. The supplied specimen is the single-System feed. | A Place, a second or nested System, an anchor relationship, or a Group custom-field association is an error. Account email and operation permissions are notices, not fields. Privacy is mapped to the observed `private` and `preventTrusted` flags. |
+| PluralPort | One file using the captured specification, `openplural_version` `"0.1"`. The supplied specimen is the single-System feed. | A Place, a second or nested System, an anchor relationship, a Group custom-field association, or a note with no member is an error. Account identity, archive reasons, operation permissions, and friend or bucket data are preserved in an extension and reported as warnings. There is no official JSON Schema check. |
+| PluralKit | One native version-2 owner export. The supplied specimen is the single-System feed. | A Place or a second or nested System is an error. Group nesting, notes, custom fields, friends, buckets, custom fronts, archive state, and relationships are notices. They are not extra JSON keys. Privacy is only `public` or `private`, so a narrower audience is reported. |
+| Lighthouse | The feed target prints that it is not implemented and returns 2. | Joshua's Lighthouse application, and the Simply Plural and PluralBridge import work named at the bottom of this file, are separate from this feed target. |
+
+## Templates and output locations
+
+| Template | Role |
+|---|---|
+| [`templates/model-feed-multiple.txt`](templates/model-feed-multiple.txt) | PluralBridge specimen with a Place, two Systems, relationships, nested Groups, and a Group note. Guide: [`model-feed-multiple.md`](templates/model-feed-multiple.md). |
+| [`templates/model-feed-single.txt`](templates/model-feed-single.txt) | One System, used for the Simply Plural, PluralPort, and PluralKit commands above. It also parses as PluralBridge. Guide: [`model-feed-single.md`](templates/model-feed-single.md). |
+| [`templates/acceptance-two-systems.txt`](templates/acceptance-two-systems.txt) | Two Systems, `Member:1-250` in each, 250 members per System. Guide: [`acceptance-two-systems.md`](templates/acceptance-two-systems.md). |
+| [`templates/model-feed-usage.md`](templates/model-feed-usage.md) | Shared feed syntax: brackets, identity, references, settings, relationships, and avatar resolution. |
+
+Output paths are relative to the working directory. The file name uses the feed's filename
+stem. `templates/model-feed-single.txt` therefore writes `model-feed-single.json`.
+
+| Target | JSON |
+|---|---|
+| PluralBridge | `out/imports/pluralbridge/<feed-stem>.json` |
+| Simply Plural | `out/imports/simplyplural/<feed-stem>.json` |
+| PluralPort | `out/imports/pluralport/<feed-stem>.json` |
+| PluralKit | `out/imports/pluralkit/<feed-stem>.json` |
+
+PluralBridge, Simply Plural, and PluralKit also write feed-specific PNG sidecars:
+
+- `out/imports/pluralbridge/<feed-stem>-avatars/<member id>.png`
+- `out/imports/simplyplural/<feed-stem>-avatars/<member _id>.png`
+- `out/imports/pluralkit/<feed-stem>-avatars/<member short id>.png`
+
+PluralPort embeds the avatar bytes in Asset records and does not write a PNG directory. A local
+PNG sidecar is not a hosted avatar URL. PluralKit leaves its native avatar URL fields null for
+that reason.
+
+## Architecture
+
+| File | Responsibility |
+|---|---|
+| `generate.py` | Original generation entry point for Aurora, the edge cases, and the twelve canonical models. |
+| `system_models.py` | Canonical PluralBridge model definitions and assembly. |
+| `gen-import-engine.py` | Shared feed parsing, the intermediate model, and dispatch to a target. |
+| `gen-avatars.py` | Shared deterministic PNG generation for feed imports. |
+| `gen-pluralbridge.py` | Canonical serialization helpers, and the PluralBridge feed adapter. |
+| `gen-simplyplural.py` | Simply Plural feed adapter. |
+| `gen-pluralport.py` | PluralPort feed adapter. |
+| `gen-pluralkit.py` | PluralKit feed adapter. |
+
+Each feed adapter maps the shared model directly into its own format. It does not convert the
+model through PluralBridge JSON. Aurora's avatar zip is built inside `generate.py`. Feed PNGs
+come from `gen-avatars.py`.
+
+## What `generate.py` writes
+
+These paths are inside the directory selected by `--out`. The committed copies are under
+[`sample-output/`](sample-output/).
 
 | File | What it is |
 |---|---|
@@ -44,16 +141,16 @@ you can commit it as test fixtures and diff it in review.
 | `edge/fronthistory-open-without-live-flag.json` | open fronts with no `live` field at all |
 | `edge/groups-structural-edge-cases.json` | the normal groups plus damaged or unusual group structures |
 | `edge/simplyplural-official-with-edge-groups.json` | a complete Simply Plural export using those edge-case groups |
-| `pluralbridge-system-models/*.json` | twelve generated PluralBridge system-model configurations (001-012) |
+| `pluralbridge-system-models/*.json` | twelve generated PluralBridge canonical models (001-012) |
 
-## PluralBridge system-model configurations
+## PluralBridge canonical models
 
-The repository includes twelve PluralBridge system-model examples in
+The repository includes twelve PluralBridge canonical models in
 [`sample-output/pluralbridge-system-models/`](sample-output/pluralbridge-system-models).
 The authoritative specification is
-[`PluralBridge-Plural-Maps-and-Design-Rules.txt`](fixtures/pluralbridge-system-models/PluralBridge-Plural-Maps-and-Design-Rules.txt).
-All twelve examples share one collection schema. Unused collections are empty arrays.
-The existing eleven examples retain their established encoding and output.
+[`Canonical Model Minimum Base.txt`](fixtures/pluralbridge-system-models/Canonical%20Model%20Minimum%20Base.txt).
+Each file is one `account` with shared peer collections and a hierarchical `tree`.
+Empty optional collections are omitted.
 
 They cover:
 
@@ -63,31 +160,47 @@ They cover:
 - sibling
 - related (non-hierarchical; reciprocal records when both sides are labeled)
 - a Place inside a System (Morgan's Room)
-- evolving relationship with unknown status
+- evolving relationship
 - archived system state
 - non-tree graph relationships
 - a top-level Group containing Systems
 - a top-level Place containing Systems and a nested Place
 - a root Place containing Groups and a nested Place, with zero Systems (Example 12)
 
-`generate.py` builds these from Python topologies in `system_models.py` (entities, memberships,
+`generate.py` builds these from Python topologies in `system_models.py` (entities,
 graph relationships, and placements). It does not copy the JSON files. Canonical serialized
 examples live in [`fixtures/pluralbridge-system-models/`](fixtures/pluralbridge-system-models).
-`--sync-system-model-sample-output` refreshes the committed sample-output mirror.
+`--sync-system-model-sample-output` refreshes the twelve canonical JSON files in the committed
+sample-output mirror. It does not overwrite `example-shape.json`, which is an illustrative
+reference and not a thirteenth canonical model.
 
-System–System structure uses `systemRelationships`. Containment uses placements:
-`systemObjectPlacements` for objects inside a System, `accountObjectPlacements` for account-level
-Group/Place roots. A `root` relationship means the System has no parent System; it may still sit
-under a Group or Place.
+Shared members and anchors live in account-level peer collections. Tree nodes reference anchors;
+member occurrences reference shared members. Nesting is containment; array order is display
+order. Notes belong to members through `noteIds`; fields are associated through `fieldIds`.
+Directed structure uses `account.relationships` (`sourceAnchorId`, `fieldId`, `targetAnchorId`).
+The label comes from the referenced custom field's `fieldName`. Reverse direction is a separate
+row. A null target is literal JSON `null`. Display combines labels for the same source/target and
+appends `->Target` only when a target exists. Root and child graph records are omitted.
+The relationship JSON format, worked examples, and per-example results are in
+[`fixtures/pluralbridge-system-models/README.md`](fixtures/pluralbridge-system-models/README.md#field-level-relationship-encoding).
+`privacyBuckets`, `visibilityScopes`, and access memberships are omitted. Notes, custom fields,
+and tree member occurrences carry visibility and permissions. Current fronting is a Boolean on
+the shared member and applies across every occurrence, independently of focused anchor.
 
-These examples keep PluralBridge's own id style, so instead of the `synthetic-` id prefix used
-everywhere else, the built-in check requires each one to declare itself synthetic in its header
-(`exportKind: self-contained-pluralbridge-example`, `modelingNote` starting with "Synthetic"). It
-also fails on any example not listed in `SYSTEM_MODEL_FIXTURE_NAMES`, on a structural mismatch
-with the canonical JSON, and on a stale sample-output mirror. CI (`.github/workflows/check.yml`)
-runs `generate.py` and `python3 -m unittest` on every pull request.
+These examples keep PluralBridge's own id style. Aurora and the edge files use the `synthetic-`
+prefix. The built-in check requires each canonical example to declare itself synthetic in its
+header (`exportKind: self-contained-pluralbridge-example`, `modelingNote` starting with
+"Synthetic"). It also fails on any example not listed in `SYSTEM_MODEL_FIXTURE_NAMES`, on a
+complete mismatch with the canonical JSON, and on a stale sample-output mirror. CI
+(`.github/workflows/check.yml`) runs `generate.py` and `python3 -m unittest` on every pull request.
+
+Field definitions for the twelve models are in
+[`docs/pluralbridge/pluralbridge-json-format.md`](docs/pluralbridge/pluralbridge-json-format.md).
 
 ## The fictional system
+
+Aurora, defined in `generate.py`, is the system behind the Simply Plural file, the PluralBridge
+collection folder, the avatar zip, and the edge files.
 
 **Members**
 
@@ -146,7 +259,7 @@ Structural group cases (only in the `edge/` group files):
 
 A robust importer shouldn't loop, crash, or invent members on any of these.
 
-## How to use it
+## How to use the Aurora exports
 
 **1. Point your importer at a format.** Use `simplyplural-official.json` to test a Simply
 Plural import, or `pluralbridge/` (or the zip) to test a PluralBridge import. Both describe the
@@ -163,7 +276,7 @@ still current after import.
 - swap `pluralbridge/groups.json` for `edge/groups-structural-edge-cases.json`
 - or import `edge/simplyplural-official-with-edge-groups.json` as a complete export
 
-**4. Use it in automated tests.** Because the output never changes, you can check the files
+**4. Use it in automated tests.** Because the Aurora output never changes, you can check the files
 into your test folder and assert exact counts and names. A minimal Python example:
 
 ```python
@@ -174,18 +287,59 @@ open_fronts = [e for e in export["frontHistory"] if "endTime" not in e]
 assert len(open_fronts) == 2
 ```
 
-**5. Make it your own.** Aurora and the Simply Plural / edge exports are defined in plain
-Python lists near the top of `generate.py` (`MEMBERS`, `GROUPS`, `EDGE_GROUPS`, `FRONT_HISTORY`
-and so on). The twelve PluralBridge system-model configurations are defined as topologies in
-`system_models.py`. Add a member or an edge case there, run it again, and every output format
-updates together. Keep new Aurora ids starting with `synthetic-`; the built-in check refuses to
-write that export otherwise.
+**5. Make the Aurora system your own.** Aurora and the Simply Plural / edge exports are defined
+in plain Python lists near the top of `generate.py` (`MEMBERS`, `GROUPS`, `EDGE_GROUPS`,
+`FRONT_HISTORY` and so on). Change those lists and run `generate.py` again to rewrite the Aurora
+formats together. Keep new Aurora ids starting with `synthetic-`; the built-in check refuses to
+write that export otherwise. The twelve canonical models are topologies in `system_models.py`.
+Feed imports are the adapter files listed above. Editing `generate.py` does not update them.
 
-## Notes on the formats
+## Format documentation
 
-These shapes are based on the official Simply Plural export and PluralBridge's per-collection
-export as seen in practice, not on a formal spec. If you know a format does something
-differently, an issue or pull request is very welcome.
+Aurora's Simply Plural file and PluralBridge collection folder follow those exports as seen in
+practice, not a formal spec. The twelve canonical models follow the canonical base and the
+PluralBridge format document. The feed targets follow the source named in each mapping
+document. If you know a format does something differently, an issue or pull request is very
+welcome.
+
+| Document | What it describes |
+|---|---|
+| [`docs/pluralbridge/pluralbridge-json-format.md`](docs/pluralbridge/pluralbridge-json-format.md) | Fields in the twelve canonical PluralBridge models. |
+| [`docs/simplyplural/simplyplural-source-analysis.md`](docs/simplyplural/simplyplural-source-analysis.md) | Observed Simply Plural export shape, including the feed-import proof of concept. |
+| [`docs/pluralport/pluralport-record-reference.md`](docs/pluralport/pluralport-record-reference.md) | Captured PluralPort record reference. |
+| [`docs/pluralport/pluralport-feed-mapping.md`](docs/pluralport/pluralport-feed-mapping.md) | How the single-System feed is mapped to PluralPort. |
+| [`docs/pluralkit/pluralkit-record-reference.md`](docs/pluralkit/pluralkit-record-reference.md) | PluralKit version-2 owner-export records. |
+| [`docs/pluralkit/pluralkit-feed-mapping.md`](docs/pluralkit/pluralkit-feed-mapping.md) | How the single-System feed is mapped to PluralKit. |
+| [`docs/visibility-permissions-roles.txt`](docs/visibility-permissions-roles.txt) | Visibility, permission, and role vocabulary used when a mapping names those words. |
+
+These are reference samples, written to show a format. They are not the files produced by the
+template commands:
+
+- [`fixtures/pluralbridge-system-models/`](fixtures/pluralbridge-system-models) and the matching files in [`sample-output/pluralbridge-system-models/`](sample-output/pluralbridge-system-models), including the illustrative [`example-shape.json`](sample-output/pluralbridge-system-models/example-shape.json)
+- [`docs/simplyplural/simplyplural-synthetic-reference.json`](docs/simplyplural/simplyplural-synthetic-reference.json)
+- [`docs/pluralport/pluralport-comprehensive-example.json`](docs/pluralport/pluralport-comprehensive-example.json)
+- [`docs/pluralkit/pluralkit-comprehensive-example.json`](docs/pluralkit/pluralkit-comprehensive-example.json)
+
+Feed command output is the `out/imports/` tree in the table above.
+
+## Tests
+
+The checked-in feed templates are compared with fixtures in
+[`fixtures/model-feeds/`](fixtures/model-feeds). The tests read the templates,
+run the importer into a temporary directory, and do not write `out/`.
+
+```sh
+python -m unittest discover -s . -p "test_*.py" -v
+```
+
+A template or mapping change that alters JSON, notices, or avatar bytes fails
+until the expected fixtures are refreshed on purpose and the diff is reviewed:
+
+```sh
+python refresh-feed-fixtures.py
+```
+
+The test run does not refresh those fixtures.
 
 ## License
 

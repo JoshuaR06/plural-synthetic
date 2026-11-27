@@ -1,0 +1,563 @@
+{
+  "customFields": [
+    {
+      "_id": "id1",
+      "name": "title",
+      "order": 0,
+      "preventTrusted": true,
+      "private": true,
+      "type": 0,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "id3",
+      "name": "author",
+      "order": 1,
+      "preventTrusted": true,
+      "private": true,
+      "type": 0,
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "friends": [
+    {
+      "_id": "synthetic-friend-0001",
+      "buckets": [
+        "bucket1"
+      ],
+      "frienduid": "synthetic-frienduid-0001",
+      "trusted": true,
+      "uid": "synthetic-system-0001",
+      "username": "Alex"
+    }
+  ],
+  "frontHistory": [
+    {
+      "_id": "synthetic-fh-0001",
+      "custom": false,
+      "live": true,
+      "member": "synthetic-member-0001",
+      "startTime": 1767225600000,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-fh-0002",
+      "custom": false,
+      "live": true,
+      "member": "synthetic-member-0003",
+      "startTime": 1767225600000,
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "frontStatuses": [
+    {
+      "_id": "customfront1",
+      "desc": "A synthetic custom front for uncertain identity.",
+      "name": "Blurry",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "groups": [
+    {
+      "_id": "synthetic-group-0001",
+      "members": [
+        "synthetic-member-0004",
+        "synthetic-member-0005",
+        "synthetic-member-0006",
+        "synthetic-member-0007",
+        "synthetic-member-0008",
+        "synthetic-member-0009",
+        "synthetic-member-0010",
+        "synthetic-member-0011",
+        "synthetic-member-0012",
+        "synthetic-member-0013",
+        "synthetic-member-0014",
+        "synthetic-member-0015",
+        "synthetic-member-0016",
+        "synthetic-member-0017",
+        "synthetic-member-0018",
+        "synthetic-member-0019",
+        "synthetic-member-0020",
+        "synthetic-member-0021",
+        "synthetic-member-0022",
+        "synthetic-member-0023",
+        "synthetic-member-0024",
+        "synthetic-member-0025",
+        "synthetic-member-0026",
+        "synthetic-member-0027",
+        "synthetic-member-0028",
+        "synthetic-member-0029",
+        "synthetic-member-0030",
+        "synthetic-member-0031",
+        "synthetic-member-0032",
+        "synthetic-member-0033",
+        "synthetic-member-0034",
+        "synthetic-member-0035",
+        "synthetic-member-0036",
+        "synthetic-member-0037",
+        "synthetic-member-0038",
+        "synthetic-member-0039",
+        "synthetic-member-0040",
+        "synthetic-member-0041",
+        "synthetic-member-0042",
+        "synthetic-member-0043",
+        "synthetic-member-0044",
+        "synthetic-member-0045",
+        "synthetic-member-0046",
+        "synthetic-member-0047",
+        "synthetic-member-0048",
+        "synthetic-member-0049",
+        "synthetic-member-0050",
+        "synthetic-member-0051",
+        "synthetic-member-0052",
+        "synthetic-member-0053",
+        "synthetic-member-0002"
+      ],
+      "name": "Theatre",
+      "parent": "root",
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-group-0002",
+      "members": [
+        "synthetic-member-0003"
+      ],
+      "name": "Backstage",
+      "parent": "synthetic-group-0001",
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "members": [
+    {
+      "_id": "synthetic-member-0001",
+      "avatarUuid": "synthetic-avatar-0001",
+      "buckets": [
+        "bucket1"
+      ],
+      "color": "#4a90e2",
+      "info": {
+        "id1": "Sailor",
+        "id3": "Popeye"
+      },
+      "name": "Popeye",
+      "preventTrusted": false,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0002",
+      "archived": true,
+      "archivedReason": "Retained for historical testing",
+      "name": "Gilligan",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0003",
+      "avatarUuid": "synthetic-avatar-0003",
+      "color": "#ff8800",
+      "name": "Penny",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0004",
+      "name": "synthetic-member-0004",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0005",
+      "name": "synthetic-member-0005",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0006",
+      "name": "synthetic-member-0006",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0007",
+      "name": "synthetic-member-0007",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0008",
+      "name": "synthetic-member-0008",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0009",
+      "name": "synthetic-member-0009",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0010",
+      "name": "synthetic-member-0010",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0011",
+      "name": "synthetic-member-0011",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0012",
+      "name": "synthetic-member-0012",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0013",
+      "name": "synthetic-member-0013",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0014",
+      "name": "synthetic-member-0014",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0015",
+      "name": "synthetic-member-0015",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0016",
+      "name": "synthetic-member-0016",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0017",
+      "name": "synthetic-member-0017",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0018",
+      "name": "synthetic-member-0018",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0019",
+      "name": "synthetic-member-0019",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0020",
+      "name": "synthetic-member-0020",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0021",
+      "name": "synthetic-member-0021",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0022",
+      "name": "synthetic-member-0022",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0023",
+      "name": "synthetic-member-0023",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0024",
+      "name": "synthetic-member-0024",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0025",
+      "name": "synthetic-member-0025",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0026",
+      "name": "synthetic-member-0026",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0027",
+      "name": "synthetic-member-0027",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0028",
+      "name": "synthetic-member-0028",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0029",
+      "name": "synthetic-member-0029",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0030",
+      "name": "synthetic-member-0030",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0031",
+      "name": "synthetic-member-0031",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0032",
+      "name": "synthetic-member-0032",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0033",
+      "name": "synthetic-member-0033",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0034",
+      "name": "synthetic-member-0034",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0035",
+      "name": "synthetic-member-0035",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0036",
+      "name": "synthetic-member-0036",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0037",
+      "name": "synthetic-member-0037",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0038",
+      "name": "synthetic-member-0038",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0039",
+      "name": "synthetic-member-0039",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0040",
+      "name": "synthetic-member-0040",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0041",
+      "name": "synthetic-member-0041",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0042",
+      "name": "synthetic-member-0042",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0043",
+      "name": "synthetic-member-0043",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0044",
+      "name": "synthetic-member-0044",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0045",
+      "name": "synthetic-member-0045",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0046",
+      "name": "synthetic-member-0046",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0047",
+      "name": "synthetic-member-0047",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0048",
+      "name": "synthetic-member-0048",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0049",
+      "name": "synthetic-member-0049",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0050",
+      "name": "synthetic-member-0050",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0051",
+      "name": "synthetic-member-0051",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0052",
+      "name": "synthetic-member-0052",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "synthetic-member-0053",
+      "name": "synthetic-member-0053",
+      "preventTrusted": true,
+      "private": true,
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "notes": [
+    {
+      "_id": "id1",
+      "date": 1767225600000,
+      "member": "synthetic-member-0001",
+      "note": "This is Popeye’s note.",
+      "supportMarkdown": false,
+      "title": "",
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "id2",
+      "date": 1767225600000,
+      "member": "synthetic-member-0003",
+      "note": "This is Penny’s note.",
+      "supportMarkdown": false,
+      "title": "",
+      "uid": "synthetic-system-0001"
+    },
+    {
+      "_id": "id3",
+      "date": 1767225600000,
+      "member": "synthetic-member-0002",
+      "note": "This is Gilligan’s historical note.",
+      "supportMarkdown": false,
+      "title": "",
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "privacyBuckets": [
+    {
+      "_id": "bucket1",
+      "name": "Close Friends",
+      "uid": "synthetic-system-0001"
+    }
+  ],
+  "users": [
+    {
+      "_id": "synthetic-system-0001",
+      "desc": "The Harbor",
+      "isAsystem": true,
+      "uid": "synthetic-system-0001",
+      "username": "example-pb-model-single"
+    }
+  ]
+}

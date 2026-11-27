@@ -1,0 +1,24 @@
+Config
+[
+  avatar-width: 64
+  avatar-height: 64
+  avatar: solid
+]
+Account
+[
+  name:example-two-system-model
+  email:example-two-system-model@example.org
+  Permission: read,write
+  Visibility: trusted friends
+
+  System: North
+  [
+    Member:1-250
+    avatar:crosshatch
+  ]
+
+  System: South
+  [
+    Member:1-250
+  ]
+]

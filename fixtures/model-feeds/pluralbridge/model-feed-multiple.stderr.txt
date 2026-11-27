@@ -1,0 +1,2 @@
+notice: {feed}:6: visibility 'self' is kept as written. docs/visibility-permissions-roles.txt names this audience 'only you'. The token was not renamed.
+notice: {feed}:16: visibility 'self' is kept as written. docs/visibility-permissions-roles.txt names this audience 'only you'. The token was not renamed.

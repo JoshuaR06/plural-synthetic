@@ -1,0 +1,1144 @@
+{
+  "account": {
+    "config": {
+      "avatar-width": 64,
+      "avatar-height": 64,
+      "avatar": "none"
+    },
+    "accountId": "account-001",
+    "displayName": "example-pb-model-multiple",
+    "email": "example-pb-model-multiple@thepluralbridge.org",
+    "status": "Active",
+    "permissions": {
+      "mode": "explicit",
+      "value": [
+        "read"
+      ]
+    },
+    "visibility": {
+      "mode": "explicit",
+      "value": "self"
+    },
+    "members": [
+      {
+        "memberId": "member-001",
+        "displayName": "Popeye",
+        "isArchived": false,
+        "fieldIds": [
+          "id1",
+          "id3"
+        ],
+        "noteIds": [],
+        "fronting": true
+      },
+      {
+        "memberId": "member-002",
+        "displayName": "Gilligan",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-1",
+        "displayName": "anchor4:L28:1",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-2",
+        "displayName": "anchor4:L28:2",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-3",
+        "displayName": "anchor4:L28:3",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-4",
+        "displayName": "anchor4:L28:4",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-5",
+        "displayName": "anchor4:L28:5",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-6",
+        "displayName": "anchor4:L28:6",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-7",
+        "displayName": "anchor4:L28:7",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-8",
+        "displayName": "anchor4:L28:8",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-9",
+        "displayName": "anchor4:L28:9",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-10",
+        "displayName": "anchor4:L28:10",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-11",
+        "displayName": "anchor4:L28:11",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-12",
+        "displayName": "anchor4:L28:12",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-13",
+        "displayName": "anchor4:L28:13",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-14",
+        "displayName": "anchor4:L28:14",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-15",
+        "displayName": "anchor4:L28:15",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-16",
+        "displayName": "anchor4:L28:16",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-17",
+        "displayName": "anchor4:L28:17",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-18",
+        "displayName": "anchor4:L28:18",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-19",
+        "displayName": "anchor4:L28:19",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-20",
+        "displayName": "anchor4:L28:20",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-21",
+        "displayName": "anchor4:L28:21",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-22",
+        "displayName": "anchor4:L28:22",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-23",
+        "displayName": "anchor4:L28:23",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-24",
+        "displayName": "anchor4:L28:24",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-25",
+        "displayName": "anchor4:L28:25",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-26",
+        "displayName": "anchor4:L28:26",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-27",
+        "displayName": "anchor4:L28:27",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-28",
+        "displayName": "anchor4:L28:28",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-29",
+        "displayName": "anchor4:L28:29",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-30",
+        "displayName": "anchor4:L28:30",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-31",
+        "displayName": "anchor4:L28:31",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-32",
+        "displayName": "anchor4:L28:32",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-33",
+        "displayName": "anchor4:L28:33",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-34",
+        "displayName": "anchor4:L28:34",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-35",
+        "displayName": "anchor4:L28:35",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-36",
+        "displayName": "anchor4:L28:36",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-37",
+        "displayName": "anchor4:L28:37",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-38",
+        "displayName": "anchor4:L28:38",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-39",
+        "displayName": "anchor4:L28:39",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-40",
+        "displayName": "anchor4:L28:40",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-41",
+        "displayName": "anchor4:L28:41",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-42",
+        "displayName": "anchor4:L28:42",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-43",
+        "displayName": "anchor4:L28:43",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-44",
+        "displayName": "anchor4:L28:44",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-45",
+        "displayName": "anchor4:L28:45",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-46",
+        "displayName": "anchor4:L28:46",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-47",
+        "displayName": "anchor4:L28:47",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-48",
+        "displayName": "anchor4:L28:48",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-49",
+        "displayName": "anchor4:L28:49",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-anchor4-L28-50",
+        "displayName": "anchor4:L28:50",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-003",
+        "displayName": "Henry",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [],
+        "fronting": false
+      },
+      {
+        "memberId": "member-004",
+        "displayName": "Mickey",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [
+          "id3"
+        ],
+        "fronting": false
+      },
+      {
+        "memberId": "member-005",
+        "displayName": "Minnie",
+        "isArchived": false,
+        "fieldIds": [],
+        "noteIds": [
+          "id1"
+        ],
+        "fronting": false
+      }
+    ],
+    "notes": [
+      {
+        "noteId": "id1",
+        "body": "this is note one",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      },
+      {
+        "noteId": "id2",
+        "body": "this is note two",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      },
+      {
+        "noteId": "id3",
+        "body": "this is note three",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      }
+    ],
+    "customFields": [
+      {
+        "fieldId": "id1",
+        "fieldName": "title",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      },
+      {
+        "fieldId": "id2",
+        "fieldName": "auditorium",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      },
+      {
+        "fieldId": "id3",
+        "fieldName": "author",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      },
+      {
+        "fieldId": "field-related",
+        "fieldName": "related",
+        "visibility": {
+          "mode": "inherit"
+        },
+        "permissions": {
+          "mode": "inherit"
+        }
+      }
+    ],
+    "anchors": [
+      {
+        "anchorId": "place-001",
+        "objectType": "place",
+        "name": "Central Hub"
+      },
+      {
+        "anchorId": "anchor1",
+        "objectType": "system",
+        "name": "The Harbor"
+      },
+      {
+        "anchorId": "anchor4",
+        "objectType": "group",
+        "name": "Theatre",
+        "fieldIds": [
+          "id2"
+        ],
+        "noteIds": [
+          "id2"
+        ]
+      },
+      {
+        "anchorId": "anchor2",
+        "objectType": "system",
+        "name": "Main House"
+      },
+      {
+        "anchorId": "anchor3",
+        "objectType": "place",
+        "name": "Waiting Room"
+      }
+    ],
+    "tree": [
+      {
+        "anchorId": "place-001",
+        "members": [],
+        "children": [
+          {
+            "anchorId": "anchor1",
+            "members": [
+              {
+                "memberId": "member-001",
+                "visibility": {
+                  "mode": "explicit",
+                  "value": "self"
+                },
+                "permissions": {
+                  "mode": "inherit"
+                }
+              },
+              {
+                "memberId": "member-002",
+                "visibility": {
+                  "mode": "inherit"
+                },
+                "permissions": {
+                  "mode": "inherit"
+                }
+              }
+            ],
+            "children": [
+              {
+                "anchorId": "anchor4",
+                "members": [
+                  {
+                    "memberId": "member-anchor4-L28-1",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-2",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-3",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-4",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-5",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-6",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-7",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-8",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-9",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-10",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-11",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-12",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-13",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-14",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-15",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-16",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-17",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-18",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-19",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-20",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-21",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-22",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-23",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-24",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-25",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-26",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-27",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-28",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-29",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-30",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-31",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-32",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-33",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-34",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-35",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-36",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-37",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-38",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-39",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-40",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-41",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-42",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-43",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-44",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-45",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-46",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-47",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-48",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-49",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  },
+                  {
+                    "memberId": "member-anchor4-L28-50",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  }
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "anchorId": "anchor2",
+            "members": [
+              {
+                "memberId": "member-003",
+                "visibility": {
+                  "mode": "inherit"
+                },
+                "permissions": {
+                  "mode": "inherit"
+                }
+              }
+            ],
+            "children": [
+              {
+                "anchorId": "anchor3",
+                "members": [
+                  {
+                    "memberId": "member-004",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "explicit",
+                      "value": [
+                        "read",
+                        "write"
+                      ]
+                    }
+                  },
+                  {
+                    "memberId": "member-005",
+                    "visibility": {
+                      "mode": "inherit"
+                    },
+                    "permissions": {
+                      "mode": "inherit"
+                    }
+                  }
+                ],
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "relationshipId": "relationship-001",
+        "sourceAnchorId": "anchor1",
+        "fieldId": "field-related",
+        "targetAnchorId": "anchor2"
+      },
+      {
+        "relationshipId": "relationship-002",
+        "sourceAnchorId": "anchor2",
+        "fieldId": "field-related",
+        "targetAnchorId": "anchor1"
+      }
+    ]
+  },
+  "audit": {
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "pluralBridgeExport": {
+    "exampleId": "import-model-feed-multiple",
+    "exampleName": "Import of model-feed-multiple",
+    "exportKind": "self-contained-pluralbridge-example",
+    "exportVersion": "0.1-draft",
+    "modelingNote": "Synthetic proof-of-concept import from a model feed. Not one of the twelve canonical examples."
+  },
+  "provenance": {
+    "lossyMappings": [],
+    "source": "synthetic",
+    "sourceGenerator": "plural-synthetic-import-poc",
+    "sourceIdsPreserved": true
+  }
+}

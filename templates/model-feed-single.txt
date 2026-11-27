@@ -1,0 +1,91 @@
+Config
+[
+  avatar-width: 64
+  avatar-height: 64
+  avatar: none
+]
+
+Account
+[
+  name: example-pb-model-single
+  email: example-pb-model-single@example-single.org
+  Permission: read
+  Visibility: self
+
+  System: The Harbor:anchor1
+  [
+    Member: Popeye
+    [
+      note: id1
+      visibility: trusted friends
+      bucket: bucket1
+      field: id1 'Sailor'
+      field: id3 'Popeye'
+      front: true
+      avatar: solid
+      color: #4A90E2
+    ]
+
+    Member: Gilligan
+    [
+      note: id3
+      archived: true
+      archivedReason: 'Retained for historical testing'
+    ]
+
+    Member: Penny
+    [
+      note: id2
+      front: true
+      avatar: crosshatch
+      color: #FF8800
+    ]
+
+    Group: Theatre:anchor2
+    [
+      Member: 1-50
+      Member: Gilligan
+
+      Group: Backstage:anchor3
+      [
+        Member: Penny
+      ]
+    ]
+  ]
+
+  Notes
+  [
+    Note:id1 'This is Popeye’s note.'
+    Note:id2 'This is Penny’s note.'
+    Note:id3 'This is Gilligan’s historical note.'
+  ]
+
+  CustomFields
+  [
+    Field:id1 'title'
+    Field:id3 'author'
+  ]
+
+  PrivacyBuckets
+  [
+    Bucket: Close Friends:bucket1
+  ]
+
+  Friends
+  [
+    Friend: Alex:friend1
+    [
+      trusted: true
+      bucket: bucket1
+    ]
+  ]
+
+  CustomFronts
+  [
+    CustomFront: Blurry:customfront1
+    [
+      description: 'A synthetic custom front for uncertain identity.'
+      front: false
+    ]
+  ]
+]

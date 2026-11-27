@@ -4,10 +4,10 @@ PLURALBRIDGE — TERMINOLOGY DICTIONARY (abbreviated for this document)
 TERMS
 
 Plural
-A person or collective whose plural structure is represented by a Plural Map.
+A person or collective whose plural structure is represented by a plural map.
 
-Plural Map
-A Plural Map describes how a plural understands their world.
+Plural map
+The overall structure representing a plural’s objects and their relationships.
 
 Object
 An entity represented in a Plural Map, including a System, Group, Place, or Member.
@@ -61,6 +61,8 @@ Account
 └── Front history
 This is the simple default: one Account, one System anchor, members and groups inside it, and one focused anchor context.
 
+Encoding: This example has no relationship rows.
+
 2. Multiple Top-Level Systems Plural Map
 A person has more than one root-level System. Neither root owns the other.
 
@@ -77,6 +79,8 @@ Account
 ├── Notes
 └── Front history
 This supports two distinct top-level Systems. Both are root anchors because neither is placed beneath another anchor.
+
+Encoding: This example has no relationship rows.
 
 3. Parent / Child Systems Plural Map
 One System contains a smaller child System.
@@ -96,33 +100,35 @@ Account
 └── Front history
 The parent / child relationship describes structure. Access and privacy remain governed by access membership, roles, consent, and policy.
 
-Encoding: The Workshop is the source of a systemRelationships record with relationshipType child and parentSystemId identifying Main House. targetSystemId is null. This canonical example encodes the child connection as a graph relationship; it does not add a placement for The Workshop or a reverse parent record. Access membership is separate and is not inherited through this relationship.
+Encoding: Nest the existing Workshop tree node beneath Main House, after Main House Group. Preserve Workshop members and children. This example has no relationship rows. Root and child graph records are omitted; nesting expresses parent/child containment.
 
 4. Sibling Systems Plural Map
 Two Systems share a common relationship, but neither controls the other.
 
 Account
-├── System: Day Team (sibling)
+├── System: Day Team (sibling->Night Team)
 │   ├── Member: A
 │   ├── Member: B
 │   └── Groups
 │       └── Group: Day Team Group
 │           ├── Member: A
 │           └── Member: B
-├── System: Night Team (sibling)
+├── System: Night Team (sibling->Day Team)
 │   ├── Member: C
 │   └── Member: D
 ├── Notes
 └── Front history
 This is useful for Systems that see themselves as parallel, cooperative, or operationally separate.
 
+Encoding: two reciprocal sibling rows that share one account-owned sibling field: Day Team -> sibling -> Night Team, and Night Team -> sibling -> Day Team.
+
 5. Related Systems Plural Map
 Two Systems are related without a parent / child placement.
 
 Account
-├── System: The Archive (related)
+├── System: The Archive (related->The Harbor)
 │   └── Member: C
-├── System: The Harbor (related)
+├── System: The Harbor (related->The Archive)
 │   ├── Member: A
 │   ├── Member: B
 │   └── Groups
@@ -133,7 +139,7 @@ Account
 └── Front history
 This could represent shared history, partial overlap, a past structure, or a loosely connected internal organization.
 
-Encoding: related is a directed graph record (systemId -> targetSystemId). It is not parent/child and does not grant access. Both Systems are labeled (related) with no arrow, so encode two records: The Archive related -> The Harbor, and The Harbor related -> The Archive.
+Encoding: two reciprocal related rows that share one account-owned related field: The Harbor -> related -> The Archive, and The Archive -> related -> The Harbor. related is not parent/child and does not grant access.
 
 6. Subsystem / Nested Place Plural Map
 An internal cluster may have its own structure within a System, without requiring another System.
@@ -156,9 +162,7 @@ Account
 
 A nested Place represents an internal cluster without forcing its members into a flat list or a separate System.
 
-Encoding: Harbor is the only System. Morgan's Room is a Place contained in Harbor (systemObjectPlacements, parent = Harbor). Alex, Morgan, and Rae are Harbor members and Harbor Group members. M1 and M2 belong to the Place (placeMemberships) and are not Harbor System members. The name "Morgan's Room" is a label. This example does not record a member-to-Place association and does not set associatedObjectId.
-
-Model 6 uses the Place structure shown in its diagram. The permitted endpoints and associated-object semantics of the subsystem relationship remain a separate specification question.
+Encoding: Nested Structure Model. Harbor is the only System. Morgan's Room is a Place nested under Harbor in the tree. Alex, Morgan, and Rae are Harbor members and Harbor Group members. M1 and M2 belong to the Place and are not Harbor System members. The name "Morgan's Room" is a label. This example has no relationship rows. The filename remains example-006-subsystem.json.
 
 7. Evolving / Uncertain Relationship Plural Map
 The user knows two structures are connected, and the exact relationship is still forming.
@@ -178,7 +182,7 @@ Account
 └── Front history
 This gives the user a way to preserve reality-in-progress without prematurely naming it.
 
-Encoding: North Wing and The Harbor are both root Systems. Encode one directed graph record: relationshipType evolving, systemId = North Wing, targetSystemId = The Harbor, relationshipStatus unknown. Do not name the connection as parent, child, sibling, related, subsystem, or ownership. unknown is the status of that evolving record, not a separate relationship type.
+Encoding: North Wing has evolving and unknown as separate null-target rows. Both source from North Wing and reference account-owned custom fields named evolving and unknown. Do not name the connection as parent, child, sibling, related, subsystem, or ownership.
 
 8. Archived System Plural Map
 A System or structure still matters historically, but is no longer active.
@@ -202,7 +206,7 @@ Account
 └── Front history
 This helps preserve migration meaning, old fronting records, old notes, and past organization.
 
-Encoding: Old Map is a root System that is no longer active. Encode lifecycle on that System: status archived, isArchived true. Current System remains status active, isArchived false. Both Systems remain relationshipType root. This example does not include a predecessor or other graph edge between Old Map and Current System.
+Encoding: Old Map is a System that is no longer active. Encode lifecycle on that System: status archived, isArchived true. Current System remains status active, isArchived false. Old Map also has an archived null-target relationship label. Archive flags remain independent lifecycle data; the label does not change or cascade those flags. This example does not include a predecessor edge between Old Map and Current System.
 
 Historical meaning is preserved by retaining Old Map and its existing members, groups, notes, front history, and associations. Archiving the System does not automatically change the lifecycle state of those associated objects. Per-object archive flags on those associated records are independent facts, not an automatic cascade.
 
@@ -230,7 +234,7 @@ B --sibling--> C
 C --associated--> A
 This breaks the ordinary tree assumption. The structure becomes a graph of relationships instead of a single trunk with branches.
 
-Encoding: encode exactly the three directed edges drawn here, plus a root record for each System: A related -> B, B sibling -> C, C associated -> A. Do not add B related -> A, C sibling -> B, or A associated -> C. Reciprocal records are used only where a diagram labels both sides with no arrow.
+Encoding: encode exactly A related->B, B sibling->C, C associated->A. Do not add B related -> A, C sibling -> B, or A associated -> C. Reciprocal records are used only where a diagram labels both sides with no arrow. Root graph records are omitted.
 
 10. Group Collection of Systems Plural Map
 A top-level Group contains members and two Systems.
@@ -251,6 +255,8 @@ Account
 └── Front history
 A Group can serve as a root anchor and contain Systems without itself becoming a System.
 
+Encoding: This example has no relationship rows. Containment is the tree.
+
 11. Place Collection of Systems Plural Map
 A top-level Place contains two Systems, one of which contains another Place.
 
@@ -267,6 +273,8 @@ Account
 └── Front history
 A Place can serve as a root anchor or appear within another anchor.
 
+Encoding: This example has no relationship rows. Containment is the tree. Waiting Room nests under Main House.
+
 12. Non-System Anchors Plural Map
 A top-level Place contains Group and Place anchors, with no Systems anywhere in the structure.
 
@@ -282,6 +290,8 @@ Account
 ├── Notes
 └── Front history
 Members can be organized through Groups and Places without requiring a System.
+
+Encoding: This example has no relationship rows. Containment is the tree.
 
 DESIGN RULES
 ------------
@@ -300,6 +310,7 @@ These examples illustrate the following PluralBridge design rules, grouped by su
 - An object may have multiple placements, and a member may belong to multiple anchors, without creating duplicate objects.
 - Parent / child placements describe containment. Sibling, related, associated, and evolving / uncertain relationships describe other connections.
 - Relationship arrows indicate direction. For these canonical examples, two Systems labeled with the same peer relationship and no arrow use two reciprocal directed records; a single arrow uses one directed record.
+- The canonical JSON examples express containment by tree nesting and display order by array position. Database placement and access-membership records are not serialized in this export format.
 
 3. Access, Authority, and Auditing
 - Access membership, roles, explicit permissions, consent, and policy govern access.
@@ -308,7 +319,7 @@ These examples illustrate the following PluralBridge design rules, grouped by su
 
 4. Focus and Fronting
 - Focus selects the active anchor context without creating access.
-- Fronting is modeled within the focused anchor context.
+- Current fronting is a Boolean on the shared member and applies across every occurrence, independently of focused anchor.
 
 5. Flexibility and Professional Use
 - The default user experience can remain simple while the underlying model supports varied structures, including those with no Systems.
@@ -319,22 +330,45 @@ These examples illustrate the following PluralBridge design rules, grouped by su
 CANONICAL JSON ENCODING
 -----------------------
 
-These field-level conventions describe the serialized canonical examples. They preserve the established encoding of Examples 1–11 while Example 12 demonstrates anchors with no Systems.
+These conventions describe the serialized canonical examples in this folder. Database links, placements, and access mechanisms remain separate from this JSON encoding; this section changes no database rules.
 
-Encoding convention for these canonical examples
+Settled JSON shape
 
-Graph records are directed. systemId is the source. Named peer associations use targetSystemId. Parent/child uses parentSystemId on the child record (relationshipType child).
+- One account object per document.
+- Shared members and anchors live in account-level peer collections.
+- Tree nodes reference anchors; member occurrences reference shared members.
+- Nesting expresses containment; array position expresses display order.
+- Repeated member occurrences retain one shared member identity.
+- Notes belong to members through noteIds; fields are associated through fieldIds.
+- Notes and custom fields carry visibility and permissions.
+- Each tree member occurrence carries its own visibility and permissions.
+- Current fronting is a Boolean on the shared member and applies across every occurrence, independently of focused anchor.
+- privacyBuckets, visibilityScopes, and access memberships are omitted from this canonical export format.
 
-When a diagram labels two Systems with the same peer type and draws no arrow, encode two directed records, one in each direction. When a diagram draws a single arrow (X --type--> Y), encode one directed record.
+Relationship records live in account.relationships:
 
-relationshipStatus is a state of a graph record. For Model 7 the established status token is unknown.
+{
+  "relationshipId": "...",
+  "sourceAnchorId": "...",
+  "fieldId": "...",
+  "targetAnchorId": null
+}
 
-Archived is a System lifecycle state (status archived, isArchived true), not a graph relationship type. Model 8 does not include a predecessor edge.
+- The label comes from the referenced custom field's fieldName.
+- All references resolve within the same account.
+- Each row has one label and one optional target.
+- Multiple labels use separate rows.
+- Reverse direction requires its own row.
+- A null target is literal JSON null.
+- Display combines labels for the same source/target; append ->Target only when a target exists.
+- Relationship-label fields are referenced by relationship rows; they are not added to anchor.fieldIds merely for relationship rendering.
+- Root and child graph records are omitted; nesting expresses parent/child containment.
+- When no relationship rows remain, omit the relationships collection.
 
-Containment uses placements. Member-in-group and member-in-place use membership collections. Access uses memberships. None of these is implied by a graph relationship.
+When a diagram labels two Systems with the same peer type and draws no arrow, encode two directed records, one in each direction, sharing one custom field. When a diagram draws a single arrow (X --type--> Y), encode one directed record.
 
-A root record in systemRelationships identifies a System with no parent System relationship. Its parentSystemId and targetSystemId are null. This serialized root marker is separate from a root anchor placement: in Examples 10 and 11, Systems retain root records while being placed beneath a Group or Place.
+Archived is a System lifecycle state (status archived, isArchived true). Model 8 also records an archived null-target label on Old Map. That label does not change or cascade per-object archive flags.
 
-relationshipStatus remains optional. Model 7 uses unknown; broader use of statuses across relationship types is deferred. No additional tables, catalogs, or type/status rules are introduced.
+Examples 1, 2, 3, 6, and 10–12 have no relationship rows.
 
-Model 6 retains its Place encoding. The permitted endpoints and associated-object semantics of subsystem remain deferred.
+Worked JSON excerpts and the relationship results for Examples 004, 005, 007, 008, and 009 are documented in README.md in this folder.

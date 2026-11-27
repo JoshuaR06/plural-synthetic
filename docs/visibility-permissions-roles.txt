@@ -1,0 +1,27 @@
+VISIBILITY
+Type              Description
+only you          Visible only to your account.
+trusted friends   Visible to friends designated as trusted.
+all friends       Visible to all your friends.
+selected people   Visible to explicitly selected people.
+inherit           Explicit visibility type requesting inherited visibility.
+
+PERMISSIONS
+Type              Description
+read              Permission type for reading existing data.
+write             Permission type for changing existing data.
+create            Permission type for creating records.
+delete            Permission type for deleting records.
+inherit           Explicit permission type requesting inherited permissions.
+all               Explicit permission type representing all permissions.
+
+ROLES
+Type              Description
+Owner             Role applied to the account owner.
+Admin             Administrative role; exact authority remains to be defined.
+Editor            Editing role; exact authority remains to be defined.
+Viewer            Administrative viewing role, including decoding private fields.
+LimitedViewer     Default role; permits viewing without decoding private fields.
+
+Permission types confer no implicit additional permissions.
+Role-to-permission assignments must be explicitly defined.

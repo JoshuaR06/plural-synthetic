@@ -1,0 +1,1092 @@
+{
+  "openplural_version": "0.1",
+  "exported_at": "2026-04-29T18:00:00Z",
+  "producer": {
+    "app": "Harbor Notes",
+    "app_version": "0.0.0-sample",
+    "exporter_version": "0.0.0-sample"
+  },
+  "capabilities": {
+    "modules": [
+      "systems",
+      "members",
+      "groups",
+      "taxonomy",
+      "custom_fields",
+      "front_periods",
+      "front_events",
+      "front_comments",
+      "notes",
+      "assets",
+      "chat",
+      "boards",
+      "relationships"
+    ]
+  },
+  "systems": [
+    {
+      "id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Harbor Sample",
+      "display_name": "Harbor",
+      "description": "Fictional system created only to illustrate the OpenPlural draft export.",
+      "tag": "| hs",
+      "color": "#66ccff",
+      "avatar_asset_id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111001",
+      "banner_asset_id": null,
+      "parent_system_id": null,
+      "archived": false,
+      "privacy": {
+        "visibility": "private",
+        "source": {
+          "source_label": "system-only"
+        }
+      },
+      "settings": {},
+      "source_refs": [
+        {
+          "app": "simply_plural",
+          "collection": "systems",
+          "id": "synthetic-system-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1002",
+      "name": "Side Loft",
+      "display_name": null,
+      "description": null,
+      "tag": null,
+      "color": null,
+      "avatar_asset_id": null,
+      "banner_asset_id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111002",
+      "parent_system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "archived": true,
+      "privacy": {
+        "visibility": "unknown",
+        "source": {}
+      },
+      "settings": {},
+      "source_refs": [
+        {
+          "app": "lighthouse",
+          "collection": "systems",
+          "id": "synthetic-system-0002",
+          "uuid": "5b2c1d40-1111-4111-8111-000000000002"
+        }
+      ],
+      "extensions": {}
+    }
+  ],
+  "members": [
+    {
+      "id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Alex",
+      "display_name": "Alex",
+      "pronouns": "they/them",
+      "description": "Fictional member used as the primary profile.",
+      "age": "ageless",
+      "birthday": {
+        "value": "2001-04-29",
+        "precision": "day",
+        "year_visible": true
+      },
+      "color": "#88ccaa",
+      "avatar_asset_id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111001",
+      "banner_asset_id": null,
+      "proxy_tags": [
+        {
+          "prefix": "a:",
+          "suffix": null
+        },
+        {
+          "prefix": null,
+          "suffix": ":a"
+        }
+      ],
+      "is_custom_front": false,
+      "archived": false,
+      "created_at": "2026-01-15T12:00:00Z",
+      "sort_order": 0,
+      "privacy": {
+        "visibility": "friends",
+        "source": {
+          "source_label": "friends"
+        }
+      },
+      "source_refs": [
+        {
+          "app": "simply_plural",
+          "collection": "members",
+          "id": "synthetic-member-0001",
+          "uuid": null
+        },
+        {
+          "app": "pluralkit",
+          "collection": "members",
+          "id": "abcde",
+          "uuid": "5b2c1d40-1111-4111-8111-0000000000aa"
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Blair",
+      "display_name": "Blair",
+      "pronouns": "she/her",
+      "description": null,
+      "age": null,
+      "birthday": {
+        "value": "--11-02",
+        "precision": "month_day",
+        "year_visible": false
+      },
+      "color": "#cc88aa",
+      "avatar_asset_id": null,
+      "banner_asset_id": null,
+      "proxy_tags": [
+        {
+          "prefix": "b:",
+          "suffix": ":b"
+        }
+      ],
+      "is_custom_front": false,
+      "archived": false,
+      "created_at": "2026-02-02T12:00:00Z",
+      "sort_order": 1,
+      "privacy": {
+        "visibility": "trusted",
+        "source": {}
+      },
+      "source_refs": [
+        {
+          "app": "sheaf",
+          "collection": "members",
+          "id": "synthetic-member-0002"
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3003",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Blur",
+      "display_name": "Blur",
+      "pronouns": null,
+      "description": "Fictional custom front, not a profile member.",
+      "age": null,
+      "birthday": null,
+      "color": "#999999",
+      "avatar_asset_id": null,
+      "banner_asset_id": null,
+      "proxy_tags": [],
+      "is_custom_front": true,
+      "archived": false,
+      "created_at": null,
+      "sort_order": 2,
+      "privacy": {
+        "visibility": "public",
+        "source": {}
+      },
+      "source_refs": [
+        {
+          "app": "simply_plural",
+          "collection": "custom_fronts",
+          "id": "synthetic-front-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3004",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": null,
+      "display_name": "Unnamed",
+      "pronouns": "he/him",
+      "description": null,
+      "age": "30s",
+      "birthday": {
+        "value": "1990",
+        "precision": "year",
+        "year_visible": true
+      },
+      "color": null,
+      "avatar_asset_id": null,
+      "banner_asset_id": null,
+      "proxy_tags": [],
+      "is_custom_front": false,
+      "archived": true,
+      "created_at": "2025-06-01T00:00:00Z",
+      "sort_order": null,
+      "privacy": {
+        "visibility": "unknown",
+        "source": {}
+      },
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3005",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1002",
+      "name": "Eden",
+      "display_name": null,
+      "pronouns": "they/them",
+      "description": "Fictional member of the nested system.",
+      "age": null,
+      "birthday": {
+        "value": "2004-11",
+        "precision": "month",
+        "year_visible": true
+      },
+      "color": "#4488cc",
+      "avatar_asset_id": null,
+      "banner_asset_id": null,
+      "proxy_tags": [],
+      "is_custom_front": false,
+      "archived": false,
+      "created_at": "2026-03-01T00:00:00Z",
+      "sort_order": 0,
+      "privacy": {
+        "visibility": "private",
+        "source": {}
+      },
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "groups": [
+    {
+      "id": "6d5c4b3a-2918-4f70-8e6d-222222222001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Daily",
+      "description": "Fictional top-level group.",
+      "color": "#7c5cbf",
+      "emoji": "☀",
+      "parent_group_id": null,
+      "sort_order": 0,
+      "source_refs": [
+        {
+          "app": "simply_plural",
+          "collection": "groups",
+          "id": "synthetic-group-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "6d5c4b3a-2918-4f70-8e6d-222222222002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Bedtime",
+      "description": null,
+      "color": null,
+      "emoji": null,
+      "parent_group_id": "6d5c4b3a-2918-4f70-8e6d-222222222001",
+      "sort_order": 1,
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "group_memberships": [
+    {
+      "id": "71a0b1c2-d3e4-4f56-8a78-333333333001",
+      "group_id": "6d5c4b3a-2918-4f70-8e6d-222222222001",
+      "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "sort_order": 0,
+      "source_refs": [
+        {
+          "app": "sheaf",
+          "collection": "group_members",
+          "id": "synthetic-gm-0001",
+          "uuid": null
+        }
+      ]
+    },
+    {
+      "id": "71a0b1c2-d3e4-4f56-8a78-333333333002",
+      "group_id": "6d5c4b3a-2918-4f70-8e6d-222222222001",
+      "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+      "sort_order": 1,
+      "source_refs": []
+    },
+    {
+      "id": "71a0b1c2-d3e4-4f56-8a78-333333333003",
+      "group_id": "6d5c4b3a-2918-4f70-8e6d-222222222002",
+      "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "sort_order": null,
+      "source_refs": []
+    }
+  ],
+  "taxonomy_terms": [
+    {
+      "id": "82b1c2d3-e4f5-4a67-8b89-444444444001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "kind": "role",
+      "name": "Host",
+      "description": "Fictional profile role label.",
+      "color": "#66ccff",
+      "parent_term_id": null,
+      "source_refs": [
+        {
+          "app": "sheaf",
+          "collection": "tags",
+          "id": "synthetic-tag-role",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "82b1c2d3-e4f5-4a67-8b89-444444444002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "kind": "tag",
+      "name": "Labels",
+      "description": "Fictional parent term.",
+      "color": null,
+      "parent_term_id": null,
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "82b1c2d3-e4f5-4a67-8b89-444444444003",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "kind": "tag",
+      "name": "Journal",
+      "description": null,
+      "color": "#e8a13c",
+      "parent_term_id": "82b1c2d3-e4f5-4a67-8b89-444444444002",
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "taxonomy_assignments": [
+    {
+      "id": "93c2d3e4-f506-4b78-8c9a-555555555001",
+      "term_id": "82b1c2d3-e4f5-4a67-8b89-444444444001",
+      "subject_type": "member",
+      "subject_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "scope": "profile",
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "93c2d3e4-f506-4b78-8c9a-555555555002",
+      "term_id": "82b1c2d3-e4f5-4a67-8b89-444444444001",
+      "subject_type": "member",
+      "subject_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+      "scope": "appearance",
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "93c2d3e4-f506-4b78-8c9a-555555555003",
+      "term_id": "82b1c2d3-e4f5-4a67-8b89-444444444003",
+      "subject_type": "note",
+      "subject_id": "a4d3e4f5-0617-4c89-8dab-666666666001",
+      "scope": null,
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "93c2d3e4-f506-4b78-8c9a-555555555004",
+      "term_id": "82b1c2d3-e4f5-4a67-8b89-444444444003",
+      "subject_type": "asset",
+      "subject_id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111003",
+      "scope": "custom",
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "93c2d3e4-f506-4b78-8c9a-555555555005",
+      "term_id": "82b1c2d3-e4f5-4a67-8b89-444444444001",
+      "subject_type": "front_period",
+      "subject_id": "b5e4f506-1728-4d9a-8ebc-777777777001",
+      "scope": "session",
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "custom_fields": [
+    {
+      "id": "c6f50617-2839-4eab-8fcd-888888888001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Role label",
+      "field_type": "select",
+      "options": ["host", "other"],
+      "supports_markdown": false,
+      "date_precision": null,
+      "sort_order": 0,
+      "privacy": {
+        "visibility": "private",
+        "source": {}
+      },
+      "source_refs": [
+        {
+          "app": "simply_plural",
+          "collection": "custom_fields",
+          "id": "synthetic-field-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "c6f50617-2839-4eab-8fcd-888888888002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Noted on",
+      "field_type": "date",
+      "options": {
+        "allow_partial": false
+      },
+      "supports_markdown": false,
+      "date_precision": "day",
+      "sort_order": 1,
+      "privacy": {
+        "visibility": "trusted",
+        "source": {}
+      },
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "c6f50617-2839-4eab-8fcd-888888888003",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Away span",
+      "field_type": "date_range",
+      "options": null,
+      "supports_markdown": false,
+      "date_precision": "day",
+      "sort_order": null,
+      "privacy": {
+        "visibility": "private",
+        "source": {}
+      },
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "c6f50617-2839-4eab-8fcd-888888888004",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "name": "Likes",
+      "field_type": "multiselect",
+      "options": ["rain", "quiet"],
+      "supports_markdown": false,
+      "date_precision": null,
+      "sort_order": 2,
+      "privacy": {
+        "visibility": "friends",
+        "source": {}
+      },
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "custom_field_values": [
+    {
+      "id": "d7061728-394a-4fbc-80de-999999999001",
+      "field_id": "c6f50617-2839-4eab-8fcd-888888888001",
+      "subject_type": "member",
+      "subject_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "value": "host",
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "d7061728-394a-4fbc-80de-999999999002",
+      "field_id": "c6f50617-2839-4eab-8fcd-888888888002",
+      "subject_type": "system",
+      "subject_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "value": "2026-04-29",
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "d7061728-394a-4fbc-80de-999999999003",
+      "field_id": "c6f50617-2839-4eab-8fcd-888888888003",
+      "subject_type": "member",
+      "subject_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+      "value": {
+        "start": "2026-04-01",
+        "end": "2026-04-03"
+      },
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "d7061728-394a-4fbc-80de-999999999004",
+      "field_id": "c6f50617-2839-4eab-8fcd-888888888004",
+      "subject_type": "member",
+      "subject_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "value": ["rain", "quiet"],
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "notes": [
+    {
+      "id": "a4d3e4f5-0617-4c89-8dab-666666666001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "title": "Sample note",
+      "body": "Fictional note body.",
+      "created_at": "2026-04-29T18:00:00Z",
+      "updated_at": "2026-04-29T18:30:00Z",
+      "entry_date": "2026-04-29",
+      "author_member_ids": [
+        "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+        "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002"
+      ],
+      "color": "#88ccaa",
+      "visibility": "private",
+      "pinned": true,
+      "content_warning": "fictional",
+      "attachment_asset_ids": [
+        "9a1b2c3d-4e5f-4a6b-8c7d-111111111003"
+      ],
+      "source_refs": [
+        {
+          "app": "simply_plural",
+          "collection": "notes",
+          "id": "synthetic-note-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "a4d3e4f5-0617-4c89-8dab-666666666002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "member_id": null,
+      "title": null,
+      "body": "Fictional system-wide note.",
+      "created_at": "2026-04-28T12:00:00Z",
+      "updated_at": null,
+      "entry_date": null,
+      "author_member_ids": [],
+      "color": null,
+      "visibility": "system",
+      "pinned": false,
+      "content_warning": null,
+      "attachment_asset_ids": [],
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "assets": [
+    {
+      "id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111001",
+      "kind": "avatar",
+      "mime_type": "image/png",
+      "file_name": "alex.png",
+      "uri": null,
+      "data_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR42mPYEqUBAAL8ATdHJTIjAAAAAElFTkSuQmCC",
+      "data_uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR42mPYEqUBAAL8ATdHJTIjAAAAAElFTkSuQmCC",
+      "size_bytes": 69,
+      "sha256": "83803707a337c9ced1fcd0cfd609f8d9f363f7e207f73d434117402fd6e19e3b",
+      "width": 1,
+      "height": 1,
+      "duration_ms": null,
+      "source_refs": [
+        {
+          "app": "simply_plural",
+          "collection": "avatars",
+          "id": "synthetic-avatar-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111002",
+      "kind": "banner",
+      "mime_type": "image/png",
+      "file_name": "banner.png",
+      "uri": "https://example.invalid/fictional-banner.png",
+      "data_base64": null,
+      "data_uri": null,
+      "size_bytes": null,
+      "sha256": null,
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111003",
+      "kind": "file",
+      "mime_type": "text/plain",
+      "file_name": "note.txt",
+      "uri": null,
+      "data_base64": "ZmljdGlvbmFsLW5vdGU=",
+      "data_uri": null,
+      "size_bytes": 14,
+      "sha256": "4df3e61e92527cfd936c19fe79c62df73040386dcd27bcdc216da9b453e038f7",
+      "width": null,
+      "height": null,
+      "duration_ms": null,
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "front_periods": [
+    {
+      "id": "b5e4f506-1728-4d9a-8ebc-777777777001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "started_at": "2026-04-29T12:00:00Z",
+      "ended_at": "2026-04-29T15:00:00Z",
+      "assignments": [
+        {
+          "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+          "front_role": "primary",
+          "confidence": 0.9,
+          "presence": "present",
+          "mood": "steady",
+          "energy": "medium",
+          "location": "desk",
+          "note": "Fictional per-assignment note.",
+          "source_refs": []
+        },
+        {
+          "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+          "front_role": "co_front",
+          "confidence": null,
+          "presence": "background",
+          "mood": null,
+          "energy": null,
+          "location": null,
+          "note": null,
+          "source_refs": []
+        }
+      ],
+      "status": null,
+      "note": "Fictional closed period.",
+      "source_kind": "tiered",
+      "source_refs": [
+        {
+          "app": "plural_star",
+          "collection": "frontPeriods",
+          "id": "synthetic-front-period-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "b5e4f506-1728-4d9a-8ebc-777777777002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "started_at": "2026-04-29T16:00:00Z",
+      "ended_at": null,
+      "assignments": [
+        {
+          "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+          "front_role": "member",
+          "confidence": 1,
+          "presence": "present",
+          "mood": null,
+          "energy": null,
+          "location": null,
+          "note": null,
+          "source_refs": []
+        }
+      ],
+      "status": null,
+      "note": null,
+      "source_kind": "event_pair",
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "b5e4f506-1728-4d9a-8ebc-777777777003",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "started_at": "2026-04-29T17:00:00Z",
+      "ended_at": null,
+      "assignments": [
+        {
+          "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3003",
+          "front_role": "custom_status",
+          "confidence": null,
+          "presence": "muted",
+          "mood": null,
+          "energy": null,
+          "location": null,
+          "note": "Fictional custom front still open.",
+          "source_refs": []
+        }
+      ],
+      "status": "masking",
+      "note": null,
+      "source_kind": "interval",
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "b5e4f506-1728-4d9a-8ebc-777777777004",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "started_at": "2026-04-28T22:00:00Z",
+      "ended_at": "2026-04-29T06:00:00Z",
+      "assignments": [
+        {
+          "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+          "front_role": "co_conscious",
+          "confidence": 0.4,
+          "presence": "asleep",
+          "mood": null,
+          "energy": "low",
+          "location": null,
+          "note": null,
+          "source_refs": []
+        }
+      ],
+      "status": "sleep",
+      "note": null,
+      "source_kind": "unknown",
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "front_events": [
+    {
+      "id": "c6f61728-3940-4eab-8fcd-aaaaaaaaa001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "at": "2026-04-29T16:00:00Z",
+      "assignments": [
+        {
+          "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+          "front_role": "member",
+          "confidence": null,
+          "presence": null,
+          "mood": null,
+          "energy": null,
+          "location": null,
+          "note": null,
+          "source_refs": []
+        }
+      ],
+      "note": "Fictional switch in.",
+      "source_refs": [
+        {
+          "app": "pluralkit",
+          "collection": "switches",
+          "id": "synthetic-switch-0001",
+          "uuid": null
+        }
+      ],
+      "extensions": {}
+    },
+    {
+      "id": "c6f61728-3940-4eab-8fcd-aaaaaaaaa002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "at": "2026-04-29T11:00:00Z",
+      "assignments": [],
+      "note": "Fictional switch-out with nobody fronting.",
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "front_comments": [
+    {
+      "id": "d708293a-4b51-4fcd-80ef-bbbbbbbbb001",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "front_period_id": "b5e4f506-1728-4d9a-8ebc-777777777001",
+      "front_event_id": null,
+      "target_time": "2026-04-29T13:00:00Z",
+      "author_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+      "body": "Fictional comment about the closed period.",
+      "created_at": "2026-04-29T15:10:00Z",
+      "edited_at": null,
+      "source_refs": [],
+      "extensions": {}
+    },
+    {
+      "id": "d708293a-4b51-4fcd-80ef-bbbbbbbbb002",
+      "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+      "front_period_id": null,
+      "front_event_id": "c6f61728-3940-4eab-8fcd-aaaaaaaaa001",
+      "target_time": "2026-04-29T16:00:00Z",
+      "author_member_id": null,
+      "body": "Fictional comment about the switch.",
+      "created_at": "2026-04-29T16:05:00Z",
+      "edited_at": "2026-04-29T16:06:00Z",
+      "source_refs": [],
+      "extensions": {}
+    }
+  ],
+  "chat": {
+    "conversations": [
+      {
+        "id": "e8193a4b-5c62-40de-81f0-ccccccccc001",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "kind": "internal_chat",
+        "title": "General",
+        "category": "house",
+        "description": "Fictional channel.",
+        "emoji": "✉",
+        "participant_member_ids": [],
+        "creator_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+        "archived": false,
+        "muted": false,
+        "direct_message": false,
+        "created_at": "2026-04-01T12:00:00Z",
+        "sort_order": 0,
+        "source_refs": [
+          {
+            "app": "prism",
+            "collection": "conversations",
+            "id": "synthetic-conv-0001",
+            "uuid": null
+          }
+        ],
+        "extensions": {}
+      },
+      {
+        "id": "e8193a4b-5c62-40de-81f0-ccccccccc002",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "kind": "direct_message",
+        "title": null,
+        "category": null,
+        "description": null,
+        "emoji": null,
+        "participant_member_ids": [
+          "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+          "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002"
+        ],
+        "creator_member_id": null,
+        "archived": true,
+        "muted": true,
+        "direct_message": true,
+        "created_at": null,
+        "sort_order": null,
+        "source_refs": [],
+        "extensions": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "f92a4b5c-6d73-41ef-8201-ddddddddd001",
+        "conversation_id": "e8193a4b-5c62-40de-81f0-ccccccccc001",
+        "author_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+        "kind": "text",
+        "body": "Fictional hello.",
+        "created_at": "2026-04-29T18:00:00Z",
+        "edited_at": null,
+        "reply_to_message_id": null,
+        "attachment_asset_ids": [],
+        "system_message": false,
+        "pinned": false,
+        "source_refs": [],
+        "extensions": {}
+      },
+      {
+        "id": "f92a4b5c-6d73-41ef-8201-ddddddddd002",
+        "conversation_id": "e8193a4b-5c62-40de-81f0-ccccccccc001",
+        "author_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+        "kind": "reply",
+        "body": "Fictional reply.",
+        "created_at": "2026-04-29T18:01:00Z",
+        "edited_at": "2026-04-29T18:02:00Z",
+        "reply_to_message_id": "f92a4b5c-6d73-41ef-8201-ddddddddd001",
+        "attachment_asset_ids": [
+          "9a1b2c3d-4e5f-4a6b-8c7d-111111111003"
+        ],
+        "system_message": false,
+        "pinned": true,
+        "source_refs": [],
+        "extensions": {}
+      },
+      {
+        "id": "f92a4b5c-6d73-41ef-8201-ddddddddd003",
+        "conversation_id": "e8193a4b-5c62-40de-81f0-ccccccccc001",
+        "author_member_id": null,
+        "kind": "system",
+        "body": "Fictional system message.",
+        "created_at": "2026-04-29T18:03:00Z",
+        "edited_at": null,
+        "reply_to_message_id": null,
+        "attachment_asset_ids": [],
+        "system_message": true,
+        "pinned": false,
+        "source_refs": [],
+        "extensions": {}
+      },
+      {
+        "id": "f92a4b5c-6d73-41ef-8201-ddddddddd004",
+        "conversation_id": "e8193a4b-5c62-40de-81f0-ccccccccc001",
+        "author_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+        "kind": "file",
+        "body": "Fictional file message.",
+        "created_at": "2026-04-29T18:07:00Z",
+        "edited_at": null,
+        "reply_to_message_id": null,
+        "attachment_asset_ids": [
+          "9a1b2c3d-4e5f-4a6b-8c7d-111111111003"
+        ],
+        "system_message": false,
+        "pinned": false,
+        "source_refs": [],
+        "extensions": {}
+      }
+    ],
+    "attachments": [
+      {
+        "id": "0a3b5c6d-7e84-42f0-8312-eeeeeeeeee01",
+        "message_id": "f92a4b5c-6d73-41ef-8201-ddddddddd002",
+        "asset_id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111003",
+        "role": "primary",
+        "caption": "Fictional caption.",
+        "sort_order": 0,
+        "source_refs": []
+      }
+    ],
+    "reactions": [
+      {
+        "id": "1b4c6d7e-8f95-4301-8423-000000000001",
+        "message_id": "f92a4b5c-6d73-41ef-8201-ddddddddd001",
+        "member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+        "value": "👍",
+        "created_at": "2026-04-29T18:04:00Z",
+        "source_refs": []
+      },
+      {
+        "id": "1b4c6d7e-8f95-4301-8423-000000000002",
+        "message_id": "f92a4b5c-6d73-41ef-8201-ddddddddd001",
+        "member_id": null,
+        "value": ":wave:",
+        "created_at": null,
+        "source_refs": []
+      }
+    ]
+  },
+  "boards": {
+    "posts": [
+      {
+        "id": "2c5d7e8f-90a6-4412-8534-101010101001",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "target_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+        "author_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+        "title": "Welcome",
+        "body": "Fictional board post.",
+        "audience": "public",
+        "pinned": true,
+        "created_at": "2026-04-29T18:00:00Z",
+        "written_at": "2026-04-29T17:00:00Z",
+        "edited_at": null,
+        "deleted_at": null,
+        "source_refs": [
+          {
+            "app": "prism",
+            "collection": "member_board_posts",
+            "id": "synthetic-board-0001",
+            "uuid": null
+          }
+        ],
+        "extensions": {}
+      },
+      {
+        "id": "2c5d7e8f-90a6-4412-8534-101010101002",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "target_member_id": null,
+        "author_member_id": null,
+        "title": null,
+        "body": "Fictional system timeline post with no surviving author.",
+        "audience": "unknown",
+        "pinned": false,
+        "created_at": "2026-04-20T12:00:00Z",
+        "written_at": null,
+        "edited_at": null,
+        "deleted_at": "2026-04-21T12:00:00Z",
+        "source_refs": [],
+        "extensions": {}
+      }
+    ]
+  },
+  "relationships": {
+    "types": [
+      {
+        "id": "3d6e8f90-a1b7-4523-8645-202020202001",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "name": "parent_of",
+        "inverse_name": "child_of",
+        "symmetric": false,
+        "description": "Fictional asymmetric type. Provisional module.",
+        "color": "#4f8fcf",
+        "sort_order": 0,
+        "source_refs": [],
+        "extensions": {}
+      },
+      {
+        "id": "3d6e8f90-a1b7-4523-8645-202020202002",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "name": "partner",
+        "inverse_name": null,
+        "symmetric": true,
+        "description": null,
+        "color": null,
+        "sort_order": 1,
+        "source_refs": [],
+        "extensions": {}
+      }
+    ],
+    "edges": [
+      {
+        "id": "4e7f90a1-b2c8-4634-8756-303030303001",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "from_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+        "to_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3005",
+        "type_id": "3d6e8f90-a1b7-4523-8645-202020202001",
+        "note": "Parsed from the opaque sentence: Blair looks after Eden.",
+        "started_at": "2024-01-01T00:00:00Z",
+        "ended_at": null,
+        "created_at": "2026-04-29T18:00:00Z",
+        "deleted_at": null,
+        "source_refs": [
+          {
+            "app": "lighthouse",
+            "collection": "relationships",
+            "id": "synthetic-rel-text-0001",
+            "uuid": null
+          }
+        ],
+        "extensions": {}
+      },
+      {
+        "id": "4e7f90a1-b2c8-4634-8756-303030303002",
+        "system_id": "8f3c1a20-6b14-4c2e-9a71-0d5e6f7a1001",
+        "from_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3001",
+        "to_member_id": "4c0e8b11-2d55-4a6f-8c33-11aa22bb3002",
+        "type_id": "3d6e8f90-a1b7-4523-8645-202020202002",
+        "note": null,
+        "started_at": null,
+        "ended_at": "2025-12-31T00:00:00Z",
+        "created_at": null,
+        "deleted_at": "2026-01-02T00:00:00Z",
+        "source_refs": [],
+        "extensions": {}
+      }
+    ]
+  },
+  "extensions": {},
+  "warnings": [
+    {
+      "level": "warning",
+      "code": "asset_uri_only",
+      "record_type": "Asset",
+      "record_id": "9a1b2c3d-4e5f-4a6b-8c7d-111111111002",
+      "message": "Banner asset 9a1b2c3d-4e5f-4a6b-8c7d-111111111002 has only uri and no inline bytes.",
+      "count": 1
+    },
+    {
+      "level": "warning",
+      "code": "relationships_parsed_from_text",
+      "record_type": "MemberRelationship",
+      "record_id": "4e7f90a1-b2c8-4634-8756-303030303001",
+      "message": "Edge 4e7f90a1-b2c8-4634-8756-303030303001 was parsed from an opaque sentence retained in note. The parse is lossy.",
+      "count": 1
+    }
+  ]
+}

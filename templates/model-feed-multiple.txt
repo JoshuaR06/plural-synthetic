@@ -1,0 +1,69 @@
+Account
+[
+  name:example-pb-model-multiple
+  email:example-pb-model-multiple@thepluralbridge.org
+  Permission: read
+  Visibility: self
+
+  Place: Central Hub
+  [
+    System: The Harbor:anchor1
+    [
+      related->Main House:anchor2
+
+      Member: Popeye
+      [
+        visibility: self
+        field: id1
+        field: id3
+        front: true
+      ]
+
+      Member: Gilligan
+
+      Group: Theatre:anchor4
+      [
+        note: id2
+        field: id2
+        Member: 1-50
+      ]
+    ]
+
+    System: Main House:anchor2
+    [
+      related->The Harbor:anchor1
+
+      Member: Henry
+
+      Place: Waiting Room:anchor3
+      [
+        Member: Mickey
+        [
+          note: id3
+          front: false
+          permission: read,write
+        ]
+
+        Member: Minnie
+        [
+          front: false
+          note: id1
+        ]
+      ]
+    ]
+  ]
+
+  Notes
+  [
+    Note:id1 'this is note one'
+    Note:id2 'this is note two'
+    Note:id3 'this is note three'
+  ]
+
+  CustomFields
+  [
+    Field:id1 'title'
+    Field:id2 'auditorium'
+    Field:id3 'author'
+  ]
+]
