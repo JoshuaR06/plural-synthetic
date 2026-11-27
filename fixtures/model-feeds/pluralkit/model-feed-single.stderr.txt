@@ -1,0 +1,17 @@
+notice: {feed}:13: visibility 'self' is kept as written. docs/visibility-permissions-roles.txt names this audience 'only you'. The token was not renamed.
+notice: account name 'example-pb-model-single' has no PluralKit field; the system name is 'The Harbor'
+notice: account email 'example-pb-model-single@example-single.org' has no PluralKit field
+notice: account permission read was not mapped to privacy or a role
+notice: account visibility 'self' is exported as private
+notice: member 'Popeye' visibility 'trusted friends' is exported as private, which is narrower than trusted friends
+notice: group 'Backstage' is nested under 'Theatre'; PluralKit groups are flat, so that parent is not written
+notice: notes have no PluralKit field: id1, id2, id3
+notice: custom fields have no PluralKit field: id1 'title', id3 'author'
+notice: member 'Popeye' custom field id1 value 'Sailor' has no PluralKit field
+notice: member 'Popeye' custom field id3 value 'Popeye' has no PluralKit field
+notice: privacy bucket bucket1 'Close Friends' has no PluralKit field
+notice: friend friend1 'Alex' has no PluralKit field
+notice: member 'Popeye' bucket assignment bucket1 has no PluralKit field
+notice: member 'Gilligan' archived true reason 'Retained for historical testing' has no PluralKit field
+notice: custom front customfront1 'Blurry' is not a PluralKit member
+notice: native avatar_url fields are null; generated images are local sidecars named by member short id, with no hosted URL: Popeye (xfzjd), Penny (locum)

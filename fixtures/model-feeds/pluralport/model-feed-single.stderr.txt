@@ -1,0 +1,5 @@
+notice: {feed}:13: visibility 'self' is kept as written. docs/visibility-permissions-roles.txt names this audience 'only you'. The token was not renamed.
+warning: Archive reason for Gilligan has no core Member field and is in extensions.org.thepluralbridge.archived_reason.
+warning: Account name and email have no core System field and are in extensions.org.thepluralbridge.account.
+warning: Account permission read was not mapped to a role or visibility. It is in extensions.org.thepluralbridge.account.permission.
+warning: Friends and privacy buckets stay in extensions.org.thepluralbridge because the captured sharing module has no record definition. The sharing module is not declared.

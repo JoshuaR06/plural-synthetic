@@ -10,7 +10,7 @@ The file is `out/imports/pluralport/<feed-stem>.json`. A failed run does not rep
 
 ## Supported scope
 
-One top-level System and Groups inside it. Ordinary members, one custom front, group membership, text custom fields and member values, member-owned notes, open front periods, and inline avatar assets. A Place, a second or nested System, an anchor relationship, a Group custom-field association, or a note with no member is an error.
+One top-level System and Groups inside it. Ordinary members, one custom front, group membership, text custom fields and member values, member-owned notes, open front periods, and inline avatar assets. A Place, a second or nested System, an anchor relationship, a Group custom-field association, or a note with no member is an error. The Group custom-field check applies to a Group inside that top-level System. The run raises before it replaces the previous JSON.
 
 Chat, boards, relationships, taxonomy, and the sketched sharing module are not written. They are not declared in `capabilities.modules`.
 

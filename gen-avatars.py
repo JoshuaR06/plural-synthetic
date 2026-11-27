@@ -7,9 +7,12 @@ way generate.py loads gen-pluralbridge.py. Importing this module does not
 write files, print, or generate an image.
 
 The callable below returns PNG bytes or an explicit no-avatar result. It does
-not read a feed, write a file, or build avatars.zip. gen-import-engine.py
-resolves avatar settings and calls generate_avatar. gen-pluralbridge.py
-writes the returned bytes. This module does not call generate.py.
+not read a feed, write a file, or build avatars.zip. gen-import-engine.py resolves avatar settings and calls generate_avatar.
+gen-pluralbridge.py and gen-simplyplural.py write the returned bytes as
+<member id>.png. gen-pluralkit.py uses the member short id as that file name
+and leaves native avatar URL fields null. gen-pluralport.py stores the same
+bytes as Asset data_base64 and does not write a PNG directory. This module
+does not call generate.py.
 
 Color algorithm
 ---------------
@@ -113,6 +116,7 @@ def generate_avatar(style, member_id, width=None, height=None, color=None):
 
 
 def _require_style(style):
+    """Reject anything other than none, solid, or crosshatch."""
     if style not in STYLES:
         raise ValueError(
             f"style must be one of {', '.join(STYLES)}; got {style!r}"
@@ -121,6 +125,7 @@ def _require_style(style):
 
 
 def _require_member_id(member_id):
+    """The derived color is SHA-256 of this UTF-8 string, so it must be a non-empty str."""
     if not isinstance(member_id, str) or member_id == "":
         raise ValueError(
             f"member_id must be a non-empty string; got {member_id!r}"
@@ -129,6 +134,7 @@ def _require_member_id(member_id):
 
 
 def _require_dimension(name, value):
+    """None becomes 64. A bool is rejected because bool is a subclass of int."""
     if value is None:
         return DEFAULT_SIZE
     # bool is a subclass of int; True would otherwise become a 1-pixel image.
@@ -148,6 +154,7 @@ def _parse_color(color):
 
 
 def _format_color(red, green, blue):
+    """Lowercase #RRGGBB for AvatarResult.base_color."""
     return f"#{red:02x}{green:02x}{blue:02x}"
 
 
@@ -158,7 +165,7 @@ def _color_from_member_id(member_id):
 
 
 def _hatch_rgb(base):
-    """Black on a light base, white on a dark base."""
+    """Black on a light base, white on a dark base. The threshold is luminance 128."""
     red, green, blue = base
     luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
     if luminance >= 128:
@@ -167,6 +174,7 @@ def _hatch_rgb(base):
 
 
 def _solid_rows(width, height, rgb):
+    """Each row is a list of RGB tuples. A flat repeated tuple would be misread as bytes."""
     row = [rgb] * width
     return [list(row) for _ in range(height)]
 
@@ -198,6 +206,7 @@ def _encode_png(width, height, rows):
 
 
 def _chunk(tag, data):
+    """One PNG chunk. The CRC covers the tag and the data, not the length."""
     body = tag + data
     checksum = zlib.crc32(body) & 0xFFFFFFFF
     return struct.pack(">I", len(data)) + body + struct.pack(">I", checksum)

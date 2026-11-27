@@ -7,10 +7,15 @@ The repository overview is in [`README.md`](../../README.md). Generated copies
 live under
 [`sample-output/pluralbridge-system-models/`](../../sample-output/pluralbridge-system-models/README.md).
 
-`generate.py` builds these configurations from Python topologies in
-`system_models.py`. It does not copy the JSON files into output. The committed
-JSON here is the canonical serialized form of those topologies and is checked
-against generated output for complete object and text equality.
+[`system_models.py`](../../system_models.py) defines the twelve topologies and
+assembles each account. [`gen-pluralbridge.py`](../../gen-pluralbridge.py)
+checks that assembly and serializes it with insertion-order JSON.
+[`generate.py`](../../generate.py) calls that serializer. It writes a generated
+copy under `--out` and, with `--sync-system-model-sample-output`, refreshes
+the twelve sample-output copies. It does not copy these fixture files, and
+canonical generation does not generate avatar images. The committed JSON here
+is the canonical serialized form of those topologies and is checked against
+generated output for complete object and text equality.
 
 Files:
 
@@ -18,7 +23,7 @@ Files:
 - `example-002-multiple-top-level-systems.json`: multiple independent root systems
 - `example-003-parent-child-system.json`: Workshop nested under Main House
 - `example-004-sibling-systems.json`: explicit sibling peer relationship
-- `example-005-related-systems.json`: reciprocal related records (both Systems labeled, no arrow)
+- `example-005-related-systems.json`: source diagram labels both Systems related and draws no arrow; the encoded rows display as `related->` each way
 - `example-006-subsystem.json`: a Place inside a System (Morgan's Room)
 - `example-007-evolving-uncertain-relationship.json`: evolving and unknown labels on North Wing, both null-target
 - `example-008-archived-system.json`: archived System lifecycle plus an archived graph label on Old Map; associated records retained; no predecessor edge
@@ -32,9 +37,20 @@ Files:
 Each example is one `account` with shared peer collections and a hierarchical `tree`.
 
 - One `account` object per document. Shared members and anchors live in account-level peer collections.
-- Tree nodes reference anchors; member occurrences reference shared members. Repeated occurrences retain one shared member identity.
+- The first property of every account is this config object. It declares avatar configuration for the example. Canonical generation writes the JSON and does not generate avatar images:
+
+```json
+"config": {
+  "avatar-width": 64,
+  "avatar-height": 64,
+  "avatar": "solid"
+}
+```
+
+- Tree nodes reference anchors; member occurrences reference shared members. Repeated occurrences retain one shared member identity. A member occurrence may sit under a System, a Group, or a Place.
 - Nesting expresses containment; array position expresses display order.
-- Notes belong to members through `noteIds`; fields are associated through `fieldIds`.
+- Account-owned notes live in `account.notes[]`. `noteIds` on a shared member, and `noteIds` on a Place, System, or Group anchor, reference those notes. These twelve fixtures use member `noteIds` only. In Examples 001–011 every note is listed on `member-001`, and every other member has `"noteIds": []`. No anchor in these files has `noteIds`; an empty anchor list is omitted. Example 012 omits `notes` and still writes `"noteIds": []` on each of its four members. Associating a note with an anchor is part of the format and is not used by these examples.
+- Custom fields are associated through `fieldIds`.
 - Notes, custom fields, and each tree member occurrence carry `visibility` and `permissions`. Shared `account.members[]` records keep member-wide data, including `fronting`, and do not carry occurrence settings.
 - Current fronting is a Boolean on the shared member and applies across every occurrence, independently of focused anchor. For examples 001–011 it is true when that member appears in a current front-history event (`endedAt` is null and `isLive` is true). Example 12 records `false` for all four members as an explicit fixture decision and has no front-history collection.
 - Directed graph records live in `account.relationships[]`. Field definitions, worked JSON, display rules, and the results for Examples 004, 005, 007, 008, and 009 are under [Field-level relationship encoding](#field-level-relationship-encoding). Empty `relationships` collections are omitted.
@@ -44,7 +60,7 @@ Each example is one `account` with shared peer collections and a hierarchical `t
 Shared modeling notes:
 
 - System–System structure uses directed `relationships`. Containment uses the `tree`.
-- Graph records are directed. When a diagram labels two Systems with the same peer type and no arrow, both directions are encoded as separate rows that share one field.
+- Graph records are directed. When a source diagram labels two Systems with the same peer type and draws no arrow, both directions are encoded as separate rows that share one field. Those rows still display with direction.
 - Model 8 encodes archived as System lifecycle and also records Old Map as `archived` with `targetAnchorId` null. Per-object archive flags on associated records are independent facts, not a cascade. Historical `linkRole`s serialize as `tags`.
 
 ## Field-level relationship encoding
@@ -55,14 +71,14 @@ are taken from the committed examples in this folder.
 
 | Field | Encoding rule |
 | --- | --- |
-| `relationshipId` | Stable id of a surviving graph row. New ids are deterministic and unique within the collection. |
+| `relationshipId` | Identifies this row. Unique within `account.relationships[]`. It does not reference another record. |
 | `sourceAnchorId` | Required source. Must be an `account.anchors[].anchorId` in the same account. |
 | `fieldId` | Required. Must be an `account.customFields[].fieldId` in the same account. That field's `fieldName` is the user-defined label. |
 | `targetAnchorId` | An `account.anchors[].anchorId` in the same account, or literal JSON `null`. Never `0`, `""`, or `"null"`. |
 
-Every `relationshipId`, `sourceAnchorId`, `fieldId`, and non-null `targetAnchorId` resolves inside the same account. Each row has one label and one optional target. Multiple labels use separate rows. Reverse direction is a separate row. Root and child graph records are omitted; nesting in `account.tree` expresses parent/child containment. When no graph rows remain, `relationships` is omitted.
+`relationshipId` identifies the row. `sourceAnchorId` references an `account.anchors[]` record, `fieldId` references an `account.customFields[]` record, and a non-null `targetAnchorId` references an `account.anchors[]` record, all in the same account. JSON `null` names no anchor. Each row has one label and one optional target. Multiple labels use separate rows. Reverse direction is a separate row. Root and child graph records are omitted; nesting in `account.tree` expresses parent/child containment. When no graph rows remain, `relationships` is omitted.
 
-When two Systems have the same peer label and no arrow, these examples encode two directed records, one in each direction, sharing one custom field. A single arrow encodes one directed record. This preserves Example 004's reciprocal sibling records and Example 009's single directed sibling record.
+When a source diagram gives two Systems the same peer label and draws no arrow, these examples encode two directed records, one in each direction, sharing one custom field. A single arrow in the diagram encodes one directed record. This preserves Example 004's reciprocal sibling records and Example 009's single directed sibling record. "No arrow" describes that diagram. The encoded reciprocal rows produce directional display labels, as in Example 005.
 
 ### Sibling example (Example 004)
 
@@ -131,7 +147,7 @@ Nesting in `account.tree` supplies containment and display order. Relationship r
 
 Relationship-label fields are referenced through relationship rows. They are not added to `anchor.fieldIds` merely to render the relationship. Payload-bearing fields such as Example 004's `custom-field-001` remain on `fieldIds` independently.
 
-Structural member membership is a tree occurrence under the owning group or place. Graph relationships do not grant access.
+Structural member membership is a tree occurrence under the owning System, Group, or Place. Graph relationships do not grant access.
 
 ### Results in the canonical examples
 
@@ -149,7 +165,7 @@ Examples 001, 002, 003, 006, and 010–012 have no relationship rows.
 
 ### Model 5: Related Systems
 
-Related is not parent/child and does not grant access. Both Systems are labeled related with no arrow, so both directions are encoded. JSON and display results are under [Field-level relationship encoding](#field-level-relationship-encoding).
+Related is not parent/child and does not grant access. The source diagram labels both Systems related and draws no arrow, so both directions are encoded. Those rows display as The Harbor `related->The Archive` and The Archive `related->The Harbor`. JSON and display results are under [Field-level relationship encoding](#field-level-relationship-encoding).
 
 ### Model 6: Nested Place
 

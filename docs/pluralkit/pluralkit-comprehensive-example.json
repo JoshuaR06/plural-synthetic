@@ -1,0 +1,263 @@
+{
+  "version": 2,
+  "id": "aaaaa",
+  "uuid": "11111111-1111-4111-8111-111111111111",
+  "name": "The Harbor",
+  "description": "A fictional system used as a PluralKit export specimen.",
+  "tag": "| Harbor",
+  "pronouns": "they/them",
+  "avatar_url": "https://example.com/avatars/harbor.png",
+  "banner": "https://example.com/banners/harbor.png",
+  "color": "aabbcc",
+  "created": "2026-01-01T00:00:00Z",
+  "webhook_url": null,
+  "privacy": {
+    "name_privacy": "public",
+    "avatar_privacy": "public",
+    "description_privacy": "private",
+    "banner_privacy": "public",
+    "pronoun_privacy": "public",
+    "member_list_privacy": "public",
+    "group_list_privacy": "private",
+    "front_privacy": "private",
+    "front_history_privacy": "private"
+  },
+  "config": {
+    "timezone": "UTC",
+    "pings_enabled": true,
+    "latch_timeout": null,
+    "member_default_private": true,
+    "group_default_private": false,
+    "show_private_info": true,
+    "member_limit": 1000,
+    "group_limit": 250,
+    "case_sensitive_proxy_tags": false,
+    "proxy_error_message_enabled": true,
+    "hid_display_split": false,
+    "hid_display_caps": false,
+    "hid_list_padding": "off",
+    "card_show_color_hex": false,
+    "proxy_switch": "new",
+    "name_format": "{name} {tag}",
+    "description_templates": [
+      "A synthetic description template."
+    ]
+  },
+  "accounts": [
+    111111111111111111,
+    222222222222222222
+  ],
+  "members": [
+    {
+      "id": "aaaab",
+      "uuid": "22222222-2222-4222-8222-222222222222",
+      "name": "Popeye",
+      "display_name": "Popeye",
+      "color": "4a90e2",
+      "birthday": "1999-03-14",
+      "pronouns": "he/him",
+      "avatar_url": "https://example.com/avatars/popeye.png",
+      "webhook_avatar_url": "https://example.com/avatars/popeye-webhook.png",
+      "banner": "https://example.com/banners/popeye.png",
+      "description": "Fictional sailor.",
+      "created": "2026-01-01T00:00:01Z",
+      "keep_proxy": true,
+      "tts": false,
+      "autoproxy_enabled": true,
+      "message_count": 3,
+      "last_message_timestamp": "2026-01-02T15:00:00Z",
+      "proxy_tags": [
+        {
+          "prefix": "P:",
+          "suffix": ":P"
+        },
+        {
+          "prefix": "P-",
+          "suffix": null
+        },
+        {
+          "prefix": null,
+          "suffix": "-p"
+        }
+      ],
+      "aliases": [
+        "Sailor"
+      ],
+      "privacy": {
+        "visibility": "public",
+        "name_privacy": "public",
+        "description_privacy": "public",
+        "banner_privacy": "public",
+        "birthday_privacy": "private",
+        "pronoun_privacy": "public",
+        "avatar_privacy": "public",
+        "metadata_privacy": "private",
+        "proxy_privacy": "public",
+        "alias_privacy": "public"
+      }
+    },
+    {
+      "id": "aaaac",
+      "uuid": "33333333-3333-4333-8333-333333333333",
+      "name": "Penny",
+      "display_name": null,
+      "color": "ff8800",
+      "birthday": null,
+      "pronouns": null,
+      "avatar_url": "https://example.com/avatars/penny.png",
+      "webhook_avatar_url": null,
+      "banner": null,
+      "description": null,
+      "created": "2026-01-01T00:00:02Z",
+      "keep_proxy": false,
+      "tts": true,
+      "autoproxy_enabled": false,
+      "message_count": 0,
+      "last_message_timestamp": null,
+      "proxy_tags": [
+        {
+          "prefix": null,
+          "suffix": "-n"
+        }
+      ],
+      "aliases": [],
+      "privacy": {
+        "visibility": "public",
+        "name_privacy": "public",
+        "description_privacy": "private",
+        "banner_privacy": "private",
+        "birthday_privacy": "private",
+        "pronoun_privacy": "private",
+        "avatar_privacy": "public",
+        "metadata_privacy": "public",
+        "proxy_privacy": "private",
+        "alias_privacy": "private"
+      }
+    },
+    {
+      "id": "aaaad",
+      "uuid": "44444444-4444-4444-8444-444444444444",
+      "name": "Gilligan",
+      "display_name": "Gill",
+      "color": null,
+      "birthday": "0004-07-04",
+      "pronouns": "he/him",
+      "avatar_url": null,
+      "webhook_avatar_url": null,
+      "banner": null,
+      "description": "Retained for historical testing.",
+      "created": "2026-01-01T00:00:03Z",
+      "keep_proxy": false,
+      "tts": false,
+      "autoproxy_enabled": false,
+      "message_count": 1,
+      "last_message_timestamp": "2026-01-01T18:00:00Z",
+      "proxy_tags": [],
+      "aliases": [
+        "Gill"
+      ],
+      "privacy": {
+        "visibility": "private",
+        "name_privacy": "private",
+        "description_privacy": "private",
+        "banner_privacy": "private",
+        "birthday_privacy": "public",
+        "pronoun_privacy": "public",
+        "avatar_privacy": "private",
+        "metadata_privacy": "private",
+        "proxy_privacy": "private",
+        "alias_privacy": "private"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "aaaae",
+      "uuid": "55555555-5555-4555-8555-555555555555",
+      "name": "Theatre",
+      "display_name": "Theatre",
+      "description": "A fictional group.",
+      "icon": "https://example.com/icons/theatre.png",
+      "banner": "https://example.com/banners/theatre.png",
+      "color": "336699",
+      "created": "2026-01-01T00:00:04Z",
+      "members": [
+        "aaaab",
+        "aaaad"
+      ],
+      "privacy": {
+        "name_privacy": "public",
+        "description_privacy": "public",
+        "banner_privacy": "public",
+        "icon_privacy": "public",
+        "list_privacy": "public",
+        "metadata_privacy": "public",
+        "visibility": "public"
+      }
+    },
+    {
+      "id": "aaaaf",
+      "uuid": "66666666-6666-4666-8666-666666666666",
+      "name": "Backstage",
+      "display_name": null,
+      "description": null,
+      "icon": null,
+      "banner": null,
+      "color": null,
+      "created": "2026-01-01T00:00:05Z",
+      "members": [
+        "aaaac",
+        "aaaab"
+      ],
+      "privacy": {
+        "name_privacy": "private",
+        "description_privacy": "private",
+        "banner_privacy": "private",
+        "icon_privacy": "private",
+        "list_privacy": "private",
+        "metadata_privacy": "private",
+        "visibility": "private"
+      }
+    },
+    {
+      "id": "aaaag",
+      "uuid": "77777777-7777-4777-8777-777777777777",
+      "name": "Wings",
+      "display_name": null,
+      "description": "A group with no members.",
+      "icon": null,
+      "banner": null,
+      "color": null,
+      "created": "2026-01-01T00:00:06Z",
+      "members": [],
+      "privacy": {
+        "name_privacy": "public",
+        "description_privacy": "public",
+        "banner_privacy": "public",
+        "icon_privacy": "public",
+        "list_privacy": "public",
+        "metadata_privacy": "public",
+        "visibility": "public"
+      }
+    }
+  ],
+  "switches": [
+    {
+      "timestamp": "2026-01-03T12:00:00Z",
+      "members": [
+        "aaaab",
+        "aaaac"
+      ]
+    },
+    {
+      "timestamp": "2026-01-02T12:00:00Z",
+      "members": []
+    },
+    {
+      "timestamp": "2026-01-01T12:00:00Z",
+      "members": [
+        "aaaad"
+      ]
+    }
+  ]
+}

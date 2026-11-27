@@ -176,6 +176,7 @@ def _explicit_or_inherit(value):
 
 
 def _gap(model, line, message):
+    """One unsupported feed fact. Printed as gap:; the member or anchor is still written."""
     return f"{model['path']}:{line}: {message}"
 
 
@@ -373,7 +374,9 @@ def render_import_model(model):
         if anchor.get("avatar_config"):
             rec["config"] = anchor["avatar_config"]
         shaped_anchors.append(system_models._shape_anchor(
-            rec, kind, field_ids=anchor["field_refs"] or None,
+            rec, kind,
+            field_ids=anchor["field_refs"] or None,
+            note_ids=anchor.get("note_refs") or None,
         ))
 
     occurrences = {}
@@ -487,6 +490,8 @@ def check_import_export(export, name="import"):
     Does not call validate_topology: that function only accepts the twelve
     canonical exampleId values. Feed imports omit username; the twelve-example
     schema check still requires it, so that check sees a copy.
+    validate_references requires each anchor noteIds entry to name an
+    account note. An anchor with no notes omits noteIds.
     """
     account = export["account"]
     if "username" in account:

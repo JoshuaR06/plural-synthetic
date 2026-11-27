@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
-"""Automated checks for generated PluralBridge canonical models."""
+"""Automated checks for generated PluralBridge canonical models and feed note references.
+
+The canonical tests call generate_system_models and simplyplural_official in memory.
+They compare the twelve exports with fixtures/pluralbridge-system-models and
+with the matching files under sample-output. example-shape.json is not part
+of that set. They do not run generate.py --out and they do not read feed output.
+
+The feed note tests parse small in-memory feeds. They do not write files.
+"""
 import copy
+import importlib.util
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -14,6 +24,7 @@ SAMPLE_OUTPUT = ROOT / "sample-output" / "pluralbridge-system-models"
 
 
 class SystemModelGenerationTests(unittest.TestCase):
+    """The twelve assembled exports: schema, references, topology, and fixture bytes."""
     @classmethod
     def setUpClass(cls):
         cls.exports = generate_system_models()
@@ -305,6 +316,7 @@ class SystemModelGenerationTests(unittest.TestCase):
                 self.assertEqual(generated_text, sample_text)
 
     def test_matches_canonical_fixtures(self):
+        """Generated text equals the committed fixture and the sample-output copy."""
         for name, generated in self.exports.items():
             with self.subTest(name=name):
                 fixture_text = (FIXTURES / name).read_text(encoding="utf-8")
@@ -318,6 +330,7 @@ class SystemModelGenerationTests(unittest.TestCase):
 
 
 class SimplyPluralRegressionTests(unittest.TestCase):
+    """Aurora's official export stays sorted-key JSON and keeps its collection shape."""
     def test_official_export_shape(self):
         export = simplyplural_official()
         self.assertEqual(len(export["members"]), 5)
@@ -332,6 +345,7 @@ class SimplyPluralRegressionTests(unittest.TestCase):
 
 
 class SystemModelDeterminismTests(unittest.TestCase):
+    """A second in-memory generation matches the first. Insertion order is part of the text."""
     def test_system_models_are_deterministic(self):
         first = generate_system_models()
         second = generate_system_models()
@@ -339,6 +353,199 @@ class SystemModelDeterminismTests(unittest.TestCase):
         for name in first:
             with self.subTest(name=name):
                 self.assertEqual(dump_system_model(first[name]), dump_system_model(second[name]))
+
+
+def _load_hyphen(filename):
+    spec = importlib.util.spec_from_file_location(filename.replace("-", "_").replace(".py", ""), ROOT / filename)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class AnchorNoteReferenceTests(unittest.TestCase):
+    """Place, System, and Group notes stay on the anchor that cited them."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = _load_hyphen("gen-import-engine.py")
+        cls.pluralbridge = _load_hyphen("gen-pluralbridge.py")
+        cls.simplyplural = _load_hyphen("gen-simplyplural.py")
+        cls.pluralport = _load_hyphen("gen-pluralport.py")
+        cls.pluralkit = _load_hyphen("gen-pluralkit.py")
+
+    def _parse(self, text):
+        return self.engine._Parser("feed.txt", text).parse()
+
+    def test_anchor_notes_are_separate_from_member_notes(self):
+        model = self._parse("""
+Account
+[
+  name: n
+  email: n@example.org
+  Place: Hub
+  [
+    note: placeNote
+    note: placeNote
+    note: laterNote
+  ]
+  System: Harbor
+  [
+    note: sysNote
+    Member: Ada
+    [
+      note: memberNote
+      note: placeNote
+    ]
+  ]
+  Group: Theatre
+  [
+    note: groupNote
+  ]
+  Notes
+  [
+    Note:placeNote 'place body'
+    Note:laterNote 'later body'
+    Note:sysNote 'system body'
+    Note:groupNote 'group body'
+    Note:memberNote 'member body'
+  ]
+]
+""")
+        by_name = {anchor["name"]: anchor for anchor in model["anchors"]}
+        self.assertEqual(by_name["Hub"]["note_refs"], ["placeNote", "laterNote"])
+        self.assertEqual(by_name["Harbor"]["note_refs"], ["sysNote"])
+        self.assertEqual(by_name["Theatre"]["note_refs"], ["groupNote"])
+        ada = model["members"][0]
+        self.assertEqual(ada["note_refs"], ["memberNote", "placeNote"])
+        self.assertNotIn("groupNote", ada["note_refs"])
+        self.assertNotIn("sysNote", ada["note_refs"])
+        self.assertNotIn("memberNote", by_name["Hub"]["note_refs"])
+
+        export, _gaps = self.pluralbridge.render_import_model(model)
+        self.pluralbridge.check_import_export(export, "feed.txt")
+        anchors = {anchor["name"]: anchor for anchor in export["account"]["anchors"]}
+        self.assertEqual(anchors["Theatre"]["noteIds"], ["groupNote"])
+        self.assertEqual(anchors["Hub"]["noteIds"], ["placeNote", "laterNote"])
+        self.assertEqual(anchors["Harbor"]["noteIds"], ["sysNote"])
+        note_ids = [note["noteId"] for note in export["account"]["notes"]]
+        self.assertIn("groupNote", note_ids)
+        members = {member["displayName"]: member for member in export["account"]["members"]}
+        self.assertEqual(members["Ada"]["noteIds"], ["memberNote", "placeNote"])
+        self.assertNotIn("groupNote", members["Ada"]["noteIds"])
+        for node in system_models.walk_tree(export["account"]["tree"]):
+            self.assertNotIn("noteIds", node)
+
+    def test_undefined_note_names_the_reference_line(self):
+        text = "\n".join([
+            "Account",
+            "[",
+            "  name: n",
+            "  email: n@example.org",
+            "  System: Harbor",
+            "  [",
+            "    note: missing",
+            "  ]",
+            "]",
+        ])
+        with self.assertRaises(self.engine.FeedError) as caught:
+            self.engine._Parser("specimen.txt", text).parse()
+        self.assertIn("specimen.txt:7:", str(caught.exception))
+        self.assertIn("undefined note 'missing'", str(caught.exception))
+
+    def test_other_targets_do_not_assign_anchor_notes_to_members(self):
+        model = self._parse("""
+Account
+[
+  name: n
+  email: n@example.org
+  System: Harbor
+  [
+    Member: Ada
+    [
+      note: memberNote
+    ]
+    Group: Theatre
+    [
+      note: groupNote
+    ]
+  ]
+  Notes
+  [
+    Note:memberNote 'member body'
+    Note:groupNote 'group body'
+  ]
+]
+""")
+        with self.assertRaises(self.simplyplural.SimplyPluralError) as sp:
+            self.simplyplural.render_import_model(model)
+        self.assertIn("anchor note association is not supported", str(sp.exception))
+        self.assertIn("groupNote", str(sp.exception))
+        with self.assertRaises(self.pluralport.PluralPortError) as pp:
+            self.pluralport.render_import_model(model)
+        self.assertIn("anchor note association is not supported", str(pp.exception))
+        self.assertIn("groupNote", str(pp.exception))
+        _export, notices = self.pluralkit.render_import_model(model)
+        self.assertTrue(any("Theatre" in notice and "groupNote" in notice for notice in notices))
+        self.assertTrue(all("groupNote" not in json.dumps(member) for member in _export["members"]))
+
+    def test_member_only_note_still_belongs_to_the_member(self):
+        model = self._parse("""
+Account
+[
+  name: n
+  email: n@example.org
+  System: Harbor
+  [
+    Member: Ada
+    [
+      note: memberNote
+    ]
+  ]
+  Notes
+  [
+    Note:memberNote 'member body'
+  ]
+]
+""")
+        self.assertEqual(model["anchors"][0]["note_refs"], [])
+        self.assertEqual(model["members"][0]["note_refs"], ["memberNote"])
+        export, _notices = self.simplyplural.render_import_model(model)
+        self.assertEqual(export["notes"][0]["member"], model["members"][0]["json_id"])
+        self.assertEqual(export["notes"][0]["_id"], "memberNote")
+
+    def test_top_level_group_custom_field_is_rejected(self):
+        model = self._parse("""
+Account
+[
+  name: n
+  email: n@example.org
+  System: Harbor
+  [
+    Group: Theatre
+    [
+      field: id1
+      Member: Ada
+    ]
+  ]
+  CustomFields
+  [
+    Field:id1 'title'
+  ]
+]
+""")
+        destination = Path(tempfile.mkdtemp()) / "existing.json"
+        destination.write_bytes(b"previous-output")
+        before = destination.read_bytes()
+        try:
+            export, _warnings = self.pluralport.render_import_model(model)
+            self.pluralport.write_import_export(destination, export)
+        except self.pluralport.PluralPortError as exc:
+            message = str(exc)
+        else:
+            self.fail("expected PluralPortError before write")
+        self.assertIn("feed.txt:", message)
+        self.assertIn("Group custom-field associations are not supported", message)
+        self.assertEqual(destination.read_bytes(), before)
 
 
 if __name__ == "__main__":

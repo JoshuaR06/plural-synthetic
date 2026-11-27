@@ -31,7 +31,7 @@ class PluralPortError(Exception):
 
 
 def _uuid(key):
-    """Deterministic UUID version 4 for one stable key."""
+    """Version-4 UUID from SHA-256. The version and variant nibbles are set after the digest."""
     raw = bytearray(hashlib.sha256(key.encode("utf-8")).digest()[:16])
     raw[6] = (raw[6] & 0x0F) | 0x40
     raw[8] = (raw[8] & 0x3F) | 0x80
@@ -43,6 +43,7 @@ def _location(model, line, message):
 
 
 def _load_avatars():
+    """Load gen-avatars.py. PluralPort embeds the returned PNG bytes; it does not write a directory."""
     path = Path(__file__).resolve().parent / "gen-avatars.py"
     import importlib.util
     spec = importlib.util.spec_from_file_location("gen_avatars", path)
@@ -67,10 +68,23 @@ def _ancestors(model, anchor):
 
 
 def _require_supported_shape(model):
-    """One top-level System and its Groups. Places and relationships are rejected."""
+    """One top-level System and its Groups.
+
+    Places, anchor note associations, and relationships are rejected on their
+    own. A Group custom-field association is rejected for every Group,
+    including a Group inside the single top-level System. A nested System
+    raises before those Group checks. The field check used to sit in that
+    nested-System branch, so a normal top-level System never reached it.
+    """
     for anchor in model["anchors"]:
         if anchor["kind"] == "place":
             _location(model, anchor["line"], "Place anchors are not supported in this PluralPort cut")
+        if anchor.get("note_refs"):
+            rendered = ", ".join(anchor["note_refs"])
+            _location(
+                model, anchor["line"],
+                f"anchor note association is not supported in this PluralPort cut: {rendered}",
+            )
     systems = [anchor for anchor in model["anchors"] if anchor["kind"] == "system"]
     if len(systems) != 1:
         line = systems[1]["line"] if len(systems) > 1 else 1
@@ -78,6 +92,7 @@ def _require_supported_shape(model):
     system = systems[0]
     if system["parent_key"] is not None:
         _location(model, system["line"], "a nested System is not supported")
+    for anchor in model["anchors"]:
         if anchor["kind"] == "group" and (anchor.get("field_refs") or anchor.get("field_values")):
             _location(model, anchor["line"], "Group custom-field associations are not supported")
         if anchor["kind"] == "group":
@@ -133,6 +148,10 @@ def _privacy(feed_visibility, resolved_from):
 
 
 def _note_owners(model):
+    """Member note owners. Anchor note_refs are not copied onto a member.
+
+    An anchor association is rejected earlier, in _require_supported_shape.
+    """
     owners = {}
     for member in model["members"]:
         for script_id in member["note_refs"]:
@@ -541,7 +560,11 @@ def _validate(model, export):
 
 
 def write_import_export(path, export):
-    """Validate, then replace only this feed's PluralPort JSON."""
+    """Replace only this feed's JSON after render has checked references and asset bytes.
+
+    The file is written in a sibling temp directory and moved into place.
+    A check that raises before this call leaves the previous JSON untouched.
+    """
     path = Path(path)
     text = json.dumps(export, indent=2, ensure_ascii=False) + "\n"
     path.parent.mkdir(parents=True, exist_ok=True)

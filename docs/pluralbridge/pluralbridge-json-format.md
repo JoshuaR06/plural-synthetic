@@ -24,7 +24,7 @@ Identifiers and references are scoped to the single account in the document.
 | --- | --- | --- |
 | `accountId` | `account.accountId` | Not referenced by other records in this JSON. |
 | `memberId` | `account.members[].memberId` | Tree member occurrences and `account.frontHistory[].memberIds`. |
-| `noteId` | `account.notes[].noteId` | `account.members[].noteIds`. |
+| `noteId` | `account.notes[].noteId` | Member `noteIds` and anchor `noteIds`. |
 | `fieldId` | `account.customFields[].fieldId` | Member `fieldIds`, anchor `fieldIds`, and relationship `fieldId`. |
 | `anchorId` | `account.anchors[].anchorId` | Tree nodes, relationship `sourceAnchorId`, and non-null relationship `targetAnchorId`. |
 | `relationshipId` | `account.relationships[].relationshipId` | Not referenced by other records. |
@@ -32,7 +32,7 @@ Identifiers and references are scoped to the single account in the document.
 
 Shared member payload is stored once in `account.members[]`. A tree occurrence references that member and carries occurrence-specific settings.
 
-- `noteIds` associates account-owned notes with a shared member.
+- `noteIds` associates account-owned notes with a shared member or with a Place, System, or Group anchor. The twelve canonical examples use member `noteIds` only. A feed import may also set anchor `noteIds`. An empty list is omitted.
 - `fieldIds` associates account-owned custom fields with a member or anchor.
 - Relationship `fieldId` selects the field whose `fieldName` supplies the relationship label.
 - A relationship-label field is not added to an anchor’s `fieldIds` merely to render the relationship.
@@ -154,7 +154,7 @@ Shared member records do not currently carry `visibility` or `permissions`; thos
 
 **Path:** `$.account.notes[]`
 
-Account-owned note records. A member’s `noteIds` associates notes with that member.
+Account-owned note records. A member’s `noteIds`, or an anchor’s `noteIds`, associates notes with that record. The twelve canonical examples associate notes with members. Feed imports can also associate a note with the Place, System, or Group that cited it. That anchor association is not copied onto the members placed inside the anchor.
 
 ```json
 {
@@ -182,7 +182,7 @@ Account-owned note records. A member’s `noteIds` associates notes with that me
 | `isArchived` | boolean | Note archive flag, independent of anchor archive state. | Present on both Example 008 notes; omitted elsewhere. |
 | `tags` | array of string | Extensible descriptive labels. | Example 008 note 002 has `historical-note`; omitted elsewhere. |
 
-Notes are associated with members, not anchors. Historical wording inside existing note bodies does not change the association established by `noteIds`.
+The twelve examples do not put `noteIds` on anchors. Historical wording inside existing note bodies does not change the association established by `noteIds`.
 
 ## Custom fields
 
@@ -292,6 +292,7 @@ Place example:
 | `color` | string | Anchor color. Observed form: hexadecimal color. | Present in 001–011; omitted in 012. |
 | `description` | string | Anchor description. | Present in 001–011; omitted in 012. |
 | `fieldIds` | array of string | References to ordinary custom fields associated with this anchor. | Present on some System anchors when non-empty. Omitted otherwise in these examples. |
+| `noteIds` | array of string | References to account notes associated with this Place, System, or Group. | Omitted when empty. Absent from the twelve canonical examples. Present on a feed-import anchor when that anchor cites one or more notes. |
 | `isArchived` | boolean | Archive flag for this anchor. Independent of the `archived` relationship label and other records’ archive flags. | Present on both Systems and both Groups in Example 008. |
 | `status` | string | System lifecycle state. Observed values: `active`, `archived`. | Present on Example 008 Systems only. |
 | `archivedAt` | string | Archive timestamp. Observed form: UTC timestamp ending in `Z`. | Present on Example 008 Old Map only. |

@@ -1,0 +1,6 @@
+notice: {feed}:13: visibility 'self' is kept as written. docs/visibility-permissions-roles.txt names this audience 'only you'. The token was not renamed.
+notice: {feed}: account Permission read has no Simply Plural field and was not written. It was not mapped to a privacy bucket, role, or token permission.
+notice: {feed}: account email has no users[] field in the observed direct export and was not written.
+notice: {feed}: visibility self and only you are private:true and preventTrusted:true. trusted friends is private:true and preventTrusted:false. Current Simply Plural friend listing (API 1.11+) still shows a member only when a friend's buckets overlap the member's buckets. No bucket was invented from a name.
+notice: {feed}:76: friend Alex is an external account, not a member. friends[]._id is synthetic-friend-0001; frienduid is synthetic-frienduid-0001.
+notice: {feed}:76: seeMembers and seeFront were not in the feed and were not given defaults.

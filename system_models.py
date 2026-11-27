@@ -14,7 +14,8 @@ account-level collection whose labels come from custom fields.
 This is generation, not JSON embedding: anchors, tree nodes, identifier
 references, inherit settings, and member-wide fronting are created
 programmatically from the topology. Aurora/Simply Plural emission lives in
-generate.py and must not be mixed with this schema.
+generate.py and must not be mixed with this schema. Feed imports do not call
+assemble. gen-pluralbridge.render_import_model builds their account directly.
 """
 from collections import OrderedDict, defaultdict
 
@@ -61,11 +62,11 @@ CANONICAL_AVATAR_CONFIG = {
 ANCHOR_ID_FIELDS = {"system": "systemId", "group": "groupId", "place": "placeId"}
 
 FIXED_AUDIT = {"createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z"}
-
-# ---------------------------------------------------------------- record builders
+# Both stamps are this constant. assemble does not read the clock.
 
 
 def account(n):
+    """Compact account identity for example n. assemble adds config, members, and anchors."""
     return {
         "accountId": f"account-{n:03d}",
         "displayName": f"Example {n}",
@@ -76,12 +77,14 @@ def account(n):
 
 
 def system_rec(system_id, name, description, color, **extra):
+    """One System row in a spec. extra holds archived state or other anchor fields."""
     rec = {"systemId": system_id, "name": name, "description": description, "color": color}
     rec.update(extra)
     return rec
 
 
 def member_rec(member_id, display_name, pronouns, description, color, archived=False, reason=None):
+    """One shared member in a spec. Placements are added later from links, not from this row."""
     rec = {
         "memberId": member_id,
         "displayName": display_name,
@@ -232,7 +235,8 @@ def _placements(spec):
     return rows
 
 
-def _shape_anchor(rec, object_type, field_ids=None, tags=None):
+def _shape_anchor(rec, object_type, field_ids=None, tags=None, note_ids=None):
+    """Shared account.anchors[] record. Empty fieldIds, noteIds, and tags are omitted."""
     id_field = ANCHOR_ID_FIELDS[object_type]
     payload = {k: v for k, v in rec.items() if k != id_field}
     out = {"anchorId": rec[id_field], "objectType": object_type}
@@ -240,6 +244,8 @@ def _shape_anchor(rec, object_type, field_ids=None, tags=None):
         out[key] = payload[key]
     if field_ids:
         out["fieldIds"] = list(field_ids)
+    if note_ids:
+        out["noteIds"] = list(note_ids)
     if tags:
         out["tags"] = list(tags)
     return out
@@ -1371,10 +1377,12 @@ SYSTEM_MODEL_FILENAMES = [
 
 
 def ids_in(collection, id_field):
+    """Set of one id field. Used to reject duplicate ids and dangling references."""
     return {row[id_field] for row in collection}
 
 
 def _assert_inherit_settings(rec, name, where):
+    """Every serialized record carries visibility and permissions, each with a mode."""
     for key in ("visibility", "permissions"):
         assert key in rec, f"{name}: {where} missing {key}"
         setting = rec[key]
@@ -1385,10 +1393,12 @@ def _assert_inherit_settings(rec, name, where):
 
 
 def _acct(export):
+    """The single account object. Canonical exports are not a list of accounts."""
     return export["account"]
 
 
 def walk_tree(nodes):
+    """Depth-first tree nodes. Order follows the serialized children arrays."""
     for node in nodes or []:
         yield node
         yield from walk_tree(node.get("children"))
@@ -1461,7 +1471,11 @@ def validate_unique_memberships(export, name="export"):
 
 
 def validate_references(export, name="export"):
-    """IDs unique, every reference in-account, relationship rows use the approved fields only."""
+    """IDs unique, every reference in-account, relationship rows use the approved fields only.
+
+    Member noteIds and anchor noteIds must name a note in this account.
+    The twelve canonical examples do not set anchor noteIds.
+    """
     account = _acct(export)
     member_ids = ids_in(account["members"], "memberId")
     assert len(member_ids) == len(account["members"]), f"{name}: duplicate memberId"
@@ -1520,6 +1534,8 @@ def validate_references(export, name="export"):
     for anchor in account["anchors"]:
         for fid in anchor.get("fieldIds") or []:
             assert fid in field_ids, f"{name}: anchor {anchor['anchorId']} field {fid} missing"
+        for nid in anchor.get("noteIds") or []:
+            assert nid in note_ids, f"{name}: anchor {anchor['anchorId']} note {nid} missing"
 
     seen_tree = []
     for node in walk_tree(account["tree"]):

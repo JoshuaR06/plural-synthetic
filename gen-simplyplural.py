@@ -102,6 +102,12 @@ def _require_supported_shape(model):
             _location(model, anchor["line"], "Place anchors are not supported in this Simply Plural cut")
         if anchor["kind"] == "group" and (anchor.get("field_refs") or anchor.get("field_values")):
             _location(model, anchor["line"], "Group custom-field associations are not supported")
+        if anchor.get("note_refs"):
+            rendered = ", ".join(anchor["note_refs"])
+            _location(
+                model, anchor["line"],
+                f"anchor note association is not supported in this Simply Plural cut: {rendered}",
+            )
         if anchor["kind"] == "group":
             for ancestor in _ancestors(model, anchor)[1:]:
                 if ancestor["kind"] == "place" or (
@@ -116,7 +122,12 @@ def _require_supported_shape(model):
 
 
 def _assign_ids(model):
-    """Stable SP ids. Named and range members keep the parse order, one id each."""
+    """One synthetic-member id per shared member, in parse order, before avatar file names are chosen.
+
+    Generated members use that id as their display name. A named member keeps
+    the feed name and the same id on every placement. Avatar files use the
+    member id, not the avatar uuid.
+    """
     for index, member in enumerate(model["members"], 1):
         member["json_id"] = f"synthetic-member-{index:04d}"
         if member["generated"]:
@@ -133,6 +144,11 @@ def _assign_ids(model):
 
 
 def _note_owners(model):
+    """Member note owners. Anchor note_refs are not copied onto a member.
+
+    An anchor association is rejected earlier, in _require_supported_shape,
+    so this function still sees only member associations.
+    """
     owners = {}
     for member in model["members"]:
         for script_id in member["note_refs"]:
@@ -399,6 +415,7 @@ def _validate(model, export):
 
 
 def _replace_avatar_dir(parent, stem, staged_dir):
+    """Swap this feed's avatar directory. A failed JSON replace restores the previous directory."""
     dest = parent / f"{stem}-avatars"
     backup = parent / f".{stem}-avatars.previous"
     if backup.exists() and not dest.exists():

@@ -1,29 +1,51 @@
 #!/usr/bin/env python3
 """Deterministic synthetic plural-system export generator.
 
-Two generation worlds share this entry point and must stay independent:
+This file is Joshua's generation workflow. A second entry point,
+gen-import-engine.py, reads a model-feed file and does not call this script.
 
-  Aurora (defined in this file) is one fictional Simply Plural system. It is emitted as:
+generate.py writes two independent products into `--out`:
+
+  Aurora, defined in this file, is one fictional Simply Plural system:
     out/pluralbridge/               PluralBridge per-collection folder ({exists,id,content} wrapped)
     out/pluralbridge-export.zip     the same folder, zipped
     out/simplyplural-official.json  the official Simply Plural single-file export (unwrapped, _id)
     out/avatars.zip                 tiny solid-colour PNGs named <memberId>.png
     out/edge/                       deliberately off-spec variants (see EDGE CASES)
 
-  The twelve PluralBridge canonical models (topologies in system_models.py) are a different
-  schema: one hierarchical account per file under out/pluralbridge-system-models/. They are
-  not derived from Aurora and must not reuse Aurora dump() key-sorting or synthetic-* ids.
-  Serialization, --out writing, sample-output sync, and fixture checks live in
-  gen-pluralbridge.py (loaded by importlib; the hyphen is not a valid import name).
+  The twelve canonical PluralBridge examples are a different schema. system_models.py
+  defines and assembles them. gen-pluralbridge.py serializes them, writes
+  out/pluralbridge-system-models/, compares fixtures, and can refresh sample-output.
+  Those files are not derived from Aurora. They must not reuse dump() key-sorting
+  or synthetic-* ids. gen-pluralbridge.py is loaded with importlib because the
+  hyphen is not a valid import name.
 
-Everything is fictional. Aurora ids are `synthetic-*`. System-model examples use PluralBridge
-id style and declare themselves synthetic in the export header. Output is byte-identical run
-to run (fixed timestamps, insertion-order canonical models, sorted-key Aurora/edge JSON,
-fixed zip dates), so fixtures can be committed and diffed.
-
-`--out DIR` is wiped and rewritten. It must be a new directory, never the fixtures folder.
-`--sync-system-model-sample-output` refreshes only the twelve example JSON files in
+`python3 generate.py --out DIR` deletes DIR and writes it again. DIR must be a
+new directory, never the fixtures folder. `--sync-system-model-sample-output`
+refreshes only the twelve example JSON files in
 sample-output/pluralbridge-system-models/ and never overwrites example-shape.json.
+
+The feed entry point is:
+
+  python gen-import-engine.py --model <target> --scriptfspec <feed>
+
+It parses the feed into one shared model, resolves repeated member placements,
+generated ranges, and avatar settings, then dispatches:
+
+  pluralbridge   gen-pluralbridge.py    PluralBridge account JSON and PNG files
+  simplyplural   gen-simplyplural.py    Simply Plural direct-export JSON and PNG files
+  pluralport     gen-pluralport.py      OpenPlural 0.1 JSON with avatar bytes inside it
+  pluralkit      gen-pluralkit.py       PluralKit version-2 JSON and PNG sidecars
+
+Each adapter maps that shared model, checks the result, and replaces only its
+own output files. gen-avatars.py builds the PNG bytes those adapters package.
+Lighthouse feed generation is not implemented: the engine prints that and exits 2.
+
+Everything is fictional. Aurora ids are `synthetic-*`. System-model examples use
+PluralBridge id style and declare themselves synthetic in the export header.
+Output is byte-identical run to run (fixed timestamps, insertion-order canonical
+models, sorted-key Aurora/edge JSON, fixed zip dates), so fixtures can be
+committed and diffed.
 
 Standard library only. Usage:  python3 generate.py [--out DIR]
 """
@@ -220,6 +242,7 @@ def simplyplural_official():
     }
 
 def iso(ms):
+    """UTC timestamp with millisecond zeros. Edge files use this instead of epoch milliseconds."""
     return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
 # EDGE CASES: variants no real SP export is known to produce, but that a robust importer
@@ -243,6 +266,7 @@ def edge_variants():
 # ---------------------------------------------------------------- output
 
 def png(rgb, size=64):
+    """Square 8-bit RGB PNG for Aurora's avatars.zip. Feed imports use gen-avatars.py instead."""
     raw = b"".join(b"\x00" + bytes(rgb) * size for _ in range(size))
     def chunk(tag, data):
         body = tag + data
@@ -251,6 +275,7 @@ def png(rgb, size=64):
             + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
 
 def write_zip(path, entries):
+    """Zip entries in sorted name order with ZIP_DATE, so the archive bytes do not follow the clock."""
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
         for name in sorted(entries):
             info = zipfile.ZipInfo(name, date_time=ZIP_DATE)
